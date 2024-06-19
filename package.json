@@ -9,7 +9,8 @@
     "build": "webpack",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "format": "prettier --write .",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
+    "report-coverage": "codecov",
     "prepare": "husky"
   },
   "files": [
@@ -21,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitest/coverage-v8": "^1.6.0",
+    "codecov": "^3.8.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
