@@ -1,0 +1,36 @@
+name: Codecov
+
+on:
+  push:
+    branches:
+      - main
+      - development
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          npm install -g npm@latest
+          npm install codecov
+      
+      - name: Run tests and coverage
+        run: |
+          npm test -- --coverage
+          codecov
+
+      - name: Upload coverage to Codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+
