@@ -1,6 +1,6 @@
 import { FilterOptions } from './filter.interface'
-import { findMany } from './find-many'
-import { findUnique } from './find-unique'
+import { findMany } from './find/find-many'
+import { findUnique } from './find/find-unique'
 
 export function filterFrom<T>(data: T[]) {
   return {

@@ -1,5 +1,5 @@
-import { evaluateFilter } from './evaluate-filter'
-import { FilterOptions } from './filter.interface'
+import { evaluateFilter } from '../evaluate-filter'
+import { FilterOptions } from '../filter.interface'
 
 export function findUnique<T>(options: FilterOptions<T>, data: T[]): T | null {
   return (

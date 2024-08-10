@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from './filter'
+import { filterFrom } from './filter-from'
 
 class User {
   name: string

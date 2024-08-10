@@ -1,5 +1,5 @@
-import { evaluateFilter } from './evaluate-filter'
-import { FilterOptions } from './filter.interface'
+import { evaluateFilter } from '../evaluate-filter'
+import { FilterOptions } from '../filter.interface'
 
 export function findMany<T>(options: FilterOptions<T>, data: T[]): T[] {
   return data.filter(item => {
