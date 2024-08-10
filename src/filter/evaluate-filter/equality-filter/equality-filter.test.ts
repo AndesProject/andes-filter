@@ -25,6 +25,13 @@ describe('EqualityFilter', () => {
     expect(filter.findMany({ where: { name: { equals: null } } }).length).toBe(0)
     expect(filter.findMany({ where: { name: { equals: undefined } } }).length).toBe(0)
     expect(filter.findMany({ where: { name: { equals: '' } } }).length).toBe(0)
+
+    expect(filter.findUnique({ where: { name: { equals: '' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { equals: null } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { equals: undefined } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { equals: 'Mariana' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name).toBe('Bob')
+    expect(filter.findUnique({ where: { name: { equals: 'Alice' } } })?.name).toBe('Alice')
   })
 
   it('boolean', () => {
