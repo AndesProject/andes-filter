@@ -1,37 +1,43 @@
-export interface FilterKeys<T> {
-  // Basic filters
-  equals?: T
-  not?: T
-  in?: T[]
-  notIn?: T[]
-  lt?: T
-  lte?: T
-  gt?: T
-  gte?: T
+export interface FilterKeys<T, K extends keyof T> {
+  equals?: T[K] | null
+  not?: T[K] | FilterKeys<T, K>
+  in?: T[K][]
+  notIn?: T[K][]
+  lt?: T[K]
+  lte?: T[K]
+  gt?: T[K]
+  gte?: T[K]
 
-  // String filters
-  contains?: string
-  startsWith?: string
-  endsWith?: string
+  // String filters (aplican solo si T[K] es string)
+  contains?: T[K] extends string ? string : never
+  startsWith?: T[K] extends string ? string : never
+  endsWith?: T[K] extends string ? string : never
+  mode?: T[K] extends string ? 'insensitive' : never
 
-  // Date and time filters
-  before?: Date
-  after?: Date
-  between?: [Date, Date]
+  // Date and time filters (aplican solo si T[K] es Date)
+  before?: T[K] extends Date ? Date : never
+  after?: T[K] extends Date ? Date : never
+  between?: T[K] extends Date ? [Date, Date] : never
 
-  // Object-related filters
-  some?: FilterKeys<T>
-  none?: FilterKeys<T>
-  every?: FilterKeys<T>
+  // Object-related filters (aplican solo si T[K] es un objeto)
+  some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
 
-  // Compound filters
-  AND?: FilterKeys<T>[]
-  OR?: FilterKeys<T>[]
-  NOT?: FilterKeys<T>[]
+  // List filters (aplican solo si T[K] es un array)
+  has?: T[K] extends Array<infer U> ? U : never
+  hasEvery?: T[K] extends Array<infer U> ? U[] : never
+  hasSome?: T[K] extends Array<infer U> ? U[] : never
+  length?: T[K] extends Array<any> ? number : never
+
+  // Compound filters (combinaciones lógicas)
+  AND?: FilterKeys<T, K>[]
+  OR?: FilterKeys<T, K>[]
+  NOT?: FilterKeys<T, K>[]
 }
 
 export type FilterOptions<T> = {
   where: {
-    [K in keyof T]?: FilterKeys<T>
+    [K in keyof T]?: FilterKeys<T, K>
   }
 }
