@@ -1,67 +1,60 @@
 import { describe, expect, it } from 'vitest'
-import { EqualityFilter } from './equality-filter'
+import { filterFrom } from '../../filter-from'
 
 describe('EqualityFilter', () => {
-  it('debe retornar true cuando el valor es igual al valor objetivo', () => {
-    const filter = new EqualityFilter(5)
-    expect(filter.evaluate(5)).toBe(true)
+  it('string', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+      { name: 'Eva' },
+      { name: 'Frank' },
+      { name: 'Grace' },
+      { name: 'Hannah' },
+      { name: 'Isaac' },
+      { name: 'Jasmine' },
+    ])
+
+    expect(filter.findMany({ where: { name: { equals: 'Bob' } } }).length).toBe(1)
+    expect(filter.findMany({ where: { name: { equals: 'Mariana' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: 'Alice' } } }).length).toBe(2)
+    expect(filter.findMany({ where: { name: { equals: 'eva' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: 'ank' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: null } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: undefined } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: '' } } }).length).toBe(0)
   })
 
-  it('debe retornar false cuando el valor no es igual al valor objetivo', () => {
-    const filter = new EqualityFilter(5)
-    expect(filter.evaluate(3)).toBe(false)
+  it('boolean', () => {
+    const filter = filterFrom<{ isValid: boolean }>([
+      { isValid: true },
+      { isValid: false },
+      { isValid: false },
+    ])
+
+    expect(filter.findMany({ where: { isValid: { equals: true } } }).length).toBe(1)
+    expect(filter.findMany({ where: { isValid: { equals: false } } }).length).toBe(2)
+    expect(filter.findMany({ where: { isValid: { equals: null } } }).length).toBe(0)
+    expect(filter.findMany({ where: { isValid: { equals: undefined } } }).length).toBe(0)
   })
 
-  it('debe manejar comparaciones de tipo string correctamente', () => {
-    const filter = new EqualityFilter('hello')
-    expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('world')).toBe(false)
-  })
+  it('numeric', () => {
+    const filter = filterFrom<{ size: number }>([
+      { size: 10 },
+      { size: 11 },
+      { size: 12 },
+      { size: 12 },
+      { size: 0.5 },
+    ])
 
-  it('debe manejar comparaciones de tipo boolean correctamente', () => {
-    const filter = new EqualityFilter(true)
-    expect(filter.evaluate(true)).toBe(true)
-    expect(filter.evaluate(false)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de objetos correctamente (referencia)', () => {
-    const obj = { key: 'value' }
-    const filter = new EqualityFilter(obj)
-    expect(filter.evaluate(obj)).toBe(true)
-
-    const differentObj = { key: 'value' }
-    expect(filter.evaluate(differentObj)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de números correctamente', () => {
-    const filter = new EqualityFilter(10)
-    expect(filter.evaluate(10)).toBe(true)
-    expect(filter.evaluate(20)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de arrays correctamente (referencia)', () => {
-    const arr = [1, 2, 3]
-    const filter = new EqualityFilter(arr)
-    expect(filter.evaluate(arr)).toBe(true)
-
-    const differentArr = [1, 2, 3]
-    expect(filter.evaluate(differentArr)).toBe(false)
-  })
-
-  it('debe manejar valores nulos y undefined', () => {
-    const filterNull = new EqualityFilter(null)
-    expect(filterNull.evaluate(null)).toBe(true)
-    expect(filterNull.evaluate(undefined)).toBe(false)
-
-    const filterUndefined = new EqualityFilter(undefined)
-    expect(filterUndefined.evaluate(undefined)).toBe(true)
-    expect(filterUndefined.evaluate(null)).toBe(false)
-  })
-
-  it('debe manejar valores de tipo diferente correctamente', () => {
-    const filter = new EqualityFilter(10)
-    expect(filter.evaluate('10')).toBe(false)
-    expect(filter.evaluate(true)).toBe(false)
-    expect(filter.evaluate([10])).toBe(false)
+    expect(filter.findMany({ where: { size: { equals: 0.5 } } }).length).toBe(1)
+    expect(filter.findMany({ where: { size: { equals: 10 } } }).length).toBe(1)
+    expect(filter.findMany({ where: { size: { equals: 0 } } }).length).toBe(0)
+    expect(filter.findMany({ where: { size: { equals: 1 } } }).length).toBe(0)
+    expect(filter.findMany({ where: { size: { equals: 12 } } }).length).toBe(2)
+    expect(filter.findMany({ where: { size: { equals: null } } }).length).toBe(0)
+    expect(filter.findMany({ where: { size: { equals: undefined } } }).length).toBe(0)
   })
 })
