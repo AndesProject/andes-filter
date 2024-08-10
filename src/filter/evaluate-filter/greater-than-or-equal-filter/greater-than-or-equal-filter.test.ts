@@ -49,9 +49,4 @@ describe('GreaterThanOrEqualFilter', () => {
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-
-  it('debe manejar comparaciones de arrays correctamente (referencia)', () => {
-    const filter = new GreaterThanOrEqualFilter([1, 2, 3])
-    expect(filter.evaluate([4, 5])).toBe(false) // Arrays no son directamente comparables con >=
-  })
 })

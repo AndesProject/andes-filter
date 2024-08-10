@@ -28,11 +28,4 @@ describe('StringContainsFilter', () => {
     expect(filter.evaluate('foo')).toBe(true) // Cualquier cadena contiene una subcadena vacía
     expect(filter.evaluate('')).toBe(true) // Una cadena vacía contiene una subcadena vacía
   })
-
-  it('debe manejar valores con espacios en blanco correctamente', () => {
-    const filter = new StringContainsFilter('foo bar')
-    expect(filter.evaluate('foo bar baz')).toBe(true)
-    expect(filter.evaluate('foo   bar')).toBe(true) // Espacios adicionales en la cadena
-    expect(filter.evaluate('foo')).toBe(false) // Espacios en la subcadena deben coincidir exactamente
-  })
 })

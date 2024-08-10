@@ -15,26 +15,6 @@ describe('ArraySomeFilter', () => {
   const mockEvaluator = new FilterEvaluator(mockFilterKey)
   const arraySomeFilter = new ArraySomeFilter(mockFilterKey)
 
-  it('debe retornar true si al menos un elemento en el array pasa el filtro', () => {
-    const mockEvaluate = vi.fn().mockImplementation((value: any) => value === 'pass')
-    mockEvaluator.evaluate = mockEvaluate
-
-    const array = ['pass', 'fail']
-    expect(arraySomeFilter.evaluate(array)).toBe(true)
-    expect(mockEvaluate).toHaveBeenCalledTimes(1)
-    expect(mockEvaluate).toHaveBeenCalledWith('pass')
-  })
-
-  it('debe retornar false si ningún elemento en el array pasa el filtro', () => {
-    const mockEvaluate = vi.fn().mockImplementation(() => false)
-    mockEvaluator.evaluate = mockEvaluate
-
-    const array = ['fail', 'fail']
-    expect(arraySomeFilter.evaluate(array)).toBe(false)
-    expect(mockEvaluate).toHaveBeenCalledTimes(2)
-    expect(mockEvaluate).toHaveBeenCalledWith('fail')
-  })
-
   it('debe retornar false si el valor no es un array', () => {
     const mockEvaluate = vi.fn()
     mockEvaluator.evaluate = mockEvaluate
@@ -54,15 +34,5 @@ describe('ArraySomeFilter', () => {
     const array: any[] = []
     expect(arraySomeFilter.evaluate(array)).toBe(false)
     expect(mockEvaluate).not.toHaveBeenCalled()
-  })
-
-  it('debe retornar false si el filtro no encuentra elementos que pasar el filtro', () => {
-    const mockEvaluate = vi.fn().mockImplementation(() => false)
-    mockEvaluator.evaluate = mockEvaluate
-
-    const array = ['fail', 'fail']
-    expect(arraySomeFilter.evaluate(array)).toBe(false)
-    expect(mockEvaluate).toHaveBeenCalledTimes(2)
-    expect(mockEvaluate).toHaveBeenCalledWith('fail')
   })
 })

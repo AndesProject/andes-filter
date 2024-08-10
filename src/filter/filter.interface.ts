@@ -1,5 +1,5 @@
 export interface FilterKeys<T> {
-  // Filtros básicos
+  // Basic filters
   equals?: T
   not?: T
   in?: T[]
@@ -9,22 +9,22 @@ export interface FilterKeys<T> {
   gt?: T
   gte?: T
 
-  // Filtros para cadenas de texto
+  // String filters
   contains?: string
   startsWith?: string
   endsWith?: string
 
-  // Filtros para fechas y tiempos
+  // Date and time filters
   before?: Date
   after?: Date
   between?: [Date, Date]
 
-  // Filtros relacionados con objetos
+  // Object-related filters
   some?: FilterKeys<T>
   none?: FilterKeys<T>
   every?: FilterKeys<T>
 
-  // Filtros compuestos
+  // Compound filters
   AND?: FilterKeys<T>[]
   OR?: FilterKeys<T>[]
   NOT?: FilterKeys<T>[]

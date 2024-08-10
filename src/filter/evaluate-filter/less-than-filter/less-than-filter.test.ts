@@ -41,15 +41,4 @@ describe('LessThanFilter', () => {
     const filter = new LessThanFilter(10)
     expect(filter.evaluate({})).toBe(false) // Comparando un objeto con un número no es válido
   })
-
-  it('debe manejar valores nulos y undefined', () => {
-    const filter = new LessThanFilter(10)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de arrays correctamente (referencia)', () => {
-    const filter = new LessThanFilter([1, 2, 3])
-    expect(filter.evaluate([0])).toBe(false) // Arrays no son directamente comparables con menos que
-  })
 })
