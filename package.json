@@ -5,11 +5,14 @@
   "license": "ISC",
   "description": "",
   "main": "dist/bundle.js",
+  "type": "module",
   "scripts": {
     "build": "webpack",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
     "test": "vitest run --watch=false",
+    "test:watch": "vitest run --watch=true --coverage",
+    "test:coverage": "vitest run --coverage",
     "report-coverage": "codecov",
     "prepare": "husky"
   },
