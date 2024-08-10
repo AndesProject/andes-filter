@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { InequalityFilter } from './inequality-filter' // Asegúrate de que la ruta sea correcta
+import { InequalityFilter } from './inequality-filter'
 
 describe('InequalityFilter', () => {
   it('debe retornar true cuando el valor no es igual al valor objetivo', () => {

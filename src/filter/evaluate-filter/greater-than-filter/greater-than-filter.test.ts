@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { GreaterThanFilter } from './greater-than-filter' // Asegúrate de que la ruta sea correcta
+import { GreaterThanFilter } from './greater-than-filter'
 
 describe('GreaterThanFilter', () => {
   it('debe retornar true cuando el valor es mayor que el valor umbral', () => {

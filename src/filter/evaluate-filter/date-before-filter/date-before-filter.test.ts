@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DateBeforeFilter } from './date-before-filter' // Asegúrate de que la ruta sea correcta
+import { DateBeforeFilter } from './date-before-filter'
 
 describe('DateBeforeFilter', () => {
   const referenceDate = new Date('2024-01-01')

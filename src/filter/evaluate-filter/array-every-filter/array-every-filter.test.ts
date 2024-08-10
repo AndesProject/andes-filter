@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
-import { FilterEvaluator } from '../../evaluate-filter' // Asegúrate de que la ruta sea correcta
-import { FilterKeys } from '../../filter.interface' // Asegúrate de que la ruta sea correcta
-import { ArrayEveryFilter } from './array-every-filter' // Asegúrate de que la ruta sea correcta
+import { FilterKeys } from '../../filter.interface'
+import { FilterEvaluator } from '../evaluate-filter'
+import { ArrayEveryFilter } from './array-every-filter'
 
 // Mock para FilterEvaluator
-vi.mock('../../evaluate-filter', () => ({
+vi.mock('../evaluate-filter', () => ({
   FilterEvaluator: vi.fn().mockImplementation(() => ({
     evaluate: vi.fn(),
   })),

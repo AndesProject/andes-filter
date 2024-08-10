@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { StringEndsWithFilter } from './string-ends-with-filter' // Asegúrate de que la ruta sea correcta
+import { StringEndsWithFilter } from './string-ends-with-filter'
 
 describe('StringEndsWithFilter', () => {
   it('debe retornar true cuando el valor es una cadena que termina con el sufijo', () => {

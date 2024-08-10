@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LessThanOrEqualFilter } from './less-than-or-equal-filter' // Asegúrate de que la ruta sea correcta
+import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
 
 describe('LessThanOrEqualFilter', () => {
   it('debe retornar true cuando el valor es menor que el valor umbral', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DateBetweenFilter } from './date-between-filter' // Asegúrate de que la ruta sea correcta
+import { DateBetweenFilter } from './date-between-filter'
 
 describe('DateBetweenFilter', () => {
   const startDate = new Date('2024-01-01')

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { EqualityFilter } from './equality-filter' // Asegúrate de que la ruta sea correcta
+import { EqualityFilter } from './equality-filter'
 
 describe('EqualityFilter', () => {
   it('debe retornar true cuando el valor es igual al valor objetivo', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ExclusionFilter } from './exclusion-filter' // Asegúrate de que la ruta sea correcta
+import { ExclusionFilter } from './exclusion-filter'
 
 describe('ExclusionFilter', () => {
   it('debe retornar true cuando el valor no está incluido en los valores objetivo', () => {

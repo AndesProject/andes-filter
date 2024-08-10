@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { StringStartsWithFilter } from './string-starts-with-filter' // Asegúrate de que la ruta sea correcta
+import { StringStartsWithFilter } from './string-starts-with-filter'
 
 describe('StringStartsWithFilter', () => {
   it('debe retornar true cuando el valor es una cadena que comienza con el prefijo', () => {

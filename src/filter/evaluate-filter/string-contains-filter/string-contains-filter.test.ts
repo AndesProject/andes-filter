@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { StringContainsFilter } from './string-contains-filter' // Asegúrate de que la ruta sea correcta
+import { StringContainsFilter } from './string-contains-filter'
 
 describe('StringContainsFilter', () => {
   it('debe retornar true cuando el valor es una cadena que contiene la subcadena', () => {
