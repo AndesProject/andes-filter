@@ -4,7 +4,7 @@ import { DateBetweenFilter } from './date-between-filter'
 describe('DateBetweenFilter', () => {
   const startDate = new Date('2024-01-01')
   const endDate = new Date('2024-01-31')
-  const filter = new DateBetweenFilter([startDate, endDate])
+  const filter = new DateBetweenFilter(startDate, endDate)
 
   it('debe retornar true cuando la fecha está dentro del rango', () => {
     expect(filter.evaluate(new Date('2024-01-10'))).toBe(true)
@@ -34,7 +34,7 @@ describe('DateBetweenFilter', () => {
   })
 
   it('debe manejar correctamente el rango con la misma fecha en ambos extremos', () => {
-    const singleDateFilter = new DateBetweenFilter([startDate, startDate])
+    const singleDateFilter = new DateBetweenFilter(startDate, startDate)
     expect(singleDateFilter.evaluate(startDate)).toBe(true)
     expect(singleDateFilter.evaluate(new Date('2024-01-02'))).toBe(false)
   })

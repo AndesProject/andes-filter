@@ -42,5 +42,5 @@ export function createFilterClassMap<T>() {
     AND: AndFilterGroup,
     OR: OrFilterGroup,
     NOT: NotFilterGroup,
-  } as { [key in keyof FilterKeys<T>]: any }
+  } as { [key in keyof FilterKeys<T, keyof T>]: any }
 }
