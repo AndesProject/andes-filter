@@ -1,6 +1,6 @@
 export interface FilterKeys<T, K extends keyof T> {
   equals?: T[K] | null
-  not?: T[K] | FilterKeys<T, K>
+  not?: T[K] | FilterKeys<T, K> | null
   in?: T[K][]
   notIn?: T[K][]
   lt?: T[K]
