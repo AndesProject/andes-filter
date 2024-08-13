@@ -1,71 +1,69 @@
 import { describe, expect, it } from 'vitest'
-import { ExclusionFilter } from './exclusion-filter'
+import { filterFrom } from '../../filter-from'
 
 describe('ExclusionFilter', () => {
-  it('debe retornar true cuando el valor no está incluido en los valores objetivo', () => {
-    const filter = new ExclusionFilter([1, 2, 3])
-    expect(filter.evaluate(4)).toBe(true)
+  it('string', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+      { name: 'Eva' },
+      { name: 'Frank' },
+      { name: 'Grace' },
+      { name: 'Hannah' },
+      { name: 'Isaac' },
+      { name: 'Jasmine' },
+    ])
+
+    expect(filter.findMany({ where: { name: { notIn: [''] } } }).length).toBe(11)
+    expect(filter.findMany({ where: { name: { notIn: ['Alice'] } } }).length).toBe(9)
+    expect(filter.findMany({ where: { name: { notIn: ['Alice', 'Bob'] } } }).length).toBe(8)
+    expect(filter.findMany({ where: { name: { notIn: ['David'] } } }).length).toBe(10)
+
+    expect(filter.findUnique({ where: { name: { notIn: [''] } } })?.name).toBe('Alice')
+    expect(filter.findUnique({ where: { name: { notIn: ['David'] } } })?.name).toBe('Alice')
+    expect(filter.findUnique({ where: { name: { notIn: ['David', 'Alice'] } } })?.name).toBe('Bob')
+    expect(filter.findUnique({ where: { name: { notIn: ['Alice', 'David'] } } })?.name).toBe('Bob')
   })
 
-  it('debe retornar false cuando el valor está incluido en los valores objetivo', () => {
-    const filter = new ExclusionFilter([1, 2, 3])
-    expect(filter.evaluate(2)).toBe(false)
+  it('number', () => {
+    const filter = filterFrom<{ size: number }>([
+      { size: 0 },
+      { size: 0 },
+      { size: 1 },
+      { size: 2 },
+      { size: 3 },
+    ])
+
+    expect(filter.findMany({ where: { size: { notIn: [0] } } }).length).toBe(3)
+    expect(filter.findMany({ where: { size: { notIn: [1] } } }).length).toBe(4)
+    expect(filter.findMany({ where: { size: { notIn: [0, 1] } } }).length).toBe(2)
+    expect(filter.findMany({ where: { size: { notIn: [2] } } }).length).toBe(4)
+
+    expect(filter.findUnique({ where: { size: { notIn: [0] } } })?.size).toBe(1)
+    expect(filter.findUnique({ where: { size: { notIn: [1] } } })?.size).toBe(0)
+    expect(filter.findUnique({ where: { size: { notIn: [0, 1] } } })?.size).toBe(2)
   })
 
-  it('debe manejar comparaciones de tipo string correctamente', () => {
-    const filter = new ExclusionFilter(['apple', 'banana', 'cherry'])
-    expect(filter.evaluate('orange')).toBe(true)
-    expect(filter.evaluate('banana')).toBe(false)
-  })
+  it('boolean', () => {
+    const filter = filterFrom<{ isValid: boolean }>([
+      { isValid: true },
+      { isValid: true },
+      { isValid: false },
+      { isValid: true },
+      { isValid: false },
+    ])
 
-  it('debe manejar comparaciones de tipo boolean correctamente', () => {
-    const filter = new ExclusionFilter([true, false])
-    expect(filter.evaluate(true)).toBe(false)
-    expect(filter.evaluate(false)).toBe(false)
-    expect(filter.evaluate(null)).toBe(true)
-  })
+    expect(filter.findMany({ where: { isValid: { notIn: [true] } } }).length).toBe(2)
+    expect(filter.findMany({ where: { isValid: { notIn: [false] } } }).length).toBe(3)
+    expect(filter.findMany({ where: { isValid: { notIn: [false, true] } } }).length).toBe(0)
 
-  it('debe manejar comparaciones de objetos correctamente (referencia)', () => {
-    const obj1 = { key: 'value1' }
-    const obj2 = { key: 'value2' }
-    const filter = new ExclusionFilter([obj1, obj2])
-
-    const differentObj = { key: 'value1' }
-    expect(filter.evaluate(differentObj)).toBe(true)
-
-    expect(filter.evaluate(obj1)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de números correctamente', () => {
-    const filter = new ExclusionFilter([10, 20, 30])
-    expect(filter.evaluate(40)).toBe(true)
-    expect(filter.evaluate(20)).toBe(false)
-  })
-
-  it('debe manejar comparaciones de arrays correctamente (referencia)', () => {
-    const arr1 = [1, 2, 3]
-    const arr2 = [4, 5, 6]
-    const filter = new ExclusionFilter([arr1, arr2])
-
-    const differentArr = [1, 2, 3]
-    expect(filter.evaluate(differentArr)).toBe(true)
-
-    expect(filter.evaluate(arr1)).toBe(false)
-  })
-
-  it('debe manejar valores nulos y undefined', () => {
-    const filter = new ExclusionFilter([null, undefined, 'test'])
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-    expect(filter.evaluate('test')).toBe(false)
-    expect(filter.evaluate('not_included')).toBe(true)
-  })
-
-  it('debe manejar valores de tipo diferente correctamente', () => {
-    const filter = new ExclusionFilter([10, '10', true])
-    expect(filter.evaluate(20)).toBe(true)
-    expect(filter.evaluate('10')).toBe(false)
-    expect(filter.evaluate(true)).toBe(false)
-    expect(filter.evaluate([10])).toBe(true)
+    expect(filter.findUnique({ where: { isValid: { notIn: [true] } } })?.isValid).toBe(false)
+    expect(filter.findUnique({ where: { isValid: { notIn: [false] } } })?.isValid).toBe(true)
+    expect(filter.findUnique({ where: { isValid: { notIn: [true, false] } } })?.isValid).toBe(
+      undefined
+    )
   })
 })
