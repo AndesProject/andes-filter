@@ -18,15 +18,13 @@ export class FilterEvaluator<T> {
 
         if (FilterClass) {
           const filterInstance = new FilterClass(this.filterKeys[typedKey])
-          if (filterInstance) {
-            this.filters.push(filterInstance)
-          }
+          if (filterInstance) this.filters.push(filterInstance)
         }
       }
     }
   }
 
-  evaluate(value: any): boolean {
+  evaluate(value: T): boolean {
     return this.filters.every(filter => filter.evaluate(value))
   }
 }
