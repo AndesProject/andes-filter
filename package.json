@@ -19,6 +19,9 @@
     "dist/**/*"
   ],
   "keywords": [],
+  "engines": {
+    "node": ">=18.20.4"
+  },
   "devDependencies": {
     "@types/node": "^20.14.5",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
