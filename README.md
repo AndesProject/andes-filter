@@ -21,13 +21,14 @@ Features
 
 <div align="center">
   <a href="https://codecov.io/github/AndesProject/andes-filter">
-    <img src="https://codecov.io/github/AndesProject/andes-filter/branch/main/graph/badge.svg?token=KT8REBY8K1" alt="codecov">
+    <img src="https://codecov.io/github/AndesProject/andes-filter/branch/master/graph/badge.svg?token=KT8REBY8K1" alt="codecov">
   </a>
   <br>
   <a href="https://codecov.io/github/AndesProject/andes-filter">
-    <img src="https://codecov.io/github/AndesProject/andes-filter/graphs/sunburst.svg?token=KT8REBY8K1" alt="codecov">
+    <img src="https://codecov.io/github/AndesProject/andes-filter/branch/master/graphs/sunburst.svg?token=KT8REBY8K1" alt="codecov">
   </a>
 </div>
+
 
 
 ### Operadores
