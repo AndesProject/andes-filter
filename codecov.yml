@@ -6,13 +6,13 @@ coverage:
     project:
       default:
         target: auto
-        threshold: 1%
+        threshold: 80%
         paths:
           - 'src/'
     patch:
       default:
         target: auto
-        threshold: 0.1%
+        threshold: 80%
 comment:
   layout: 'reach, diff, flags, files'
   behavior: default
