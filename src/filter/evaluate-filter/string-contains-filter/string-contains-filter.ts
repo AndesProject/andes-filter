@@ -1,9 +1,14 @@
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class StringContainsFilter implements EvaluateFilter {
-  constructor(private substring: string) {}
+  constructor(
+    private value: string,
+    private insensitive: boolean = false
+  ) {}
 
-  evaluate(value: string): boolean {
-    return typeof value === 'string' && value.includes(this.substring)
+  evaluate(input: string): boolean {
+    const compareInput = this.insensitive ? input.toLowerCase() : input
+    const compareValue = this.insensitive ? this.value.toLowerCase() : this.value
+    return compareInput.includes(compareValue)
   }
 }

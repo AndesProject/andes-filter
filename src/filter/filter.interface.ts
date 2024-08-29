@@ -1,3 +1,5 @@
+export const MODE_INSENSITIVE: string = 'insensitive'
+
 export interface FilterKeys<T, K extends keyof T> {
   equals?: T[K] | null
   not?: T[K] | FilterKeys<T, K> | null
@@ -12,7 +14,7 @@ export interface FilterKeys<T, K extends keyof T> {
   contains?: T[K] extends string ? string : never
   startsWith?: T[K] extends string ? string : never
   endsWith?: T[K] extends string ? string : never
-  mode?: T[K] extends string ? 'insensitive' : never
+  mode?: T[K] extends string ? typeof MODE_INSENSITIVE : never
 
   // Date and time filters (aplican solo si T[K] es Date)
   before?: T[K] extends Date ? Date : never
