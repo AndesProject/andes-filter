@@ -4,6 +4,6 @@ export class StringContainsFilter implements EvaluateFilter {
   constructor(private substring: string) {}
 
   evaluate(value: string): boolean {
-    return typeof value === 'string' && Boolean(value.length) && value.includes(this.substring)
+    return typeof value === 'string' && value.includes(this.substring)
   }
 }
