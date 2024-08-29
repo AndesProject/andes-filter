@@ -1,38 +1,38 @@
 import { describe, expect, it } from 'vitest'
-import { StringStartsWithFilter } from './string-starts-with-filter'
+import { filterFrom } from '../../filter-from'
 
 describe('StringStartsWithFilter', () => {
-  it('debe retornar true cuando el valor es una cadena que comienza con el prefijo', () => {
-    const filter = new StringStartsWithFilter('foo')
-    expect(filter.evaluate('foobar')).toBe(true)
-    expect(filter.evaluate('foo bar')).toBe(true)
-  })
+  it('string', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+      { name: 'Eva' },
+      { name: 'Frank' },
+      { name: 'Grace' },
+      { name: 'Hannah' },
+      { name: 'Isaac' },
+      { name: 'Jasmine' },
+      { name: 'Gustavo Cerati' },
+    ])
 
-  it('debe retornar false cuando el valor es una cadena que no comienza con el prefijo', () => {
-    const filter = new StringStartsWithFilter('foo')
-    expect(filter.evaluate('barfoo')).toBe(false)
-    expect(filter.evaluate('')).toBe(false)
-  })
+    expect(filter.findMany({ where: { name: { startsWith: 'Cerati' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { startsWith: 'Bob' } } }).length).toBe(1)
+    expect(filter.findMany({ where: { name: { startsWith: 'Mariana' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { startsWith: 'Alice' } } }).length).toBe(2)
+    expect(filter.findMany({ where: { name: { startsWith: 'eva' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { startsWith: 'ank' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { startsWith: ' ' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { startsWith: '' } } }).length).toBe(12)
+    expect(filter.findMany({ where: { name: { startsWith: 'A' } } }).length).toBe(2)
+    expect(filter.findMany({ where: { name: { startsWith: 'Gus' } } }).length).toBe(1)
 
-  it('debe retornar false cuando el valor no es una cadena', () => {
-    const filter = new StringStartsWithFilter('foo')
-    expect(filter.evaluate(123)).toBe(false)
-    expect(filter.evaluate([])).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-  })
-
-  it('debe manejar el prefijo vacío correctamente', () => {
-    const filter = new StringStartsWithFilter('')
-    expect(filter.evaluate('foo')).toBe(true) // Cualquier cadena comienza con una cadena vacía
-    expect(filter.evaluate('')).toBe(true) // Una cadena vacía comienza con una cadena vacía
-  })
-
-  it('debe manejar valores con espacios en blanco correctamente', () => {
-    const filter = new StringStartsWithFilter('foo')
-    expect(filter.evaluate('foo bar')).toBe(true)
-    expect(filter.evaluate('foo   bar')).toBe(true) // Espacios adicionales en la cadena
-    expect(filter.evaluate(' bar foo')).toBe(false) // Espacios en el prefijo deben coincidir exactamente
+    expect(filter.findUnique({ where: { name: { startsWith: ' ' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { startsWith: '' } } })?.name).toBe('Alice')
+    expect(filter.findUnique({ where: { name: { startsWith: 'Mariana' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { startsWith: 'Bob' } } })?.name).toBe('Bob')
+    expect(filter.findUnique({ where: { name: { startsWith: 'Alice' } } })?.name).toBe('Alice')
   })
 })

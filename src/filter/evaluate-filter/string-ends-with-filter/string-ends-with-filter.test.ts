@@ -1,38 +1,33 @@
 import { describe, expect, it } from 'vitest'
-import { StringEndsWithFilter } from './string-ends-with-filter'
+import { filterFrom } from '../../filter-from'
 
 describe('StringEndsWithFilter', () => {
-  it('debe retornar true cuando el valor es una cadena que termina con el sufijo', () => {
-    const filter = new StringEndsWithFilter('bar')
-    expect(filter.evaluate('foobar')).toBe(true)
-    expect(filter.evaluate('foo bar')).toBe(true)
-  })
+  it('string', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+      { name: 'Eva' },
+      { name: 'Frank' },
+      { name: 'Grace' },
+      { name: 'Hannah' },
+      { name: 'Isaac' },
+      { name: 'Jasmine' },
+      { name: 'Gustavo Cerati' },
+    ])
 
-  it('debe retornar false cuando el valor es una cadena que no termina con el sufijo', () => {
-    const filter = new StringEndsWithFilter('bar')
-    expect(filter.evaluate('foo')).toBe(false)
-    expect(filter.evaluate('')).toBe(false)
-  })
+    expect(filter.findMany({ where: { name: { endsWith: 'ice' } } }).length).toBe(2)
+    expect(filter.findMany({ where: { name: { endsWith: 'Cerati' } } }).length).toBe(1)
+    expect(filter.findMany({ where: { name: { endsWith: 'David' } } }).length).toBe(1)
+    expect(filter.findMany({ where: { name: { endsWith: 'smi' } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { endsWith: ' ' } } }).length).toBe(0)
 
-  it('debe retornar false cuando el valor no es una cadena', () => {
-    const filter = new StringEndsWithFilter('bar')
-    expect(filter.evaluate(123)).toBe(false)
-    expect(filter.evaluate([])).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-  })
-
-  it('debe manejar el sufijo vacío correctamente', () => {
-    const filter = new StringEndsWithFilter('')
-    expect(filter.evaluate('foo')).toBe(true) // Cualquier cadena termina con una cadena vacía
-    expect(filter.evaluate('')).toBe(true) // Una cadena vacía termina con una cadena vacía
-  })
-
-  it('debe manejar valores con espacios en blanco correctamente', () => {
-    const filter = new StringEndsWithFilter('bar')
-    expect(filter.evaluate('foo bar')).toBe(true)
-    expect(filter.evaluate('foo   bar')).toBe(true) // Espacios adicionales en la cadena
-    expect(filter.evaluate('bar foo')).toBe(false) // Espacios en el sufijo deben coincidir exactamente
+    expect(filter.findUnique({ where: { name: { endsWith: ' ' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { endsWith: '' } } })?.name).toBe('Alice')
+    expect(filter.findUnique({ where: { name: { endsWith: 'Mariana' } } })).toBe(null)
+    expect(filter.findUnique({ where: { name: { endsWith: 'Bob' } } })?.name).toBe('Bob')
+    expect(filter.findUnique({ where: { name: { endsWith: 'Alice' } } })?.name).toBe('Alice')
   })
 })

@@ -1,9 +1,9 @@
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
-export class GreaterThanFilter<T> implements EvaluateFilter {
-  constructor(private thresholdValue: T) {}
+export class GreaterThanFilter implements EvaluateFilter {
+  constructor(private thresholdValue: number) {}
 
-  evaluate(value: any): boolean {
+  evaluate(value: number): boolean {
     return value > this.thresholdValue
   }
 }

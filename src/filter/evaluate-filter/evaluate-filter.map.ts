@@ -18,6 +18,7 @@ import { NotFilterGroup } from './not-filter-group'
 import { OrFilterGroup } from './or-filter-group'
 import { StringContainsFilter } from './string-contains-filter'
 import { StringEndsWithFilter } from './string-ends-with-filter'
+import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
 import { StringStartsWithFilter } from './string-starts-with-filter'
 
 export function createFilterClassMap<T>() {
@@ -33,6 +34,7 @@ export function createFilterClassMap<T>() {
     contains: StringContainsFilter,
     startsWith: StringStartsWithFilter,
     endsWith: StringEndsWithFilter,
+    mode: StringInsensitiveModeFilter,
     before: DateBeforeFilter,
     after: DateAfterFilter,
     between: DateBetweenFilter,
