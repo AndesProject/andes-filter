@@ -1,6 +1,6 @@
 export const MODE_INSENSITIVE = 'insensitive' as const
 
-type DateNumber = Date | number
+export type DateOrNumber = Date | number | string
 
 export interface FilterKeys<T, K extends keyof T> {
   equals?: T[K] | null
@@ -21,9 +21,9 @@ export interface FilterKeys<T, K extends keyof T> {
   mode?: T[K] extends string ? typeof MODE_INSENSITIVE : never
   regex?: T[K] extends string ? string : never
 
-  before?: T[K] extends Date ? Date : never
-  after?: T[K] extends Date ? Date : never
-  between?: T[K] extends DateNumber ? [DateNumber, DateNumber] : never
+  before?: T[K] extends DateOrNumber ? DateOrNumber : never
+  after?: T[K] extends DateOrNumber ? DateOrNumber : never
+  between?: T[K] extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
 
   some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
   none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never

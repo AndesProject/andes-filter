@@ -1,33 +1,51 @@
 import { describe, expect, it } from 'vitest'
-import { BeforeFilter } from './before-filter'
+import { filterFrom } from '../../filter-from'
 
-describe('DateBeforeFilter', () => {
-  const referenceDate = new Date('2024-01-01')
+describe('BeforeFilter', () => {
+  it('Date', () => {
+    const now = new Date()
 
-  it('debe retornar true cuando el valor es una fecha antes de la fecha de referencia', () => {
-    const filter = new BeforeFilter(referenceDate)
-    expect(filter.evaluate(new Date('2023-12-31'))).toBe(true)
-    expect(filter.evaluate(new Date('2023-11-15'))).toBe(true)
+    const filter = filterFrom<{ date: Date }>([
+      { date: new Date() },
+      { date: new Date() },
+      { date: new Date(now.getTime() - 1000) },
+      { date: new Date(now.getTime() - 2000) },
+      { date: new Date(now.getTime() + 1000) },
+    ])
+
+    expect(filter.findMany({ where: { date: { before: new Date() } } }).length).toBe(2)
+    expect(
+      filter.findMany({ where: { date: { before: new Date(now.getTime() + 1000) } } }).length
+    ).toBe(4)
+    expect(filter.findMany({ where: { date: { before: 0 } } }).length).toBe(0)
   })
 
-  it('debe retornar false cuando el valor es una fecha igual a la fecha de referencia', () => {
-    const filter = new BeforeFilter(referenceDate)
-    expect(filter.evaluate(new Date('2024-01-01'))).toBe(false)
+  it('number', () => {
+    const now: number = new Date().getTime()
+
+    const filter = filterFrom<{ date: number }>([
+      { date: now },
+      { date: now },
+      { date: now - 1000 },
+      { date: now - 2000 },
+      { date: now + 1000 },
+    ])
+
+    expect(filter.findMany({ where: { date: { before: now } } }).length).toBe(2)
+    expect(filter.findMany({ where: { date: { before: now + 1000 } } }).length).toBe(4)
   })
 
-  it('debe retornar false cuando el valor es una fecha después de la fecha de referencia', () => {
-    const filter = new BeforeFilter(referenceDate)
-    expect(filter.evaluate(new Date('2024-01-02'))).toBe(false)
-    expect(filter.evaluate(new Date('2024-06-15'))).toBe(false)
-  })
+  it('string', () => {
+    const now: number = new Date().getTime()
 
-  it('debe retornar false cuando el valor no es una fecha', () => {
-    const filter = new BeforeFilter(referenceDate)
-    expect(filter.evaluate('2023-12-31')).toBe(false)
-    expect(filter.evaluate(1234567890)).toBe(false)
-    expect(filter.evaluate([])).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
+    const filter = filterFrom<{ date: string }>([
+      { date: '2023-08-31' },
+      { date: '2023-08-31' },
+      { date: '2024-08-31' },
+      { date: '2025-08-31' },
+      { date: '2025-08-31' },
+    ])
+
+    expect(filter.findMany({ where: { date: { before: now } } }).length).toBe(3)
   })
 })
