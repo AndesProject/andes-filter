@@ -20,6 +20,7 @@ import { StringContainsFilter } from './string-contains-filter'
 import { StringEndsWithFilter } from './string-ends-with-filter'
 import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
 import { StringNotContainsFilter } from './string-not-contains-filter'
+import { StringNotEndsWithFilter } from './string-not-ends-with-filter'
 import { StringNotStartsWithFilter } from './string-not-starts-with-filter'
 import { StringStartsWithFilter } from './string-starts-with-filter'
 
@@ -38,7 +39,7 @@ export function createFilterClassMap<T>() {
     startsWith: StringStartsWithFilter,
     notStartsWith: StringNotStartsWithFilter,
     endsWith: StringEndsWithFilter,
-    // notEndsWith
+    notEndsWith: StringNotEndsWithFilter,
     mode: StringInsensitiveModeFilter,
     // regex
     // isEmpty
