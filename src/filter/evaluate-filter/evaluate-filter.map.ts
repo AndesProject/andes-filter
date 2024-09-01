@@ -20,6 +20,7 @@ import { StringContainsFilter } from './string-contains-filter'
 import { StringEndsWithFilter } from './string-ends-with-filter'
 import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
 import { StringNotContainsFilter } from './string-not-contains-filter'
+import { StringNotStartsWithFilter } from './string-not-starts-with-filter'
 import { StringStartsWithFilter } from './string-starts-with-filter'
 
 export function createFilterClassMap<T>() {
@@ -35,7 +36,7 @@ export function createFilterClassMap<T>() {
     contains: StringContainsFilter,
     notContains: StringNotContainsFilter,
     startsWith: StringStartsWithFilter,
-    // notStartsWith
+    notStartsWith: StringNotStartsWithFilter,
     endsWith: StringEndsWithFilter,
     // notEndsWith
     mode: StringInsensitiveModeFilter,
