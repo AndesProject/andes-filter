@@ -1,4 +1,6 @@
-export const MODE_INSENSITIVE: string = 'insensitive'
+export const MODE_INSENSITIVE = 'insensitive' as const
+
+type DateNumber = Date | number
 
 export interface FilterKeys<T, K extends keyof T> {
   equals?: T[K] | null
@@ -10,32 +12,38 @@ export interface FilterKeys<T, K extends keyof T> {
   gt?: T[K]
   gte?: T[K]
 
-  // String filters (aplican solo si T[K] es string)
   contains?: T[K] extends string ? string : never
+  notContains?: T[K] extends string ? string : never
   startsWith?: T[K] extends string ? string : never
+  notStartsWith?: T[K] extends string ? string : never
   endsWith?: T[K] extends string ? string : never
+  notEndsWith?: T[K] extends string ? string : never
   mode?: T[K] extends string ? typeof MODE_INSENSITIVE : never
+  regex?: T[K] extends string ? string : never
+  isEmpty?: T[K] extends string | Array<any> ? boolean : never
+  notEmpty?: T[K] extends string ? boolean : never
+  search?: T[K] extends string ? string : never
 
-  // Date and time filters (aplican solo si T[K] es Date)
   before?: T[K] extends Date ? Date : never
   after?: T[K] extends Date ? Date : never
-  between?: T[K] extends Date ? [Date, Date] : never
+  between?: T[K] extends DateNumber ? [DateNumber, DateNumber] : never
 
-  // Object-related filters (aplican solo si T[K] es un objeto)
   some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
   none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
   every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  isSet?: T[K] extends object ? boolean : never
 
-  // List filters (aplican solo si T[K] es un array)
   has?: T[K] extends Array<infer U> ? U : never
   hasEvery?: T[K] extends Array<infer U> ? U[] : never
   hasSome?: T[K] extends Array<infer U> ? U[] : never
   length?: T[K] extends Array<any> ? number : never
 
-  // Compound filters (combinaciones lógicas)
   AND?: FilterKeys<T, K>[]
   OR?: FilterKeys<T, K>[]
   NOT?: FilterKeys<T, K>[]
+
+  isNull?: boolean
+  distinct?: boolean
 }
 
 export type FilterOptions<T> = {

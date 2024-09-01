@@ -19,6 +19,7 @@ import { OrFilterGroup } from './or-filter-group'
 import { StringContainsFilter } from './string-contains-filter'
 import { StringEndsWithFilter } from './string-ends-with-filter'
 import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
+import { StringNotContainsFilter } from './string-not-contains-filter'
 import { StringStartsWithFilter } from './string-starts-with-filter'
 
 export function createFilterClassMap<T>() {
@@ -32,17 +33,31 @@ export function createFilterClassMap<T>() {
     gt: GreaterThanFilter,
     gte: GreaterThanOrEqualFilter,
     contains: StringContainsFilter,
+    notContains: StringNotContainsFilter,
     startsWith: StringStartsWithFilter,
+    // notStartsWith
     endsWith: StringEndsWithFilter,
+    // notEndsWith
     mode: StringInsensitiveModeFilter,
+    // regex
+    // isEmpty
+    // notEmpty
+    // search
     before: DateBeforeFilter,
     after: DateAfterFilter,
     between: DateBetweenFilter,
     some: ArraySomeFilter,
     none: ArrayNoneFilter,
     every: ArrayEveryFilter,
+    // isSet
+    // has
+    // hasEvery
+    // hasSome
+    // length
     AND: AndFilterGroup,
     OR: OrFilterGroup,
     NOT: NotFilterGroup,
+    // isNull
+    // distinct
   } as { [key in keyof FilterKeys<T, keyof T>]: any }
 }
