@@ -1,7 +1,7 @@
 import { FilterKeys } from '../filter.interface'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
-import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
+import { InsensitiveModeFilter } from './insensitive-mode-filter'
 
 export class FilterEvaluator<T> {
   private filters: EvaluateFilter[] = []
@@ -54,7 +54,7 @@ export class FilterEvaluator<T> {
       }
     })
 
-    const modeFilterClass = new StringInsensitiveModeFilter(stringFilters)
+    const modeFilterClass = new InsensitiveModeFilter(stringFilters)
     this.filters.push(modeFilterClass)
   }
 

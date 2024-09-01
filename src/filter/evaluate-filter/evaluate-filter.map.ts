@@ -1,29 +1,29 @@
 import { FilterKeys } from '../filter.interface'
+import { AfterFilter } from './after-filter'
 import { AndFilterGroup } from './and-filter-group'
-import { ArrayEveryFilter } from './array-every-filter'
-import { ArrayNoneFilter } from './array-none-filter'
-import { ArraySomeFilter } from './array-some-filter'
-import { DateAfterFilter } from './date-after-filter'
-import { DateBeforeFilter } from './date-before-filter'
-import { DateBetweenFilter } from './date-between-filter'
+import { BeforeFilter } from './before-filter'
+import { BetweenFilter } from './between-filter'
+import { ContainsFilter } from './contains-filter'
+import { EndsWithFilter } from './ends-with-filter'
 import { EqualityFilter } from './equality-filter'
+import { EveryFilter } from './every-filter'
 import { ExclusionFilter } from './exclusion-filter'
 import { GreaterThanFilter } from './greater-than-filter'
 import { GreaterThanOrEqualFilter } from './greater-than-or-equal-filter'
 import { InclusionFilter } from './inclusion-filter'
 import { InequalityFilter } from './inequality-filter'
+import { InsensitiveModeFilter } from './insensitive-mode-filter'
 import { LessThanFilter } from './less-than-filter'
 import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
+import { NoneFilter } from './none-filter'
+import { NotContainsFilter } from './not-contains-filter'
+import { NotEndsWithFilter } from './not-ends-with-filter'
 import { NotFilterGroup } from './not-filter-group'
+import { NotStartsWithFilter } from './not-starts-with-filter'
 import { OrFilterGroup } from './or-filter-group'
-import { StringContainsFilter } from './string-contains-filter'
-import { StringEndsWithFilter } from './string-ends-with-filter'
-import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
-import { StringNotContainsFilter } from './string-not-contains-filter'
-import { StringNotEndsWithFilter } from './string-not-ends-with-filter'
-import { StringNotStartsWithFilter } from './string-not-starts-with-filter'
-import { StringRegexFilter } from './string-regex-filter'
-import { StringStartsWithFilter } from './string-starts-with-filter'
+import { RegexFilter } from './regex-filter'
+import { SomeFilter } from './some-filter'
+import { StartsWithFilter } from './starts-with-filter'
 
 export function createFilterClassMap<T>() {
   return {
@@ -35,24 +35,20 @@ export function createFilterClassMap<T>() {
     lte: LessThanOrEqualFilter,
     gt: GreaterThanFilter,
     gte: GreaterThanOrEqualFilter,
-    contains: StringContainsFilter,
-    notContains: StringNotContainsFilter,
-    startsWith: StringStartsWithFilter,
-    notStartsWith: StringNotStartsWithFilter,
-    endsWith: StringEndsWithFilter,
-    notEndsWith: StringNotEndsWithFilter,
-    mode: StringInsensitiveModeFilter,
-    regex: StringRegexFilter,
-    // isEmpty
-    // notEmpty
-    // search
-    before: DateBeforeFilter,
-    after: DateAfterFilter,
-    between: DateBetweenFilter,
-    some: ArraySomeFilter,
-    none: ArrayNoneFilter,
-    every: ArrayEveryFilter,
-    // isSet
+    contains: ContainsFilter,
+    notContains: NotContainsFilter,
+    startsWith: StartsWithFilter,
+    notStartsWith: NotStartsWithFilter,
+    endsWith: EndsWithFilter,
+    notEndsWith: NotEndsWithFilter,
+    mode: InsensitiveModeFilter,
+    regex: RegexFilter,
+    before: BeforeFilter,
+    after: AfterFilter,
+    between: BetweenFilter,
+    some: SomeFilter,
+    none: NoneFilter,
+    every: EveryFilter,
     // has
     // hasEvery
     // hasSome

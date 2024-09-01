@@ -20,9 +20,6 @@ export interface FilterKeys<T, K extends keyof T> {
   notEndsWith?: T[K] extends string ? string : never
   mode?: T[K] extends string ? typeof MODE_INSENSITIVE : never
   regex?: T[K] extends string ? string : never
-  isEmpty?: T[K] extends string | Array<any> ? boolean : never
-  notEmpty?: T[K] extends string ? boolean : never
-  search?: T[K] extends string ? string : never
 
   before?: T[K] extends Date ? Date : never
   after?: T[K] extends Date ? Date : never
@@ -31,7 +28,6 @@ export interface FilterKeys<T, K extends keyof T> {
   some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
   none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
   every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
-  isSet?: T[K] extends object ? boolean : never
 
   has?: T[K] extends Array<infer U> ? U : never
   hasEvery?: T[K] extends Array<infer U> ? U[] : never
