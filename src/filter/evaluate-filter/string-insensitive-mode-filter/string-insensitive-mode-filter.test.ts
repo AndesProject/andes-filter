@@ -172,4 +172,39 @@ describe('StringInsensitiveModeFilter', () => {
       filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: 'ALICE' } } })?.name
     ).toBe('Alice')
   })
+
+  it('multi string', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+      { name: 'Eva' },
+      { name: 'Frank' },
+      { name: 'Grace' },
+      { name: 'Hannah' },
+      { name: 'Isaac' },
+      { name: 'Jasmine' },
+      { name: 'Gustavo Cerati' },
+    ])
+
+    expect(
+      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ra', startsWith: 'f' } } })
+        .length
+    ).toBe(1)
+
+    expect(
+      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } } })
+        .length
+    ).toBe(2)
+
+    expect(
+      filter.findMany({
+        where: {
+          name: { mode: 'insensitive', contains: 'ra', not: 'Frank', notIn: ['Gustavo Cerati'] },
+        },
+      }).length
+    ).toBe(1)
+  })
 })
