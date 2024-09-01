@@ -34,7 +34,14 @@ export class FilterEvaluator<T> {
 
   private handleModeKey(): void {
     const stringFilters: EvaluateFilter[] = []
-    const stringFilterKeys: string[] = ['contains', 'startsWith', 'endsWith']
+    const stringFilterKeys: string[] = [
+      'contains',
+      'notContains',
+      'startsWith',
+      'notStartsWith',
+      'endsWith',
+      'notEndsWith',
+    ]
     const filterKeys = Object.keys(this.filterKeys).filter(key => key !== 'mode')
 
     filterKeys.forEach(key => {
