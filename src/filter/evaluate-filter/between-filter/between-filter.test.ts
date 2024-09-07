@@ -1,41 +1,38 @@
 import { describe, expect, it } from 'vitest'
-import { BetweenFilter } from './between-filter'
+import { filterFrom } from '../../filter-from'
 
 describe('DateBetweenFilter', () => {
-  const startDate = new Date('2024-01-01')
-  const endDate = new Date('2024-01-31')
-  const filter = new BetweenFilter(startDate, endDate)
+  it('Date', () => {
+    const filter = filterFrom<{ date: string }>([
+      { date: '2024-09-01' },
+      { date: '2024-09-08' },
+      { date: '2024-09-09' },
+      { date: '2024-09-10' },
+      { date: '2024-09-11' },
+    ])
 
-  it('debe retornar true cuando la fecha está dentro del rango', () => {
-    expect(filter.evaluate(new Date('2024-01-10'))).toBe(true)
-    expect(filter.evaluate(new Date('2024-01-15'))).toBe(true)
-  })
+    expect(
+      filter.findMany({
+        where: {
+          date: { between: ['2024-09-01', '2024-09-11'] },
+        },
+      }).length
+    ).toBe(5)
 
-  it('debe retornar false cuando la fecha está fuera del rango', () => {
-    expect(filter.evaluate(new Date('2023-12-31'))).toBe(false)
-    expect(filter.evaluate(new Date('2024-02-01'))).toBe(false)
-  })
+    expect(
+      filter.findMany({
+        where: {
+          date: { between: ['2024-09-02', '2024-09-11'] },
+        },
+      }).length
+    ).toBe(4)
 
-  it('debe retornar false cuando la fecha es igual al inicio del rango pero está fuera del rango inferior', () => {
-    expect(filter.evaluate(startDate)).toBe(true)
-  })
-
-  it('debe retornar false cuando la fecha es igual al final del rango pero está fuera del rango superior', () => {
-    expect(filter.evaluate(endDate)).toBe(true)
-  })
-
-  it('debe retornar false cuando el valor no es una fecha', () => {
-    expect(filter.evaluate('2024-01-10')).toBe(false)
-    expect(filter.evaluate(1234567890)).toBe(false)
-    expect(filter.evaluate([])).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-  })
-
-  it('debe manejar correctamente el rango con la misma fecha en ambos extremos', () => {
-    const singleDateFilter = new BetweenFilter(startDate, startDate)
-    expect(singleDateFilter.evaluate(startDate)).toBe(true)
-    expect(singleDateFilter.evaluate(new Date('2024-01-02'))).toBe(false)
+    expect(
+      filter.findMany({
+        where: {
+          date: { between: ['2024-09-01', '2024-09-10'] },
+        },
+      }).length
+    ).toBe(4)
   })
 })
