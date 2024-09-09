@@ -25,9 +25,9 @@ export interface FilterKeys<T, K extends keyof T = keyof T> {
   after?: T[K] extends DateOrNumber ? DateOrNumber : never
   between?: T[K] extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
 
-  some?: { [U in keyof T[K]]?: FilterKeys<U> }
-  none?: { [U in keyof T[K]]?: FilterKeys<U> }
-  every?: { [U in keyof T[K]]?: FilterKeys<U> }
+  some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
 
   has?: T[K] extends Array<infer U> ? U : never
   hasEvery?: T[K] extends Array<infer U> ? U[] : never
@@ -42,10 +42,8 @@ export interface FilterKeys<T, K extends keyof T = keyof T> {
   distinct?: boolean
 }
 
-export type FilterOptions<T> = { [K in keyof T]?: FilterKeys<T, K> }
-
-export type FilterQuery<T> = {
-  where: FilterOptions<T>
+export type FilterOptions<T> = {
+  where: {
+    [K in keyof T]?: FilterKeys<T, K>
+  }
 }
-
-// include

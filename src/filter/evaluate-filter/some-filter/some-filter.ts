@@ -1,12 +1,13 @@
-import { FilterOptions } from '../../filter.interface'
+import { FilterKeys, FilterOptions } from '../../filter.interface'
 import { EvaluateFilter } from '../evaluate-filter.interface'
-import { matchesFilter } from '../matches-filter'
+import { findUnique } from '../find-unique'
 
 export class SomeFilter<T> implements EvaluateFilter {
-  constructor(private filterKeys: FilterOptions<T>) {}
+  constructor(private filterKeys: FilterKeys<T>) {}
 
-  evaluate(value: any): boolean {
-    const isValid: boolean = matchesFilter<T>(this.filterKeys, value)
+  evaluate(data: T[]): boolean {
+    const filter = { where: this.filterKeys } as FilterOptions<T>
+    const isValid: boolean = Boolean(findUnique(filter, data))
     return isValid
   }
 }
