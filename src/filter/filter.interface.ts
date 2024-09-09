@@ -2,7 +2,7 @@ export const MODE_INSENSITIVE = 'insensitive' as const
 
 export type DateOrNumber = Date | number | string
 
-export interface FilterKeys<T, K extends keyof T> {
+export interface FilterKeys<T, K extends keyof T = keyof T> {
   equals?: T[K] | null
   not?: T[K] | FilterKeys<T, K> | null
   in?: T[K][]
@@ -25,9 +25,9 @@ export interface FilterKeys<T, K extends keyof T> {
   after?: T[K] extends DateOrNumber ? DateOrNumber : never
   between?: T[K] extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
 
-  some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
-  none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
-  every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  some?: { [U in keyof T[K]]?: FilterKeys<U> }
+  none?: { [U in keyof T[K]]?: FilterKeys<U> }
+  every?: { [U in keyof T[K]]?: FilterKeys<U> }
 
   has?: T[K] extends Array<infer U> ? U : never
   hasEvery?: T[K] extends Array<infer U> ? U[] : never
@@ -42,8 +42,10 @@ export interface FilterKeys<T, K extends keyof T> {
   distinct?: boolean
 }
 
-export type FilterOptions<T> = {
-  where: {
-    [K in keyof T]?: FilterKeys<T, K>
-  }
+export type FilterOptions<T> = { [K in keyof T]?: FilterKeys<T, K> }
+
+export type FilterQuery<T> = {
+  where: FilterOptions<T>
 }
+
+// include

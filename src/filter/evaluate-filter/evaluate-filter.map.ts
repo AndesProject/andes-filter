@@ -25,38 +25,68 @@ import { RegexFilter } from './regex-filter'
 import { SomeFilter } from './some-filter'
 import { StartsWithFilter } from './starts-with-filter'
 
-export function createFilterClassMap<T>() {
-  return {
-    equals: EqualityFilter,
-    not: InequalityFilter,
-    in: InclusionFilter,
-    notIn: ExclusionFilter,
-    lt: LessThanFilter,
-    lte: LessThanOrEqualFilter,
-    gt: GreaterThanFilter,
-    gte: GreaterThanOrEqualFilter,
-    contains: ContainsFilter,
-    notContains: NotContainsFilter,
-    startsWith: StartsWithFilter,
-    notStartsWith: NotStartsWithFilter,
-    endsWith: EndsWithFilter,
-    notEndsWith: NotEndsWithFilter,
-    mode: InsensitiveModeFilter,
-    regex: RegexFilter,
-    before: BeforeFilter,
-    after: AfterFilter,
-    between: BetweenFilter,
-    some: SomeFilter,
-    none: NoneFilter,
-    every: EveryFilter,
+export function createFilterClassMap<T>(
+  type: keyof FilterKeys<T>,
+  filter: any,
+  insensitive?: boolean
+): any {
+  switch (type) {
+    case 'equals':
+      return new EqualityFilter(filter)
+    case 'not':
+      return new InequalityFilter(filter)
+    case 'in':
+      return new InclusionFilter(filter)
+    case 'notIn':
+      return new ExclusionFilter(filter)
+    case 'lt':
+      return new LessThanFilter(filter)
+    case 'lte':
+      return new LessThanOrEqualFilter(filter)
+    case 'gt':
+      return new GreaterThanFilter(filter)
+    case 'gte':
+      return new GreaterThanOrEqualFilter(filter)
+    case 'contains':
+      return new ContainsFilter(filter, insensitive)
+    case 'notContains':
+      return new NotContainsFilter(filter, insensitive)
+    case 'startsWith':
+      return new StartsWithFilter(filter, insensitive)
+    case 'notStartsWith':
+      return new NotStartsWithFilter(filter, insensitive)
+    case 'endsWith':
+      return new EndsWithFilter(filter, insensitive)
+    case 'notEndsWith':
+      return new NotEndsWithFilter(filter, insensitive)
+    case 'mode':
+      return new InsensitiveModeFilter(filter)
+    case 'regex':
+      return new RegexFilter(filter)
+    case 'before':
+      return new BeforeFilter(filter)
+    case 'after':
+      return new AfterFilter(filter)
+    case 'between':
+      return new BetweenFilter(filter)
+    case 'some':
+      return new SomeFilter(filter)
+    case 'none':
+      return new NoneFilter(filter)
+    case 'every':
+      return new EveryFilter(filter)
     // has
     // hasEvery
     // hasSome
     // length
-    AND: AndFilterGroup,
-    OR: OrFilterGroup,
-    NOT: NotFilterGroup,
+    case 'AND':
+      return new AndFilterGroup(filter)
+    case 'OR':
+      return new OrFilterGroup(filter)
+    case 'NOT':
+      return new NotFilterGroup(filter)
     // isNull
     // distinct
-  } as { [key in keyof FilterKeys<T, keyof T>]: any }
+    // include
+  }
 }

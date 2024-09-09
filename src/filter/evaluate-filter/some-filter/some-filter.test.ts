@@ -1,38 +1,40 @@
-import { describe, expect, it, vi } from 'vitest'
-import { FilterKeys } from '../../filter.interface'
-import { FilterEvaluator } from '../evaluate-filter'
-import { SomeFilter } from './some-filter'
+import { describe, expect, it } from 'vitest'
+import { filterFrom } from '../../filter-from'
 
-// Mock para FilterEvaluator
-vi.mock('../evaluate-filter', () => ({
-  FilterEvaluator: vi.fn().mockImplementation(() => ({
-    evaluate: vi.fn(),
-  })),
-}))
+describe('SomeFilter', () => {
+  it('string', () => {
+    interface Post {
+      title: string
+    }
 
-describe('ArraySomeFilter', () => {
-  const mockFilterKey: FilterKeys<any> = {} // Configura un valor adecuado según tu implementación
-  const mockEvaluator = new FilterEvaluator(mockFilterKey)
-  const arraySomeFilter = new SomeFilter(mockFilterKey)
+    interface User {
+      name: string
+      posts: Post
+    }
 
-  it('debe retornar false si el valor no es un array', () => {
-    const mockEvaluate = vi.fn()
-    mockEvaluator.evaluate = mockEvaluate
+    const filter = filterFrom<User>([
+      { name: 'Alice', posts: { title: 'a' } },
+      { name: 'Alice', posts: { title: 'b' } },
+      { name: 'Bob', posts: { title: 'c' } },
+      { name: 'Charlie', posts: { title: 'd' } },
+      { name: 'David', posts: { title: 'e' } },
+      { name: 'Eva', posts: { title: 'f' } },
+      { name: 'Frank', posts: { title: 'g' } },
+      { name: 'Grace', posts: { title: 'a' } },
+    ])
 
-    expect(arraySomeFilter.evaluate('not an array')).toBe(false)
-    expect(arraySomeFilter.evaluate(123)).toBe(false)
-    expect(arraySomeFilter.evaluate({})).toBe(false)
-    expect(arraySomeFilter.evaluate(null)).toBe(false)
-    expect(arraySomeFilter.evaluate(undefined)).toBe(false)
-    expect(mockEvaluate).not.toHaveBeenCalled()
-  })
-
-  it('debe manejar correctamente un array vacío', () => {
-    const mockEvaluate = vi.fn()
-    mockEvaluator.evaluate = mockEvaluate
-
-    const array: any[] = []
-    expect(arraySomeFilter.evaluate(array)).toBe(false)
-    expect(mockEvaluate).not.toHaveBeenCalled()
+    expect(
+      filter.findMany({
+        where: {
+          posts: {
+            some: {
+              title: {
+                equals: 'a',
+              },
+            },
+          },
+        },
+      }).length
+    ).toBe(2)
   })
 })

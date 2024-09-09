@@ -1,13 +1,12 @@
-import { FilterKeys } from '../../filter.interface'
-import { FilterEvaluator } from '../evaluate-filter'
+import { FilterOptions } from '../../filter.interface'
 import { EvaluateFilter } from '../evaluate-filter.interface'
+import { matchesFilter } from '../matches-filter'
 
 export class SomeFilter<T> implements EvaluateFilter {
-  constructor(private filterKey: FilterKeys<T, keyof T>) {}
+  constructor(private filterKeys: FilterOptions<T>) {}
 
   evaluate(value: any): boolean {
-    if (!Array.isArray(value)) return false
-    const evaluator = new FilterEvaluator(this.filterKey)
-    return value.some(v => evaluator.evaluate(v))
+    const isValid: boolean = matchesFilter<T>(this.filterKeys, value)
+    return isValid
   }
 }
