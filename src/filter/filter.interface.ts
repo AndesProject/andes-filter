@@ -42,7 +42,7 @@ export interface FilterKeys<T, K extends keyof T = keyof T> {
   distinct?: boolean
 }
 
-export type FilterOptions<T> = {
+export type FilterQuery<T> = {
   where: {
     [K in keyof T]?: FilterKeys<T, K>
   }

@@ -1,26 +1,27 @@
 {
   "name": "@andes/filter",
   "version": "1.0.0",
-  "author": "AndesProject",
-  "license": "ISC",
-  "description": "",
-  "main": "dist/bundle.js",
-  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "webpack",
+    "start": "webpack watch --mode development",
+    "build": "webpack --mode production",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
-    "test": "npx vitest run --watch=false",
+    "test": "npx vitest --coverage --watch=false",
     "test:watch": "npx vitest --watch --coverage",
     "test:coverage": "npx vitest --coverage",
     "prepare": "husky"
   },
-  "files": [
-    "dist/**/*"
-  ],
   "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "engines": {
-    "node": ">=18.20.4"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.5",
