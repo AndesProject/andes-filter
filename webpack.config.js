@@ -1,29 +1,36 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
-const myPackage = require('./package.json')
-const library = myPackage.name
+const dotenv = require('dotenv')
+const webpack = require('webpack')
+
+dotenv.config()
 
 module.exports = {
+  mode: 'development',
   entry: './src/index.ts',
+  devtool: 'source-map',
   output: {
-    filename: 'bundle.js',
+    filename: 'index.js',
+    publicPath: 'auto',
     path: path.resolve(__dirname, 'dist'),
-    library,
-    libraryTarget: 'umd',
+    library: {
+      type: 'umd',
+    },
     globalObject: 'this',
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    alias: {
+      '@app': path.resolve(__dirname, 'src/'),
+    },
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.(ts|tsx)$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
-  externals: [nodeExternals()],
-  target: ['web', 'es5'],
+  plugins: [new webpack.DefinePlugin({})],
 }
