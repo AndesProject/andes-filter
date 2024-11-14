@@ -1,7 +1,7 @@
 import { FilterKeys } from '../filter.interface'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
-import { StringInsensitiveModeFilter } from './string-insensitive-mode-filter'
+import { InsensitiveModeFilter } from './insensitive-mode-filter'
 
 export class FilterEvaluator<T> {
   private filters: EvaluateFilter[] = []
@@ -10,18 +10,9 @@ export class FilterEvaluator<T> {
     this.initializeFilters()
   }
 
-  private getFilterClass(key: string) {
-    const typedKey = key as keyof FilterKeys<T, keyof T>
-    const filterClassMap = createFilterClassMap<T>()
-    return filterClassMap[typedKey]
-  }
-
-  private getFilterInstance(key: string, value: any): EvaluateFilter | null {
-    const FilterClass = this.getFilterClass(key)
-    if (!FilterClass) return null
-
-    const filterInstance: EvaluateFilter = new FilterClass(value)
-    return filterInstance
+  private getFilterClass<T>(type: string, filter: any, insensitive?: boolean) {
+    const key = type as keyof FilterKeys<T>
+    return createFilterClassMap<T>(key, filter, insensitive)
   }
 
   private initializeFilters(): void {
@@ -34,25 +25,31 @@ export class FilterEvaluator<T> {
 
   private handleModeKey(): void {
     const stringFilters: EvaluateFilter[] = []
-    const stringFilterKeys: string[] = ['contains', 'startsWith', 'endsWith']
+    const stringFilterKeys: string[] = [
+      'contains',
+      'notContains',
+      'startsWith',
+      'notStartsWith',
+      'endsWith',
+      'notEndsWith',
+    ]
     const filterKeys = Object.keys(this.filterKeys).filter(key => key !== 'mode')
 
     filterKeys.forEach(key => {
       const value = this.getFilterKeyValue(key)
       if (stringFilterKeys.includes(key)) {
-        const FilterInstance = this.getFilterClass(key)
-        stringFilters.push(new FilterInstance(value, true))
+        stringFilters.push(this.getFilterClass(key, value, true))
       } else {
         this.addFilterInstance(key, value)
       }
     })
 
-    const modeFilterClass = new StringInsensitiveModeFilter(stringFilters)
+    const modeFilterClass = new InsensitiveModeFilter(stringFilters)
     this.filters.push(modeFilterClass)
   }
 
   private addFilterInstance(key: string, value: any): void {
-    const filterInstance = this.getFilterInstance(key, value)
+    const filterInstance = this.getFilterClass(key, value)
     if (filterInstance) {
       this.filters.push(filterInstance)
     }
