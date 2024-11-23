@@ -1,10 +1,10 @@
 import { findMany } from './evaluate-filter/find-many'
 import { findUnique } from './evaluate-filter/find-unique'
-import { FilterQuery } from './filter.interface'
+import { FilterMethods, QueryFilter } from './filter.interface'
 
-export function filterFrom<T>(data: T[]) {
+export function filterFrom<T>(data: T[]): FilterMethods<T> {
   return {
-    findMany: (options: FilterQuery<T>) => findMany(options, data),
-    findUnique: (options: FilterQuery<T>) => findUnique(options, data),
+    findMany: (options: QueryFilter<T>) => findMany(options, data),
+    findUnique: (options: QueryFilter<T>) => findUnique(options, data),
   }
 }

@@ -2,9 +2,9 @@ export const MODE_INSENSITIVE = 'insensitive' as const
 
 export type DateOrNumber = Date | number | string
 
-export interface FilterKeys<T, K extends keyof T = keyof T> {
+export interface QueryOption<T, K extends keyof T = keyof T> {
   equals?: T[K] | null
-  not?: T[K] | FilterKeys<T, K> | null
+  not?: T[K] | QueryOption<T, K> | null
   in?: T[K][]
   notIn?: T[K][]
   lt?: T[K]
@@ -25,25 +25,42 @@ export interface FilterKeys<T, K extends keyof T = keyof T> {
   after?: T[K] extends DateOrNumber ? DateOrNumber : never
   between?: T[K] extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
 
-  some?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
-  none?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
-  every?: T[K] extends object ? FilterKeys<T[K], keyof T[K]> : never
+  some?: T[K] extends object ? QueryOption<T[K], keyof T[K]> : never
+  none?: T[K] extends object ? QueryOption<T[K], keyof T[K]> : never
+  every?: T[K] extends object ? QueryOption<T[K], keyof T[K]> : never
 
   has?: T[K] extends Array<infer U> ? U : never
   hasEvery?: T[K] extends Array<infer U> ? U[] : never
   hasSome?: T[K] extends Array<infer U> ? U[] : never
   length?: T[K] extends Array<any> ? number : never
 
-  AND?: FilterKeys<T, K>[]
-  OR?: FilterKeys<T, K>[]
-  NOT?: FilterKeys<T, K>[]
+  AND?: QueryOption<T, K>[]
+  OR?: QueryOption<T, K>[]
+  NOT?: QueryOption<T, K>[]
 
   isNull?: boolean
   distinct?: boolean
 }
 
-export type FilterQuery<T> = {
-  where: {
-    [K in keyof T]?: FilterKeys<T, K>
+export interface QueryResponse<T> {
+  data: T[]
+  pagination: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalItems: number
   }
+}
+
+export type QueryFilter<T> = {
+  where: {
+    [K in keyof T]?: QueryOption<T, K>
+  }
+  pagination?: { page: number; limit: number }
+  orderBy?: { [K in keyof T]?: 'asc' | 'desc' }
+}
+
+export interface FilterMethods<T> {
+  findMany: (options: QueryFilter<T>) => QueryResponse<T>
+  findUnique: (options: QueryFilter<T>) => T | null
 }

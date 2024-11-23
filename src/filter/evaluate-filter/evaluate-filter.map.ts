@@ -1,4 +1,4 @@
-import { FilterKeys } from '../filter.interface'
+import { QueryOption } from '../filter.interface'
 import { AfterFilter } from './after-filter'
 import { AndFilterGroup } from './and-filter-group'
 import { BeforeFilter } from './before-filter'
@@ -26,7 +26,7 @@ import { SomeFilter } from './some-filter'
 import { StartsWithFilter } from './starts-with-filter'
 
 export function createFilterClassMap<T>(
-  type: keyof FilterKeys<T>,
+  type: keyof QueryOption<T>,
   filter: any,
   insensitive?: boolean
 ): any {

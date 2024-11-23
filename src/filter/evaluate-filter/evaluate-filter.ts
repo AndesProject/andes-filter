@@ -1,4 +1,4 @@
-import { FilterKeys } from '../filter.interface'
+import { QueryOption } from '../filter.interface'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
 import { InsensitiveModeFilter } from './insensitive-mode-filter'
@@ -6,12 +6,12 @@ import { InsensitiveModeFilter } from './insensitive-mode-filter'
 export class FilterEvaluator<T> {
   private filters: EvaluateFilter[] = []
 
-  constructor(private filterKeys: FilterKeys<T, keyof T>) {
+  constructor(private filterKeys: QueryOption<T, keyof T>) {
     this.initializeFilters()
   }
 
   private getFilterClass<T>(type: string, filter: any, insensitive?: boolean) {
-    const key = type as keyof FilterKeys<T>
+    const key = type as keyof QueryOption<T>
     return createFilterClassMap<T>(key, filter, insensitive)
   }
 
@@ -33,7 +33,9 @@ export class FilterEvaluator<T> {
       'endsWith',
       'notEndsWith',
     ]
-    const filterKeys = Object.keys(this.filterKeys).filter(key => key !== 'mode')
+    const filterKeys = Object.keys(this.filterKeys).filter(
+      key => key !== 'mode'
+    )
 
     filterKeys.forEach(key => {
       const value = this.getFilterKeyValue(key)
@@ -56,7 +58,7 @@ export class FilterEvaluator<T> {
   }
 
   private getFilterKeyValue(key: string): any {
-    const typedKey = key as keyof FilterKeys<T, keyof T>
+    const typedKey = key as keyof QueryOption<T, keyof T>
     return this.filterKeys[typedKey]
   }
 
