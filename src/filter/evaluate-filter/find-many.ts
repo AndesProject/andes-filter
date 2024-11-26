@@ -1,10 +1,10 @@
-import { QueryFilter, QueryResponse } from '../filter.interface'
+import { FindManyQueryResponse, QueryFilter } from '../filter.interface'
 import { matchesFilter } from './matches-filter'
 
 export function findMany<T>(
   filter: QueryFilter<T>,
   data: T[]
-): QueryResponse<T> {
+): FindManyQueryResponse<T> {
   const items = data.filter(item => matchesFilter(filter.where, item))
 
   return {

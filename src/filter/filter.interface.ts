@@ -42,7 +42,7 @@ export interface QueryOption<T, K extends keyof T = keyof T> {
   distinct?: boolean
 }
 
-export interface QueryResponse<T> {
+export interface FindManyQueryResponse<T> {
   data: T[]
   pagination: {
     currentPage: number
@@ -51,6 +51,8 @@ export interface QueryResponse<T> {
     totalItems: number
   }
 }
+
+export type FindUniqueQueryResponse<T> = T | null
 
 export type QueryFilter<T> = {
   where: {
@@ -61,6 +63,6 @@ export type QueryFilter<T> = {
 }
 
 export interface FilterMethods<T> {
-  findMany: (options: QueryFilter<T>) => QueryResponse<T>
-  findUnique: (options: QueryFilter<T>) => T | null
+  findMany: (options: QueryFilter<T>) => FindManyQueryResponse<T>
+  findUnique: (options: QueryFilter<T>) => FindUniqueQueryResponse<T>
 }
