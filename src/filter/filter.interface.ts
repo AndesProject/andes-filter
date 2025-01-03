@@ -42,24 +42,33 @@ export interface QueryOption<T, K extends keyof T = keyof T> {
   distinct?: boolean
 }
 
+export interface QueryResponsePagination {
+  currentPage: number
+  pageSize: number
+  totalPages: number
+  totalItems: number
+}
+
 export interface FindManyQueryResponse<T> {
   data: T[]
-  pagination: {
-    currentPage: number
-    pageSize: number
-    totalPages: number
-    totalItems: number
-  }
+  pagination: QueryResponsePagination
 }
 
 export type FindUniqueQueryResponse<T> = T | null
+
+export enum QueryFilterOrderByEnum {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export type QueryFilterPagination = { page: number; limit: number }
 
 export type QueryFilter<T> = {
   where: {
     [K in keyof T]?: QueryOption<T, K>
   }
-  pagination?: { page: number; limit: number }
-  orderBy?: { [K in keyof T]?: 'asc' | 'desc' }
+  pagination?: QueryFilterPagination
+  orderBy?: { [K in keyof T]?: QueryFilterOrderByEnum }
 }
 
 export interface FilterMethods<T> {
