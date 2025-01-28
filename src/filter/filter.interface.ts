@@ -51,7 +51,7 @@ export interface QueryResponsePagination {
 
 export interface FindManyQueryResponse<T> {
   data: T[]
-  pagination: QueryResponsePagination
+  pagination?: QueryResponsePagination | any
 }
 
 export type FindUniqueQueryResponse<T> = T | null
