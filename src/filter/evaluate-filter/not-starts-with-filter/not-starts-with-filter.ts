@@ -8,7 +8,9 @@ export class NotStartsWithFilter implements EvaluateFilter {
 
   evaluate(input: string): boolean {
     const compareInput = this.insensitive ? input.toLowerCase() : input
-    const compareValue = this.insensitive ? this.value.toLowerCase() : this.value
+    const compareValue = this.insensitive
+      ? this.value.toLowerCase()
+      : this.value
     return !compareInput.startsWith(compareValue)
   }
 }

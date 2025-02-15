@@ -15,7 +15,7 @@ module.exports = {
     library: {
       type: 'umd',
     },
-    globalObject: 'this',
+    globalObject: "typeof self !== 'undefined' ? self : this",
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
