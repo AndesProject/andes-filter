@@ -1,5 +1,10 @@
-import { FindManyQueryResponse, QueryFilter } from '../filter.interface'
+import {
+  FindManyQueryResponse,
+  QueryFilter,
+  QueryFilterPagination,
+} from '../filter.interface'
 import { matchesFilter } from './matches-filter'
+import { paginateArray } from './paginator'
 import { sortObjects } from './sort-objects'
 
 export function findMany<T>(
@@ -8,14 +13,11 @@ export function findMany<T>(
 ): FindManyQueryResponse<T> {
   const result = data.filter(item => matchesFilter(filter.where, item))
   const items = sortObjects(result, filter.orderBy || {})
+  return paginateArray(items, getQueryFilterPagination(filter))
+}
 
-  return {
-    data: items,
-    pagination: {
-      currentPage: 0,
-      pageSize: 0,
-      totalItems: items.length,
-      totalPages: 0,
-    },
-  }
+function getQueryFilterPagination<T>(
+  filter: QueryFilter<T>
+): QueryFilterPagination {
+  return filter?.pagination || { page: 1, size: 24 }
 }
