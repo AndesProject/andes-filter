@@ -1,11 +1,15 @@
 {
-  "name": "@andes/filter",
+  "name": "@andes-project/filter",
   "version": "1.0.0",
+  "private": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "webpack watch --mode development",
     "build": "webpack --mode production",
