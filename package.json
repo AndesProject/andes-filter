@@ -1,5 +1,5 @@
 {
-  "name": "@andes-project/filter",
+  "name": "@andes/filter",
   "version": "1.0.0",
   "private": false,
   "main": "dist/index.js",
