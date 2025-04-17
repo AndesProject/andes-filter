@@ -17,21 +17,43 @@ describe('EqualityFilter', () => {
       { name: 'Jasmine' },
     ])
 
-    expect(filter.findMany({ where: { name: { equals: 'Bob' } } }).length).toBe(1)
-    expect(filter.findMany({ where: { name: { equals: 'Mariana' } } }).length).toBe(0)
-    expect(filter.findMany({ where: { name: { equals: 'Alice' } } }).length).toBe(2)
-    expect(filter.findMany({ where: { name: { equals: 'eva' } } }).length).toBe(0)
-    expect(filter.findMany({ where: { name: { equals: 'ank' } } }).length).toBe(0)
-    expect(filter.findMany({ where: { name: { equals: null } } }).length).toBe(0)
-    expect(filter.findMany({ where: { name: { equals: undefined } } }).length).toBe(0)
+    expect(filter.findMany({ where: { name: { equals: 'Bob' } } }).length).toBe(
+      1
+    )
+    expect(
+      filter.findMany({ where: { name: { equals: 'Mariana' } } }).length
+    ).toBe(0)
+    expect(
+      filter.findMany({ where: { name: { equals: 'Alice' } } }).length
+    ).toBe(2)
+    expect(filter.findMany({ where: { name: { equals: 'eva' } } }).length).toBe(
+      0
+    )
+    expect(filter.findMany({ where: { name: { equals: 'ank' } } }).length).toBe(
+      0
+    )
+    expect(filter.findMany({ where: { name: { equals: null } } }).length).toBe(
+      0
+    )
+    expect(
+      filter.findMany({ where: { name: { equals: undefined } } }).length
+    ).toBe(0)
     expect(filter.findMany({ where: { name: { equals: '' } } }).length).toBe(0)
 
     expect(filter.findUnique({ where: { name: { equals: '' } } })).toBe(null)
     expect(filter.findUnique({ where: { name: { equals: null } } })).toBe(null)
-    expect(filter.findUnique({ where: { name: { equals: undefined } } })).toBe(null)
-    expect(filter.findUnique({ where: { name: { equals: 'Mariana' } } })).toBe(null)
-    expect(filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name).toBe('Bob')
-    expect(filter.findUnique({ where: { name: { equals: 'Alice' } } })?.name).toBe('Alice')
+    expect(filter.findUnique({ where: { name: { equals: undefined } } })).toBe(
+      null
+    )
+    expect(filter.findUnique({ where: { name: { equals: 'Mariana' } } })).toBe(
+      null
+    )
+    expect(
+      filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name
+    ).toBe('Bob')
+    expect(
+      filter.findUnique({ where: { name: { equals: 'Alice' } } })?.name
+    ).toBe('Alice')
   })
 
   it('boolean', () => {
@@ -41,10 +63,18 @@ describe('EqualityFilter', () => {
       { isValid: false },
     ])
 
-    expect(filter.findMany({ where: { isValid: { equals: true } } }).length).toBe(1)
-    expect(filter.findMany({ where: { isValid: { equals: false } } }).length).toBe(2)
-    expect(filter.findMany({ where: { isValid: { equals: null } } }).length).toBe(0)
-    expect(filter.findMany({ where: { isValid: { equals: undefined } } }).length).toBe(0)
+    expect(
+      filter.findMany({ where: { isValid: { equals: true } } }).length
+    ).toBe(1)
+    expect(
+      filter.findMany({ where: { isValid: { equals: false } } }).length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { isValid: { equals: null } } }).length
+    ).toBe(0)
+    expect(
+      filter.findMany({ where: { isValid: { equals: undefined } } }).length
+    ).toBe(0)
   })
 
   it('numeric', () => {
@@ -61,7 +91,11 @@ describe('EqualityFilter', () => {
     expect(filter.findMany({ where: { size: { equals: 0 } } }).length).toBe(0)
     expect(filter.findMany({ where: { size: { equals: 1 } } }).length).toBe(0)
     expect(filter.findMany({ where: { size: { equals: 12 } } }).length).toBe(2)
-    expect(filter.findMany({ where: { size: { equals: null } } }).length).toBe(0)
-    expect(filter.findMany({ where: { size: { equals: undefined } } }).length).toBe(0)
+    expect(filter.findMany({ where: { size: { equals: null } } }).length).toBe(
+      0
+    )
+    expect(
+      filter.findMany({ where: { size: { equals: undefined } } }).length
+    ).toBe(0)
   })
 })

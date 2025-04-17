@@ -17,15 +17,33 @@ describe('ExclusionFilter', () => {
       { name: 'Jasmine' },
     ])
 
-    expect(filter.findMany({ where: { name: { notIn: [''] } } }).length).toBe(11)
-    expect(filter.findMany({ where: { name: { notIn: ['Alice'] } } }).length).toBe(9)
-    expect(filter.findMany({ where: { name: { notIn: ['Alice', 'Bob'] } } }).length).toBe(8)
-    expect(filter.findMany({ where: { name: { notIn: ['David'] } } }).length).toBe(10)
+    expect(filter.findMany({ where: { name: { notIn: [''] } } }).length).toBe(
+      11
+    )
+    expect(
+      filter.findMany({ where: { name: { notIn: ['Alice'] } } }).length
+    ).toBe(9)
+    expect(
+      filter.findMany({ where: { name: { notIn: ['Alice', 'Bob'] } } }).length
+    ).toBe(8)
+    expect(
+      filter.findMany({ where: { name: { notIn: ['David'] } } }).length
+    ).toBe(10)
 
-    expect(filter.findUnique({ where: { name: { notIn: [''] } } })?.name).toBe('Alice')
-    expect(filter.findUnique({ where: { name: { notIn: ['David'] } } })?.name).toBe('Alice')
-    expect(filter.findUnique({ where: { name: { notIn: ['David', 'Alice'] } } })?.name).toBe('Bob')
-    expect(filter.findUnique({ where: { name: { notIn: ['Alice', 'David'] } } })?.name).toBe('Bob')
+    expect(filter.findUnique({ where: { name: { notIn: [''] } } })?.name).toBe(
+      'Alice'
+    )
+    expect(
+      filter.findUnique({ where: { name: { notIn: ['David'] } } })?.name
+    ).toBe('Alice')
+    expect(
+      filter.findUnique({ where: { name: { notIn: ['David', 'Alice'] } } })
+        ?.name
+    ).toBe('Bob')
+    expect(
+      filter.findUnique({ where: { name: { notIn: ['Alice', 'David'] } } })
+        ?.name
+    ).toBe('Bob')
   })
 
   it('number', () => {
@@ -39,12 +57,16 @@ describe('ExclusionFilter', () => {
 
     expect(filter.findMany({ where: { size: { notIn: [0] } } }).length).toBe(3)
     expect(filter.findMany({ where: { size: { notIn: [1] } } }).length).toBe(4)
-    expect(filter.findMany({ where: { size: { notIn: [0, 1] } } }).length).toBe(2)
+    expect(filter.findMany({ where: { size: { notIn: [0, 1] } } }).length).toBe(
+      2
+    )
     expect(filter.findMany({ where: { size: { notIn: [2] } } }).length).toBe(4)
 
     expect(filter.findUnique({ where: { size: { notIn: [0] } } })?.size).toBe(1)
     expect(filter.findUnique({ where: { size: { notIn: [1] } } })?.size).toBe(0)
-    expect(filter.findUnique({ where: { size: { notIn: [0, 1] } } })?.size).toBe(2)
+    expect(
+      filter.findUnique({ where: { size: { notIn: [0, 1] } } })?.size
+    ).toBe(2)
   })
 
   it('boolean', () => {
@@ -56,14 +78,25 @@ describe('ExclusionFilter', () => {
       { isValid: false },
     ])
 
-    expect(filter.findMany({ where: { isValid: { notIn: [true] } } }).length).toBe(2)
-    expect(filter.findMany({ where: { isValid: { notIn: [false] } } }).length).toBe(3)
-    expect(filter.findMany({ where: { isValid: { notIn: [false, true] } } }).length).toBe(0)
+    expect(
+      filter.findMany({ where: { isValid: { notIn: [true] } } }).length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { isValid: { notIn: [false] } } }).length
+    ).toBe(3)
+    expect(
+      filter.findMany({ where: { isValid: { notIn: [false, true] } } }).length
+    ).toBe(0)
 
-    expect(filter.findUnique({ where: { isValid: { notIn: [true] } } })?.isValid).toBe(false)
-    expect(filter.findUnique({ where: { isValid: { notIn: [false] } } })?.isValid).toBe(true)
-    expect(filter.findUnique({ where: { isValid: { notIn: [true, false] } } })?.isValid).toBe(
-      undefined
-    )
+    expect(
+      filter.findUnique({ where: { isValid: { notIn: [true] } } })?.isValid
+    ).toBe(false)
+    expect(
+      filter.findUnique({ where: { isValid: { notIn: [false] } } })?.isValid
+    ).toBe(true)
+    expect(
+      filter.findUnique({ where: { isValid: { notIn: [true, false] } } })
+        ?.isValid
+    ).toBe(undefined)
   })
 })

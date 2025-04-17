@@ -13,9 +13,13 @@ describe('BeforeFilter', () => {
       { date: new Date(now.getTime() + 1000) },
     ])
 
-    expect(filter.findMany({ where: { date: { before: new Date() } } }).length).toBe(2)
     expect(
-      filter.findMany({ where: { date: { before: new Date(now.getTime() + 1000) } } }).length
+      filter.findMany({ where: { date: { before: new Date() } } }).length
+    ).toBe(2)
+    expect(
+      filter.findMany({
+        where: { date: { before: new Date(now.getTime() + 1000) } },
+      }).length
     ).toBe(4)
     expect(filter.findMany({ where: { date: { before: 0 } } }).length).toBe(0)
   })
@@ -32,7 +36,9 @@ describe('BeforeFilter', () => {
     ])
 
     expect(filter.findMany({ where: { date: { before: now } } }).length).toBe(2)
-    expect(filter.findMany({ where: { date: { before: now + 1000 } } }).length).toBe(4)
+    expect(
+      filter.findMany({ where: { date: { before: now + 1000 } } }).length
+    ).toBe(4)
   })
 
   it('string', () => {

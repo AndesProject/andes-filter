@@ -19,7 +19,9 @@ describe('LessThanOrEqualFilter', () => {
     expect(filter.findMany({ where: { size: { lte: 3 } } }).length).toBe(7)
     expect(filter.findMany({ where: { size: { lte: 100 } } }).length).toBe(7)
 
-    expect(filter.findUnique({ where: { size: { lte: -3 } } })?.size).toBe(undefined)
+    expect(filter.findUnique({ where: { size: { lte: -3 } } })?.size).toBe(
+      undefined
+    )
     expect(filter.findUnique({ where: { size: { lte: -2 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lte: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lte: 100 } } })?.size).toBe(-2)

@@ -19,7 +19,9 @@ describe('LessThanFilter', () => {
     expect(filter.findMany({ where: { size: { lt: 3 } } }).length).toBe(6)
     expect(filter.findMany({ where: { size: { lt: 100 } } }).length).toBe(7)
 
-    expect(filter.findUnique({ where: { size: { lt: -2 } } })?.size).toBe(undefined)
+    expect(filter.findUnique({ where: { size: { lt: -2 } } })?.size).toBe(
+      undefined
+    )
     expect(filter.findUnique({ where: { size: { lt: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lt: 100 } } })?.size).toBe(-2)
   })

@@ -22,6 +22,8 @@ describe('GreaterThanOrEqualFilter', () => {
     expect(filter.findUnique({ where: { size: { gte: -3 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { gte: -2 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { gte: -1 } } })?.size).toBe(-1)
-    expect(filter.findUnique({ where: { size: { gte: 100 } } })?.size).toBe(undefined)
+    expect(filter.findUnique({ where: { size: { gte: 100 } } })?.size).toBe(
+      undefined
+    )
   })
 })

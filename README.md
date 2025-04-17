@@ -29,8 +29,6 @@ Features
   </a>
 </div>
 
-
-
 ### Operadores
 
 #### Operadores de Comparación

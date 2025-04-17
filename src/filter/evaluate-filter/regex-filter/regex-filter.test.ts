@@ -18,7 +18,9 @@ describe('StringRegexFilter', () => {
       { name: 'Gustavo Cerati' },
     ])
 
-    expect(filter.findMany({ where: { name: { regex: '^Alice$' } } }).length).toBe(2)
+    expect(
+      filter.findMany({ where: { name: { regex: '^Alice$' } } }).length
+    ).toBe(2)
     expect(filter.findMany({ where: { name: { regex: '^G' } } }).length).toBe(2)
     expect(filter.findMany({ where: { name: { regex: 'a$' } } }).length).toBe(1)
   })

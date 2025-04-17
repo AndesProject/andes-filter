@@ -19,44 +19,70 @@ describe('InsensitiveModeFilter', () => {
     ])
 
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'CERATI' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'CERATI' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'BOB' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'BOB' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'MARIANA' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'MARIANA' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ALICE' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'ALICE' } },
+      }).length
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'EVA' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'EVA' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ANK' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'ANK' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: ' ' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: ' ' } },
+      }).length
     ).toBe(1)
-    expect(filter.findMany({ where: { name: { mode: 'insensitive', contains: '' } } }).length).toBe(
-      12
-    )
+    expect(
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: '' } },
+      }).length
+    ).toBe(12)
 
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', contains: ' ' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', contains: ' ' } },
+      })?.name
     ).toBe('Gustavo Cerati')
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', contains: '' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', contains: '' } },
+      })?.name
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', contains: 'MARIANA' } } })
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', contains: 'MARIANA' } },
+      })
     ).toBe(null)
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', contains: 'BOB' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', contains: 'BOB' } },
+      })?.name
     ).toBe('Bob')
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', contains: 'ALICE' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', contains: 'ALICE' } },
+      })?.name
     ).toBe('Alice')
   })
 
@@ -77,50 +103,80 @@ describe('InsensitiveModeFilter', () => {
     ])
 
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'CERATI' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'CERATI' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'BOB' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'BOB' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'ALICE' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'ALICE' } },
+      }).length
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'EVA' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'EVA' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'ANK' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'ANK' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: ' ' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: ' ' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: '' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: '' } },
+      }).length
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'A' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'A' } },
+      }).length
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', startsWith: 'GUS' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', startsWith: 'GUS' } },
+      }).length
     ).toBe(1)
 
-    expect(filter.findUnique({ where: { name: { mode: 'insensitive', startsWith: ' ' } } })).toBe(
-      null
-    )
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', startsWith: '' } } })?.name
-    ).toBe('Alice')
-    expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } } })
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', startsWith: ' ' } },
+      })
     ).toBe(null)
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', startsWith: 'BOB' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', startsWith: '' } },
+      })?.name
+    ).toBe('Alice')
+    expect(
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } },
+      })
+    ).toBe(null)
+    expect(
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', startsWith: 'BOB' } },
+      })?.name
     ).toBe('Bob')
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', startsWith: 'ALICE' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', startsWith: 'ALICE' } },
+      })?.name
     ).toBe('Alice')
   })
 
@@ -141,35 +197,55 @@ describe('InsensitiveModeFilter', () => {
     ])
 
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', endsWith: 'ICE' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', endsWith: 'ICE' } },
+      }).length
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', endsWith: 'CERATI' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', endsWith: 'CERATI' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', endsWith: 'DAVID' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', endsWith: 'DAVID' } },
+      }).length
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', endsWith: 'SMI' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', endsWith: 'SMI' } },
+      }).length
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', endsWith: ' ' } } }).length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', endsWith: ' ' } },
+      }).length
     ).toBe(0)
 
-    expect(filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: ' ' } } })).toBe(
-      null
-    )
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: '' } } })?.name
-    ).toBe('Alice')
-    expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: 'MARIANA' } } })
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', endsWith: ' ' } },
+      })
     ).toBe(null)
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: 'BOB' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', endsWith: '' } },
+      })?.name
+    ).toBe('Alice')
+    expect(
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', endsWith: 'MARIANA' } },
+      })
+    ).toBe(null)
+    expect(
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', endsWith: 'BOB' } },
+      })?.name
     ).toBe('Bob')
     expect(
-      filter.findUnique({ where: { name: { mode: 'insensitive', endsWith: 'ALICE' } } })?.name
+      filter.findUnique({
+        where: { name: { mode: 'insensitive', endsWith: 'ALICE' } },
+      })?.name
     ).toBe('Alice')
   })
 
@@ -190,19 +266,28 @@ describe('InsensitiveModeFilter', () => {
     ])
 
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ra', startsWith: 'f' } } })
-        .length
+      filter.findMany({
+        where: {
+          name: { mode: 'insensitive', contains: 'ra', startsWith: 'f' },
+        },
+      }).length
     ).toBe(1)
 
     expect(
-      filter.findMany({ where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } } })
-        .length
+      filter.findMany({
+        where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } },
+      }).length
     ).toBe(2)
 
     expect(
       filter.findMany({
         where: {
-          name: { mode: 'insensitive', contains: 'ra', not: 'Frank', notIn: ['Gustavo Cerati'] },
+          name: {
+            mode: 'insensitive',
+            contains: 'ra',
+            not: 'Frank',
+            notIn: ['Gustavo Cerati'],
+          },
         },
       }).length
     ).toBe(1)

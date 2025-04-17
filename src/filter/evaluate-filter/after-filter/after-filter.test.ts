@@ -13,9 +13,13 @@ describe('AfterFilter', () => {
       { date: new Date(now.getTime() + 1000) },
     ])
 
-    expect(filter.findMany({ where: { date: { after: new Date() } } }).length).toBe(2)
     expect(
-      filter.findMany({ where: { date: { after: new Date(now.getTime() + 1000) } } }).length
+      filter.findMany({ where: { date: { after: new Date() } } }).length
+    ).toBe(2)
+    expect(
+      filter.findMany({
+        where: { date: { after: new Date(now.getTime() + 1000) } },
+      }).length
     ).toBe(1)
     expect(filter.findMany({ where: { date: { after: 0 } } }).length).toBe(5)
   })
@@ -32,7 +36,9 @@ describe('AfterFilter', () => {
     ])
 
     expect(filter.findMany({ where: { date: { after: now } } }).length).toBe(1)
-    expect(filter.findMany({ where: { date: { after: now + 1000 } } }).length).toBe(0)
+    expect(
+      filter.findMany({ where: { date: { after: now + 1000 } } }).length
+    ).toBe(0)
   })
 
   it('string', () => {
