@@ -4,26 +4,21 @@ import { BeforeFilter } from './before-filter'
 
 describe('BeforeFilter', () => {
   it('Date', () => {
-    const now = new Date()
-
+    const fixedDate = new Date('2025-01-01')
     const filter = filterFrom<{ date: Date }>([
       { date: new Date() },
       { date: new Date() },
-      { date: new Date(now.getTime() - 1000) },
-      { date: new Date(now.getTime() - 2000) },
-      { date: new Date(now.getTime() + 1000) },
+      { date: new Date(fixedDate.getTime() - 1000) },
+      { date: new Date(fixedDate.getTime() - 2000) },
+      { date: new Date(fixedDate.getTime() + 1000) },
     ])
 
     expect(
-      filter.findMany({ where: { date: { before: new Date() } } }).data.length
+      filter.findMany({ where: { date: { before: fixedDate } } }).data.length
     ).toBe(2)
     expect(
-      filter.findMany({
-        where: { date: { before: new Date(now.getTime() + 1000) } },
-      }).data.length
-    ).toBe(4)
-    expect(
-      filter.findMany({ where: { date: { before: 0 } } }).data.length
+      filter.findMany({ where: { date: { before: new Date('2020-01-01') } } })
+        .data.length
     ).toBe(0)
   })
 
@@ -92,6 +87,47 @@ describe('BeforeFilter', () => {
     expect(result instanceof Date || typeof result === 'object').toBe(true)
     const result2 = filter.findUnique({ where: { date: { before: 0 } } })
     expect(result2).toBe(null)
+  })
+
+  it('should return true if value is before reference date', () => {
+    const ref = new Date('2023-01-01')
+    const filter = new BeforeFilter(ref)
+    expect(filter.evaluate(new Date('2022-12-31'))).toBe(true)
+  })
+
+  it('should return false if value is after reference date', () => {
+    const ref = new Date('2023-01-01')
+    const filter = new BeforeFilter(ref)
+    expect(filter.evaluate(new Date('2023-02-01'))).toBe(false)
+  })
+
+  it('should return false if value is equal to reference date', () => {
+    const ref = new Date('2023-01-01')
+    const filter = new BeforeFilter(ref)
+    expect(filter.evaluate(new Date('2023-01-01'))).toBe(false)
+  })
+
+  it('should handle reference date as number', () => {
+    const ref = new Date('2023-01-01').getTime()
+    const filter = new BeforeFilter(ref)
+    expect(filter.evaluate(new Date('2022-12-31').getTime())).toBe(true)
+    expect(filter.evaluate(new Date('2023-02-01').getTime())).toBe(false)
+  })
+
+  it('should return false if value is null or undefined', () => {
+    const filter = new BeforeFilter(new Date('2023-01-01'))
+    expect(filter.evaluate(null as any)).toBe(false)
+    expect(filter.evaluate(undefined as any)).toBe(false)
+  })
+
+  it('should return false if referenceDate is invalid', () => {
+    const filter = new BeforeFilter('invalid-date' as any)
+    expect(filter.evaluate(new Date('2022-12-31'))).toBe(false)
+  })
+
+  it('should return false if value is invalid date', () => {
+    const filter = new BeforeFilter(new Date('2023-01-01'))
+    expect(filter.evaluate('invalid-date' as any)).toBe(false)
   })
 })
 

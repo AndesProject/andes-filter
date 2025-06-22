@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from './filter-from'
+import { filterFrom } from '../filter-from'
 
 class User {
   name: string
@@ -41,7 +41,7 @@ describe('distinct en findMany', () => {
     ])
     const result = filter.findMany({ where: {}, distinct: 'name' })
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name).sort()).toEqual(['a', 'b', 'c'])
+    expect(result.data.map((x) => x.name).sort()).toEqual(['a', 'b', 'c'])
   })
 
   it('distinct por múltiples campos', () => {
@@ -75,7 +75,7 @@ describe('distinct en findMany', () => {
       distinct: 'name',
     })
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name).sort()).toEqual(['a', 'b', 'c'])
+    expect(result.data.map((x) => x.name).sort()).toEqual(['a', 'b', 'c'])
   })
 
   it('distinct ignora null y undefined', () => {
@@ -88,9 +88,9 @@ describe('distinct en findMany', () => {
     ])
     const result = filter.findMany({ where: {}, distinct: 'name' })
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name)).toContain(null)
-    expect(result.data.map(x => x.name)).toContain(undefined)
-    expect(result.data.map(x => x.name)).toContain('a')
+    expect(result.data.map((x) => x.name)).toContain(null)
+    expect(result.data.map((x) => x.name)).toContain(undefined)
+    expect(result.data.map((x) => x.name)).toContain('a')
   })
 
   it('distinct con arrays y objetos anidados', () => {
@@ -103,7 +103,7 @@ describe('distinct en findMany', () => {
     ])
     const result = filter.findMany({ where: {}, distinct: 'tags' })
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.tags)).toEqual([
+    expect(result.data.map((x) => x.tags)).toEqual([
       [1, 2],
       [2, 3],
       [3, 4],

@@ -38,7 +38,7 @@ export function matchesFilter<T = any>(
 
   // Si el filtro tiene campos, usa FilterEvaluator
   const fieldKeys = Object.keys(filter).filter(
-    key => !GROUP_KEYS.includes(key) && !ARRAY_FILTER_KEYS.includes(key)
+    (key) => !GROUP_KEYS.includes(key) && !ARRAY_FILTER_KEYS.includes(key)
   )
   if (fieldKeys.length > 0) {
     const evaluator = new FilterEvaluator(filter)

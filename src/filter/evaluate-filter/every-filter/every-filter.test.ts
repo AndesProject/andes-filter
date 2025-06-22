@@ -31,17 +31,19 @@ describe('EveryFilter', () => {
   })
 
   it('arrays vacíos, null y undefined', () => {
-    const filter = filterFrom<{ items: any }>([
-      { items: [] },
-      { items: null },
-      { items: undefined },
+    const filter = filterFrom<{ items: number[] }>([
       { items: [2, 2, 2] },
+      { items: [2, 2] },
+      { items: [2] },
+      { items: [] },
+      { items: [1, 2, 2] },
+      { items: null as any },
+      { items: undefined as any },
     ])
-    // El array vacío y el array [2,2,2] pasan el filtro every
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
         .length
-    ).toBe(2)
+    ).toBe(4) // [2,2,2], [], undefined, y [2,2,2] pasan (verdad vacua)
   })
 
   it('findUnique', () => {
@@ -73,39 +75,202 @@ describe('EveryFilter', () => {
 })
 
 describe('EveryFilter Unit', () => {
-  it('debe retornar true si todos los elementos cumplen el filtro', () => {
-    const filter = new EveryFilter<any>({ equals: 2 })
-    expect(filter.evaluate([2, 2, 2])).toBe(true)
-    expect(filter.evaluate([2])).toBe(true)
-  })
-
-  it('debe retornar false si algún elemento no cumple el filtro', () => {
-    const filter = new EveryFilter<any>({ equals: 2 })
-    expect(filter.evaluate([2, 1, 2])).toBe(false)
-    expect(filter.evaluate([1, 1, 1])).toBe(false)
-  })
-
-  it('debe retornar false si el valor no es un array, es null o undefined', () => {
-    const filter = new EveryFilter<any>({ equals: 2 })
-    expect(filter.evaluate('not-an-array')).toBe(false)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-  })
-
-  it('debe retornar true si el array está vacío', () => {
-    const filter = new EveryFilter<any>({ equals: 2 })
+  it('should return true for empty array (vacuous truth)', () => {
+    const filter = new EveryFilter({ equals: 1 })
     expect(filter.evaluate([])).toBe(true)
   })
 
-  it('debe retornar false si no hay filtros definidos', () => {
-    const filter = new EveryFilter<any>({})
-    expect(filter.evaluate([2, 2, 2])).toBe(false)
+  it('should return false for non-array input', () => {
+    const filter = new EveryFilter({ equals: 1 })
+    expect(filter.evaluate(null)).toBe(false)
+    expect(filter.evaluate(undefined)).toBe(false)
+    expect(filter.evaluate(123)).toBe(false)
+    expect(filter.evaluate('string')).toBe(false)
+    expect(filter.evaluate({})).toBe(false)
   })
 
-  it('debe funcionar con filtros complejos', () => {
-    const filter = new EveryFilter<any>({ equals: true })
-    expect(filter.evaluate([true, true])).toBe(true)
-    expect(filter.evaluate([true, false])).toBe(false)
+  it('should return true if every item matches the primitive filter', () => {
+    const filter = new EveryFilter(5)
+    expect(filter.evaluate([5, 5, 5])).toBe(true)
+    expect(filter.evaluate([5, 5, 4])).toBe(false)
+  })
+
+  it('should return true if every item matches the operator filter', () => {
+    const filter = new EveryFilter({ equals: 2 })
+    expect(filter.evaluate([2, 2, 2])).toBe(true)
+    expect(filter.evaluate([2, 2, 3])).toBe(false)
+  })
+
+  it('should return true if every item matches a complex object filter', () => {
+    const filter = new EveryFilter({ a: 1, b: 2 })
+    expect(
+      filter.evaluate([
+        { a: 1, b: 2 },
+        { a: 1, b: 2 },
+      ])
+    ).toBe(true)
+    expect(
+      filter.evaluate([
+        { a: 1, b: 2 },
+        { a: 1, b: 3 }, // Different value for 'b'
+      ])
+    ).toBe(false)
+  })
+
+  it('should return true for empty filter and array of objects', () => {
+    const filter = new EveryFilter({})
+    expect(filter.evaluate([{ a: 1 }, { b: 2 }])).toBe(true)
+  })
+
+  it('should return true for empty filter and array of primitives', () => {
+    const filter = new EveryFilter({})
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+  })
+
+  it('should return false if any item is null or undefined', () => {
+    const filter = new EveryFilter({ equals: 1 })
+    expect(filter.evaluate([1, 1, null])).toBe(false)
+    expect(filter.evaluate([1, undefined, 1])).toBe(false)
+  })
+
+  it('should handle nested operator filters', () => {
+    const filter = new EveryFilter({ gt: 0 })
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 0, 3])).toBe(false)
+  })
+
+  it('should handle nested complex filters', () => {
+    const filter = new EveryFilter({ a: { equals: 1 } })
+    expect(filter.evaluate([{ a: 1 }, { a: 1 }])).toBe(true)
+    expect(filter.evaluate([{ a: 1 }, { a: 2 }])).toBe(false)
+  })
+
+  it('should handle array of objects with empty filter', () => {
+    const filter = new EveryFilter({})
+    expect(filter.evaluate([{ x: 1 }, { y: 2 }])).toBe(true)
+  })
+
+  it('should handle array of primitives with empty filter', () => {
+    const filter = new EveryFilter({})
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+  })
+
+  it('should handle array of objects with null/undefined', () => {
+    const filter = new EveryFilter({ a: 1 })
+    expect(filter.evaluate([{ a: 1 }, null, { a: 1 }])).toBe(false)
+    expect(filter.evaluate([{ a: 1 }, undefined, { a: 1 }])).toBe(false)
+  })
+})
+
+describe('EveryFilter Integration', () => {
+  it('should work with filterFrom for primitive arrays', () => {
+    const filter = filterFrom<{ arr: number[] }>([
+      { arr: [1, 1, 1] },
+      { arr: [1, 2, 1] },
+      { arr: [2, 2, 2] },
+      { arr: [] },
+    ])
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any).data
+        .length
+    ).toBe(2) // [1,1,1] y [] (verdad vacua)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } } as any).data
+        .length
+    ).toBe(2) // [2,2,2] y [] (verdad vacua)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 3 } } } } as any).data
+        .length
+    ).toBe(1) // solo [] (verdad vacua)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any)
+        .data[0].arr
+    ).toEqual([1, 1, 1])
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } } as any)
+        .data[0].arr
+    ).toEqual([2, 2, 2])
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any)
+        .data[0].arr
+    ).not.toEqual([1, 2, 1])
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any).data
+        .length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } } as any).data
+        .length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 3 } } } } as any).data
+        .length
+    ).toBe(1)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any)
+        .data[0].arr
+    ).toEqual([1, 1, 1])
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } } as any)
+        .data[0].arr
+    ).toEqual([2, 2, 2])
+  })
+
+  it('should work with filterFrom for arrays of objects', () => {
+    const filter = filterFrom<{ arr: { a: number }[] }>([
+      { arr: [{ a: 1 }, { a: 1 }] },
+      { arr: [{ a: 1 }, { a: 2 }] },
+      { arr: [{ a: 2 }, { a: 2 }] },
+      { arr: [] },
+    ])
+    expect(
+      filter.findMany({
+        where: { arr: { every: { a: { equals: 1 } } } } as any,
+      }).data.length
+    ).toBe(2) // [{a:1}, {a:1}] y [] (verdad vacua)
+    expect(
+      filter.findMany({
+        where: { arr: { every: { a: { equals: 2 } } } } as any,
+      }).data.length
+    ).toBe(2) // [{a:2}, {a:2}] y [] (verdad vacua)
+    expect(
+      filter.findMany({
+        where: { arr: { every: { a: { equals: 3 } } } } as any,
+      }).data.length
+    ).toBe(1) // solo [] (verdad vacua)
+  })
+
+  it('should return true for empty array in integration', () => {
+    const filter = filterFrom<{ arr: number[] }>([{ arr: [] }, { arr: [1] }])
+    expect(
+      filter.findMany({ where: { arr: { every: 1 } } } as any).data.length
+    ).toBe(2) // [] y [1] (ambos pasan)
+    expect(
+      filter.findMany({ where: { arr: { every: 2 } } } as any).data.length
+    ).toBe(1) // solo [] (verdad vacua)
+  })
+
+  it('should handle empty filter with array of objects', () => {
+    const filter = filterFrom<{ arr: { x: number }[] }>([
+      { arr: [{ x: 1 }, { x: 2 }] },
+      { arr: [{ x: 3 }] },
+      { arr: [] },
+    ])
+    // Según Prisma/TypeORM: array vacío con filtro vacío retorna true (verdad vacua)
+    expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
+      3
+    )
+  })
+
+  it('should handle empty filter with array of primitives', () => {
+    const filter = filterFrom<{ arr: number[] }>([
+      { arr: [1, 2, 3] },
+      { arr: [4, 5, 6] },
+      { arr: [] },
+    ])
+    // Según Prisma/TypeORM: arrays de primitivos con filtro vacío retornan true (verdad vacua)
+    expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
+      3
+    )
   })
 })

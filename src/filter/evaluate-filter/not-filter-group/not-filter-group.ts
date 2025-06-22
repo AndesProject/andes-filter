@@ -13,6 +13,6 @@ export class NotFilterGroup<T> implements EvaluateFilter {
     if (!this.filters || this.filters.length === 0) return true
 
     // NOT group: negate the disjunction of all subfilters
-    return !this.filters.some(filter => matchesFilter(filter, data))
+    return !this.filters.some((filter) => matchesFilter(filter, data))
   }
 }

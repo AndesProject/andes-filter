@@ -2,18 +2,21 @@
 
 ### Description
 
-This project aims to develop a filtering library that allows developers to apply complex filters and
-conditions to data collections in an intuitive and programmatic way. By using objects to define
-conditions, users can combine logical and relational operators, making it easy to construct queries
-and manage data efficiently and at scale. The library is developed in TypeScript, ensuring type
-safety and modern JavaScript features for enhanced developer experience and performance.
+This project aims to develop a filtering library that allows developers to apply
+complex filters and conditions to data collections in an intuitive and
+programmatic way. By using objects to define conditions, users can combine
+logical and relational operators, making it easy to construct queries and manage
+data efficiently and at scale. The library is developed in TypeScript, ensuring
+type safety and modern JavaScript features for enhanced developer experience and
+performance.
 
 ### Features
 
 Features
 
 - Intuitive Conditionals: Define complex filters using objects.
-- Logical and Relational Operators: Combine multiple conditions for advanced queries.
+- Logical and Relational Operators: Combine multiple conditions for advanced
+  queries.
 - Scalability: Designed to handle large data volumes with high performance.
 - Ease of Use: Clear and consistent syntax to improve developer productivity.
 
@@ -69,7 +72,8 @@ Features
 - contains: Contiene una subcadena específica.
 - startsWith: Comienza con una subcadena específica.
 - endsWith: Termina con una subcadena específica.
-- mode: Define si la comparación debe ser sensible o insensible a mayúsculas/minúsculas.
+- mode: Define si la comparación debe ser sensible o insensible a
+  mayúsculas/minúsculas.
 
 #### Operadores de Relación
 

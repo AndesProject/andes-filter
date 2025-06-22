@@ -19,7 +19,9 @@ export interface QueryOption<T, K extends keyof T = keyof T> {
   endsWith?: T[K] extends string ? string : never
   notEndsWith?: T[K] extends string ? string : never
   mode?: T[K] extends string ? typeof MODE_INSENSITIVE : never
-  regex?: T[K] extends string ? string : never
+  regex?: T[K] extends string
+    ? string | { pattern: string; flags?: string }
+    : never
 
   before?: T[K] extends DateOrNumber ? DateOrNumber : never
   after?: T[K] extends DateOrNumber ? DateOrNumber : never

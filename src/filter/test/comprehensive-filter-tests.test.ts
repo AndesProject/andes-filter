@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { filterFrom } from '../filter-from'
-import { QueryOption } from '../filter.interface'
 
 describe('Comprehensive Filter Tests', () => {
   const testData = [
@@ -72,7 +71,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { id: { not: 1 } } as any,
       })
       expect(result.data).toHaveLength(4)
-      expect(result.data.every(item => item.id !== 1)).toBe(true)
+      expect(result.data.every((item) => item.id !== 1)).toBe(true)
     })
 
     it('should handle in filter', () => {
@@ -81,7 +80,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { id: { in: [1, 3, 5] } } as any,
       })
       expect(result.data).toHaveLength(3)
-      expect(result.data.map(item => item.id).sort()).toEqual([1, 3, 5])
+      expect(result.data.map((item) => item.id).sort()).toEqual([1, 3, 5])
     })
 
     it('should handle notIn filter', () => {
@@ -90,7 +89,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { id: { notIn: [1, 3, 5] } } as any,
       })
       expect(result.data).toHaveLength(2)
-      expect(result.data.map(item => item.id).sort()).toEqual([2, 4])
+      expect(result.data.map((item) => item.id).sort()).toEqual([2, 4])
     })
   })
 
@@ -101,7 +100,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { age: { lt: 30 } } as any,
       })
       expect(result.data).toHaveLength(3) // Alice (25), David (28), Eva (22)
-      expect(result.data.every(item => item.age < 30)).toBe(true)
+      expect(result.data.every((item) => item.age < 30)).toBe(true)
     })
 
     it('should handle less than or equal filter', () => {
@@ -110,7 +109,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { age: { lte: 30 } } as any,
       })
       expect(result.data).toHaveLength(4) // Alice (25), Bob (30), David (28), Eva (22)
-      expect(result.data.every(item => item.age <= 30)).toBe(true)
+      expect(result.data.every((item) => item.age <= 30)).toBe(true)
     })
 
     it('should handle greater than filter', () => {
@@ -119,7 +118,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { age: { gt: 30 } } as any,
       })
       expect(result.data).toHaveLength(1) // Charlie (35)
-      expect(result.data.every(item => item.age > 30)).toBe(true)
+      expect(result.data.every((item) => item.age > 30)).toBe(true)
     })
 
     it('should handle greater than or equal filter', () => {
@@ -128,7 +127,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { age: { gte: 30 } } as any,
       })
       expect(result.data).toHaveLength(2) // Bob (30), Charlie (35)
-      expect(result.data.every(item => item.age >= 30)).toBe(true)
+      expect(result.data.every((item) => item.age >= 30)).toBe(true)
     })
   })
 
@@ -140,7 +139,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(3) // Alice, Charlie, David
       expect(
-        result.data.every(item => item.name.toLowerCase().includes('a'))
+        result.data.every((item) => item.name.toLowerCase().includes('a'))
       ).toBe(true)
     })
 
@@ -151,7 +150,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(1) // Bob (solo Bob no contiene 'a')
       expect(
-        result.data.every(item => !item.name.toLowerCase().includes('a'))
+        result.data.every((item) => !item.name.toLowerCase().includes('a'))
       ).toBe(true)
     })
 
@@ -170,7 +169,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { name: { notStartsWith: 'A' } } as any,
       })
       expect(result.data).toHaveLength(4)
-      expect(result.data.every(item => !item.name.startsWith('A'))).toBe(true)
+      expect(result.data.every((item) => !item.name.startsWith('A'))).toBe(true)
     })
 
     it('should handle endsWith filter', () => {
@@ -179,7 +178,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { name: { endsWith: 'e' } } as any,
       })
       expect(result.data).toHaveLength(2) // Alice, Charlie
-      expect(result.data.every(item => item.name.endsWith('e'))).toBe(true)
+      expect(result.data.every((item) => item.name.endsWith('e'))).toBe(true)
     })
 
     it('should handle notEndsWith filter', () => {
@@ -188,7 +187,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { name: { notEndsWith: 'e' } } as any,
       })
       expect(result.data).toHaveLength(3) // Bob, David, Eva
-      expect(result.data.every(item => !item.name.endsWith('e'))).toBe(true)
+      expect(result.data.every((item) => !item.name.endsWith('e'))).toBe(true)
     })
 
     it('should handle regex filter', () => {
@@ -197,7 +196,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { name: { regex: '^[A-C]' } } as any,
       })
       expect(result.data).toHaveLength(3) // Alice, Bob, Charlie
-      expect(result.data.every(item => /^[A-C]/.test(item.name))).toBe(true)
+      expect(result.data.every((item) => /^[A-C]/.test(item.name))).toBe(true)
     })
   })
 
@@ -238,7 +237,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2) // Alice, Bob
       expect(
-        result.data.every(item => item.createdAt < new Date('2023-03-01'))
+        result.data.every((item) => item.createdAt < new Date('2023-03-01'))
       ).toBe(true)
     })
 
@@ -249,7 +248,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2) // David, Eva
       expect(
-        result.data.every(item => item.createdAt > new Date('2023-03-01'))
+        result.data.every((item) => item.createdAt > new Date('2023-03-01'))
       ).toBe(true)
     })
 
@@ -265,7 +264,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data).toHaveLength(3) // Bob, Charlie, David
       expect(
         result.data.every(
-          item =>
+          (item) =>
             item.createdAt >= new Date('2023-02-01') &&
             item.createdAt <= new Date('2023-04-01')
         )
@@ -280,7 +279,9 @@ describe('Comprehensive Filter Tests', () => {
         where: { tags: { has: 'admin' } } as any,
       })
       expect(result.data).toHaveLength(2) // Alice, Charlie
-      expect(result.data.every(item => item.tags.includes('admin'))).toBe(true)
+      expect(result.data.every((item) => item.tags.includes('admin'))).toBe(
+        true
+      )
     })
 
     it('should handle hasEvery filter', () => {
@@ -300,8 +301,8 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(3) // Alice, Charlie, David
       expect(
-        result.data.every(item =>
-          item.tags.some(tag => ['admin', 'moderator'].includes(tag))
+        result.data.every((item) =>
+          item.tags.some((tag) => ['admin', 'moderator'].includes(tag))
         )
       ).toBe(true)
     })
@@ -312,7 +313,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { tags: { length: 2 } } as any,
       })
       expect(result.data).toHaveLength(2) // Alice, David
-      expect(result.data.every(item => item.tags.length === 2)).toBe(true)
+      expect(result.data.every((item) => item.tags.length === 2)).toBe(true)
     })
   })
 
@@ -411,7 +412,7 @@ describe('Comprehensive Filter Tests', () => {
         where: { email: { isNull: true } } as any,
       })
       expect(result.data).toHaveLength(2) // Bob, Charlie
-      expect(result.data.every(item => item.email == null)).toBe(true)
+      expect(result.data.every((item) => item.email == null)).toBe(true)
     })
 
     it('should handle isNull false filter', () => {
@@ -420,7 +421,21 @@ describe('Comprehensive Filter Tests', () => {
         where: { email: { isNull: false } } as any,
       })
       expect(result.data).toHaveLength(2) // Alice, David
-      expect(result.data.every(item => item.email != null)).toBe(true)
+      expect(result.data.every((item) => item.email != null)).toBe(true)
+    })
+
+    it('should handle in filter with null and undefined', () => {
+      const data = [
+        { id: 1, value: null },
+        { id: 2, value: undefined },
+        { id: 3, value: 0 },
+        { id: 4, value: 1 },
+      ] as any
+      const filter = filterFrom(data)
+      const result = filter.findMany({
+        where: { value: { in: [null, undefined] } as any },
+      })
+      expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 2])
     })
   })
 
@@ -433,7 +448,7 @@ describe('Comprehensive Filter Tests', () => {
         } as any,
       })
       expect(result.data).toHaveLength(3) // Alice, Charlie, David
-      expect(result.data.every(item => item.age >= 25 && item.active)).toBe(
+      expect(result.data.every((item) => item.age >= 25 && item.active)).toBe(
         true
       )
     })
@@ -446,7 +461,7 @@ describe('Comprehensive Filter Tests', () => {
         } as any,
       })
       expect(result.data).toHaveLength(2) // Eva (age < 25), Bob (inactive)
-      expect(result.data.every(item => item.age < 25 || !item.active)).toBe(
+      expect(result.data.every((item) => item.age < 25 || !item.active)).toBe(
         true
       )
     })
@@ -459,7 +474,9 @@ describe('Comprehensive Filter Tests', () => {
         } as any,
       })
       expect(result.data).toHaveLength(2) // Alice (age < 30 and active), David (age < 30 and active)
-      expect(result.data.every(item => item.age < 30 && item.active)).toBe(true)
+      expect(result.data.every((item) => item.age < 30 && item.active)).toBe(
+        true
+      )
     })
   })
 
@@ -560,6 +577,76 @@ describe('Comprehensive Filter Tests', () => {
 
       expect(executionTime).toBeLessThan(100) // Should complete in less than 100ms
       expect(result.data.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('IN Filter - Prisma/TypeORM Compatibility', () => {
+    it('should handle in filter with dates (by value)', () => {
+      const date1 = new Date('2023-01-01')
+      const date2 = new Date('2023-01-02')
+      const date3 = new Date('2023-01-01')
+      const data = [
+        { id: 1, date: date1 },
+        { id: 2, date: date2 },
+        { id: 3, date: date3 },
+        { id: 4, date: null },
+      ]
+      const filter = filterFrom(data)
+      // Debe incluir ambos objetos con la misma fecha
+      const result = filter.findMany({ where: { date: { in: [date1] } } })
+      expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 3])
+    })
+
+    it('should handle in filter with NaN', () => {
+      const data = [
+        { id: 1, value: NaN },
+        { id: 2, value: 1 },
+        { id: 3, value: 0 },
+        { id: 4, value: null },
+      ]
+      const filter = filterFrom(data)
+      const result = filter.findMany({ where: { value: { in: [NaN, 1] } } })
+      expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 2])
+    })
+
+    it('should handle in filter with null and undefined', () => {
+      const data = [
+        { id: 1, value: null },
+        { id: 2, value: undefined },
+        { id: 3, value: 0 },
+        { id: 4, value: 1 },
+      ] as any
+      const filter = filterFrom(data)
+      const result = filter.findMany({
+        where: { value: { in: [null, undefined] } as any },
+      })
+      expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 2])
+    })
+
+    it('should handle in filter with objects (by reference)', () => {
+      const obj1 = { key: 'value' }
+      const obj2 = { key: 'value' }
+      const data = [
+        { id: 1, obj: obj1 },
+        { id: 2, obj: obj2 },
+        { id: 3, obj: { key: 'different' } },
+        { id: 4, obj: null },
+      ]
+      const filter = filterFrom(data)
+      // Solo obj1 es igual por referencia
+      const result = filter.findMany({ where: { obj: { in: [obj1] } } })
+      expect(result.data.map((d) => (d as any).id)).toEqual([1])
+    })
+
+    it('should handle in filter with empty array (should never match)', () => {
+      const data = [
+        { id: 1, value: 1 },
+        { id: 2, value: 2 },
+        { id: 3, value: 3 },
+      ]
+      const filter = filterFrom(data)
+      const result = filter.findMany({ where: { value: { in: [] } } })
+      expect(result.data).toHaveLength(0)
     })
   })
 })

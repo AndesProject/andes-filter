@@ -15,15 +15,15 @@ export class HasSomeFilter<T> implements EvaluateFilter {
     // Si los valores objetivo son objetos, usar matchesFilter para comparación compleja
     if (
       this.targetValues.some(
-        target => typeof target === 'object' && target !== null
+        (target) => typeof target === 'object' && target !== null
       )
     ) {
-      return this.targetValues.some(targetValue => {
-        return value.some(item => matchesFilter(targetValue as any, item))
+      return this.targetValues.some((targetValue) => {
+        return value.some((item) => matchesFilter(targetValue as any, item))
       })
     }
 
     // Para valores primitivos, usar comparación directa
-    return this.targetValues.some(targetValue => value.includes(targetValue))
+    return this.targetValues.some((targetValue) => value.includes(targetValue))
   }
 }

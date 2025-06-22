@@ -15,7 +15,6 @@ import { HasFilter } from './has-filter'
 import { HasSomeFilter } from './has-some-filter'
 import { InclusionFilter } from './inclusion-filter'
 import { InequalityFilter } from './inequality-filter'
-import { InsensitiveModeFilter } from './insensitive-mode-filter'
 import { IsNullFilter } from './is-null-filter'
 import { LengthFilter } from './length-filter'
 import { LessThanFilter } from './less-than-filter'
@@ -37,13 +36,13 @@ export function createFilterClassMap<T>(
 ): any {
   switch (type) {
     case 'equals':
-      return new EqualityFilter(filter)
+      return new EqualityFilter(filter, insensitive)
     case 'not':
-      return new InequalityFilter(filter)
+      return new InequalityFilter(filter, insensitive)
     case 'in':
-      return new InclusionFilter(filter)
+      return new InclusionFilter(filter, insensitive)
     case 'notIn':
-      return new ExclusionFilter(filter)
+      return new ExclusionFilter(filter, insensitive)
     case 'lt':
       return new LessThanFilter(filter)
     case 'lte':

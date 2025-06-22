@@ -291,4 +291,153 @@ describe('LengthFilter class', () => {
     expect(filter.evaluate(largeArray)).toBe(true)
     expect(filter.evaluate([...largeArray, 1])).toBe(false)
   })
+
+  it('should handle object-based length filters with equals', () => {
+    const filter = new LengthFilter({ equals: 3 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(false)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(false)
+  })
+
+  it('should handle object-based length filters with gte', () => {
+    const filter = new LengthFilter({ gte: 3 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(false)
+  })
+
+  it('should handle object-based length filters with lte', () => {
+    const filter = new LengthFilter({ lte: 3 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(false)
+  })
+
+  it('should handle object-based length filters with gt', () => {
+    const filter = new LengthFilter({ gt: 2 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(false)
+  })
+
+  it('should handle object-based length filters with lt', () => {
+    const filter = new LengthFilter({ lt: 3 })
+
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1])).toBe(true)
+    expect(filter.evaluate([1, 2, 3])).toBe(false)
+  })
+
+  it('should handle object-based length filters with multiple conditions', () => {
+    const filter = new LengthFilter({ gte: 2, lte: 4 })
+
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(true)
+    expect(filter.evaluate([1])).toBe(false)
+    expect(filter.evaluate([1, 2, 3, 4, 5])).toBe(false)
+  })
+
+  it('should handle object-based length filters with gt and lt', () => {
+    const filter = new LengthFilter({ gt: 1, lt: 4 })
+
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1])).toBe(false)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(false)
+  })
+
+  it('should handle object-based length filters with equals and other conditions', () => {
+    const filter = new LengthFilter({ equals: 3, gte: 2 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(false)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(false)
+  })
+
+  it('should handle strings with length filters', () => {
+    const filter = new LengthFilter(5)
+
+    expect(filter.evaluate('hello')).toBe(true)
+    expect(filter.evaluate('hi')).toBe(false)
+    expect(filter.evaluate('world')).toBe(true)
+  })
+
+  it('should handle strings with object-based length filters', () => {
+    const filter = new LengthFilter({ gte: 3, lte: 6 })
+
+    expect(filter.evaluate('hello')).toBe(true)
+    expect(filter.evaluate('hi')).toBe(false)
+    expect(filter.evaluate('worldwide')).toBe(false)
+  })
+
+  it('should handle empty strings', () => {
+    const filter = new LengthFilter(0)
+
+    expect(filter.evaluate('')).toBe(true)
+    expect(filter.evaluate('a')).toBe(false)
+  })
+
+  it('should handle strings with equals condition', () => {
+    const filter = new LengthFilter({ equals: 4 })
+
+    expect(filter.evaluate('test')).toBe(true)
+    expect(filter.evaluate('hello')).toBe(false)
+    expect(filter.evaluate('hi')).toBe(false)
+  })
+
+  it('should handle complex object-based length filters', () => {
+    const filter = new LengthFilter({
+      equals: 3,
+      gte: 2,
+      lte: 5,
+      gt: 1,
+      lt: 4,
+    })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([1, 2])).toBe(false)
+    expect(filter.evaluate([1, 2, 3, 4])).toBe(false)
+  })
+
+  it('should handle null target in constructor', () => {
+    const filter = new LengthFilter(null as any)
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate('test')).toBe(true)
+  })
+
+  it('should handle undefined target in constructor', () => {
+    const filter = new LengthFilter(undefined as any)
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate('test')).toBe(true)
+  })
+
+  it('should handle empty object in constructor', () => {
+    const filter = new LengthFilter({})
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate('test')).toBe(true)
+  })
+
+  it('should handle object with only equals property', () => {
+    const filter = new LengthFilter({ equals: 2 })
+
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1])).toBe(false)
+    expect(filter.evaluate([1, 2, 3])).toBe(false)
+  })
+
+  it('should handle object without equals property', () => {
+    const filter = new LengthFilter({ gte: 2 })
+
+    expect(filter.evaluate([1, 2])).toBe(true)
+    expect(filter.evaluate([1])).toBe(false)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+  })
 })

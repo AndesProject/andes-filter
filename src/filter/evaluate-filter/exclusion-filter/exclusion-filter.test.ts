@@ -234,4 +234,21 @@ describe('ExclusionFilter Unit Tests', () => {
     expect(filter.evaluate({ id: 1 })).toBe(true) // Diferente referencia
     expect(filter.evaluate([1, 2, 3])).toBe(true) // Diferente referencia
   })
+
+  it('debe manejar fechas por valor', () => {
+    const date1 = new Date('2023-01-01')
+    const date2 = new Date('2023-01-01')
+    const date3 = new Date('2024-01-01')
+    const filter = new ExclusionFilter([date1])
+    expect(filter.evaluate(date1)).toBe(false) // misma referencia
+    expect(filter.evaluate(date2)).toBe(false) // mismo valor
+    expect(filter.evaluate(date3)).toBe(true) // diferente valor
+  })
+
+  it('debe manejar NaN correctamente', () => {
+    const filter = new ExclusionFilter([NaN, 1])
+    expect(filter.evaluate(NaN)).toBe(false)
+    expect(filter.evaluate(1)).toBe(false)
+    expect(filter.evaluate(2)).toBe(true)
+  })
 })

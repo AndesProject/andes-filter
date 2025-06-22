@@ -55,11 +55,11 @@ describe('Debug Object Filters', () => {
     console.log('Expected: Alice, Bob (USA addresses)')
     console.log(
       'Actual:',
-      result.data.map(item => item.profile[0].name)
+      result.data.map((item) => item.profile[0].name)
     )
 
     expect(result.data).toHaveLength(2)
-    expect(result.data.map(item => item.profile[0].name).sort()).toEqual([
+    expect(result.data.map((item) => item.profile[0].name).sort()).toEqual([
       'Alice',
       'Bob',
     ])
@@ -81,7 +81,7 @@ describe('Debug Object Filters', () => {
     console.log(
       'Actual:',
       result.data.map(
-        item => `${item.profile[0].name} (${item.profile[0].age})`
+        (item) => `${item.profile[0].name} (${item.profile[0].age})`
       )
     )
 
@@ -104,7 +104,7 @@ describe('Debug Object Filters', () => {
     console.log(
       'Actual:',
       result.data.map(
-        item => `${item.profile[0].name} (${item.profile[0].age})`
+        (item) => `${item.profile[0].name} (${item.profile[0].age})`
       )
     )
 

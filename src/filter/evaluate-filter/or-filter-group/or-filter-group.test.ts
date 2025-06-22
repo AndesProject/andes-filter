@@ -78,7 +78,7 @@ describe('OrFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name)).toEqual(['John', 'Jane', 'Bob'])
+    expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane', 'Bob'])
   })
 
   it('should work with nested OR conditions', () => {
@@ -108,7 +108,7 @@ describe('OrFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name)).toEqual([
+    expect(result.data.map((x) => x.name)).toEqual([
       'Product A',
       'Product B',
       'Product C',
@@ -139,7 +139,7 @@ describe('OrFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name)).toEqual([
+    expect(result.data.map((x) => x.name)).toEqual([
       'Product A',
       'Product B',
       'Product C',
@@ -233,7 +233,7 @@ describe('OrFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(3)
-    expect(result.data.map(x => x.name)).toEqual(['Laptop', 'Phone', 'Book'])
+    expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone', 'Book'])
   })
 
   it('should handle null and undefined values in conditions', () => {
@@ -254,7 +254,7 @@ describe('OrFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(2)
-    expect(result.data.map(x => x.id)).toEqual([1, 2])
+    expect(result.data.map((x) => x.id)).toEqual([1, 2])
   })
 
   it('should work with single condition', () => {

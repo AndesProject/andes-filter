@@ -80,7 +80,7 @@ describe('AndFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(2)
-    expect(result.data.map(x => x.name)).toEqual(['John', 'Jane'])
+    expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane'])
   })
 
   it('should work with nested AND conditions', () => {
@@ -137,7 +137,7 @@ describe('AndFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(2)
-    expect(result.data.map(x => x.name)).toEqual(['Product A', 'Product C'])
+    expect(result.data.map((x) => x.name)).toEqual(['Product A', 'Product C'])
   })
 
   it('should handle empty AND array', () => {
@@ -227,7 +227,7 @@ describe('AndFilterGroup', () => {
     })
 
     expect(result.data.length).toBe(2)
-    expect(result.data.map(x => x.name)).toEqual(['Laptop', 'Phone'])
+    expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone'])
   })
 
   it('should handle null and undefined values in conditions', () => {

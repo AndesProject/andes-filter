@@ -1,7 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { filterFrom } from '../../filter-from'
 import { QueryOption } from '../../filter.interface'
-import { FilterEvaluator } from '../evaluate-filter'
 import { matchesFilter } from '../matches-filter'
 import { NotFilterGroup } from './not-filter-group'
 

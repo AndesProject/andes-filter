@@ -92,6 +92,63 @@ describe('RegexFilter', () => {
       filter.findMany({ where: { value: { regex: '\\' } } }).data.length
     ).toBe(0) // patrón inválido
   })
+
+  it('regex con flags como string', () => {
+    const filter = filterFrom<{ value: string }>([
+      { value: 'Hello' },
+      { value: 'hello' },
+      { value: 'HELLO' },
+      { value: 'world' },
+    ])
+    // Sin flag i
+    expect(
+      filter.findMany({ where: { value: { regex: '^hello$' } } }).data.length
+    ).toBe(1)
+    // Con flag i (insensible)
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: '^hello$', flags: 'i' } } },
+      }).data.length
+    ).toBe(3)
+    // Con flag i y patrón parcial
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: 'hello', flags: 'i' } } },
+      }).data.length
+    ).toBe(3)
+    // Con flag i y patrón que no matchea
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: 'bye', flags: 'i' } } },
+      }).data.length
+    ).toBe(0)
+  })
+
+  it('regex como objeto con flags edge cases', () => {
+    const filter = filterFrom<{ value: string }>([
+      { value: 'abc123' },
+      { value: 'ABC123' },
+      { value: 'def456' },
+    ])
+    // Flag global (g) no afecta test, cada string se evalúa por separado (como en Prisma/JS)
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: '\\d+', flags: 'g' } } },
+      }).data.length
+    ).toBe(3)
+    // Flags combinados (gi)
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: 'abc', flags: 'gi' } } },
+      }).data.length
+    ).toBe(2)
+    // Flag inválido
+    expect(
+      filter.findMany({
+        where: { value: { regex: { pattern: 'abc', flags: 'z' } } },
+      }).data.length
+    ).toBe(0)
+  })
 })
 
 describe('RegexFilter Unit Tests', () => {

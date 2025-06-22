@@ -29,13 +29,39 @@ function compare<T>(a: T, b: T, key: keyof T): number {
   const valueA = a[key]
   const valueB = b[key]
 
+  // Manejar null y undefined - colocarlos al final
+  if (valueA === null && valueB === null) return 0
+  if (valueA === null) return 1
+  if (valueB === null) return -1
+  if (valueA === undefined && valueB === undefined) return 0
+  if (valueA === undefined) return 1
+  if (valueB === undefined) return -1
+
+  // Si ambos son números, comparar numéricamente
   if (typeof valueA === 'number' && typeof valueB === 'number') {
     return valueA - valueB
-  } else {
-    const fa = `${valueA}`.trim().toLowerCase()
-    const fb = `${valueB}`.trim().toLowerCase()
-    if (fa < fb) return -1
-    if (fa > fb) return 1
-    return 0
   }
+
+  // Si ambos son strings, comparar alfabéticamente
+  if (typeof valueA === 'string' && typeof valueB === 'string') {
+    return valueA.localeCompare(valueB)
+  }
+
+  // Si ambos son booleanos, comparar como números
+  if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
+    return Number(valueA) - Number(valueB)
+  }
+
+  // Si ambos son fechas, comparar como fechas
+  if (valueA instanceof Date && valueB instanceof Date) {
+    return valueA.getTime() - valueB.getTime()
+  }
+
+  // Para tipos mixtos o diferentes, convertir a string y comparar
+  const strA = String(valueA).toLowerCase()
+  const strB = String(valueB).toLowerCase()
+
+  if (strA < strB) return -1
+  if (strA > strB) return 1
+  return 0
 }

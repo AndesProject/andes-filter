@@ -11,6 +11,6 @@ export class InsensitiveModeFilter implements EvaluateFilter {
     if (value == null) return false
 
     // Evalúa todos los filtros con lógica AND
-    return this.filters.every(filter => filter.evaluate(value))
+    return this.filters.every((filter) => filter.evaluate(value))
   }
 }

@@ -12,6 +12,6 @@ export class AndFilterGroup<T> implements EvaluateFilter {
   evaluate(data: any): boolean {
     if (!this.filters || this.filters.length === 0) return true
 
-    return this.filters.every(filter => matchesFilter(filter, data))
+    return this.filters.every((filter) => matchesFilter(filter, data))
   }
 }

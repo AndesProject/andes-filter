@@ -12,6 +12,6 @@ export class OrFilterGroup<T> implements EvaluateFilter {
   evaluate(data: any): boolean {
     if (!this.filters || this.filters.length === 0) return false
 
-    return this.filters.some(filter => matchesFilter(filter, data))
+    return this.filters.some((filter) => matchesFilter(filter, data))
   }
 }
