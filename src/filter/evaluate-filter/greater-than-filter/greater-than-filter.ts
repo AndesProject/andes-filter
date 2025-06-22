@@ -8,36 +8,57 @@ export class GreaterThanFilter implements EvaluateFilter {
   }
 
   evaluate(data: any): boolean {
+    // Handle null/undefined cases - Prisma/TypeORM behavior
     if (data === null || data === undefined) return false
     if (this.referenceValue === null || this.referenceValue === undefined)
       return false
 
-    // Si ambos valores son fechas o pueden ser convertidos a fechas, usar lógica de fechas
+    // Handle NaN cases - Prisma/TypeORM behavior
+    if (typeof data === 'number' && Number.isNaN(data)) return false
+    if (
+      typeof this.referenceValue === 'number' &&
+      Number.isNaN(this.referenceValue)
+    )
+      return false
+
+    // Handle number comparisons (including floating point)
+    if (typeof data === 'number' && typeof this.referenceValue === 'number') {
+      return Number(data) > Number(this.referenceValue)
+    }
+
+    // Handle Date comparisons - compare by value, not reference
     if (this.isDateLike(data) && this.isDateLike(this.referenceValue)) {
       const dateValue = new Date(data)
       const refDate = new Date(this.referenceValue)
-
       if (isNaN(dateValue.getTime()) || isNaN(refDate.getTime())) return false
-      return dateValue > refDate
+      return dateValue.getTime() > refDate.getTime()
     }
 
-    // Para strings, usar comparación lexicográfica
+    // Handle string comparisons - use lexicographic comparison
     if (typeof data === 'string' && typeof this.referenceValue === 'string') {
+      // Si ambos strings parecen fechas, comparar como fechas
+      const dateA = new Date(data)
+      const dateB = new Date(this.referenceValue)
+      const isDateA = !isNaN(dateA.getTime())
+      const isDateB = !isNaN(dateB.getTime())
+      if (isDateA && isDateB) {
+        return dateA.getTime() > dateB.getTime()
+      }
+      if (isDateA !== isDateB) {
+        // Si uno es fecha válida y el otro no, retorna false (no comparable)
+        return false
+      }
+      // Si ninguno es fecha válida, comparar como string
       return data > this.referenceValue
     }
 
-    // Para números, usar comparación numérica
-    if (typeof data === 'number' && typeof this.referenceValue === 'number') {
-      return data > this.referenceValue
-    }
-
-    // Para comparaciones mixtas, intentar convertir a números primero
+    // Handle mixed type comparisons
     if (typeof data === 'string' && typeof this.referenceValue === 'number') {
       const numData = parseFloat(data)
       if (!isNaN(numData)) {
         return numData > this.referenceValue
       }
-      // Si no es un número, usar comparación de strings
+      // If string cannot be converted to number, use string comparison
       return data > this.referenceValue.toString()
     }
 
@@ -46,19 +67,25 @@ export class GreaterThanFilter implements EvaluateFilter {
       if (!isNaN(numRef)) {
         return data > numRef
       }
-      // Si no es un número, usar comparación de strings
+      // If reference cannot be converted to number, use string comparison
       return data.toString() > this.referenceValue
     }
 
-    // Para otros tipos, usar comparación directa
-    return data > this.referenceValue
+    // For other types, try to convert to comparable values
+    try {
+      return data > this.referenceValue
+    } catch {
+      return false
+    }
   }
 
   private isDateLike(value: any): boolean {
-    return (
-      value instanceof Date ||
-      typeof value === 'string' ||
-      typeof value === 'number'
-    )
+    if (value instanceof Date) return true
+    if (typeof value === 'number') return !isNaN(value) && value > 0
+    if (typeof value === 'string') {
+      const date = new Date(value)
+      return !isNaN(date.getTime())
+    }
+    return false
   }
 }

@@ -96,6 +96,15 @@ export function createFilterClassMap<T>(
       return new NotFilterGroup(filter)
     case 'isNull':
       return new IsNullFilter(filter)
+    case 'distinct':
+      // Distinct filter - returns true if all values in array are unique
+      return {
+        evaluate: (data: any) => {
+          if (!Array.isArray(data)) return false
+          const uniqueValues = new Set(data)
+          return uniqueValues.size === data.length
+        },
+      }
     default:
       console.warn(`Unknown filter type: ${type}`)
       return null

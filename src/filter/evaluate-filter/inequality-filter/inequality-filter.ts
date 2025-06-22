@@ -7,10 +7,12 @@ import { SomeFilter } from '../some-filter/some-filter'
 
 export class InequalityFilter<T> implements EvaluateFilter {
   private evaluator: EvaluateFilter | null = null
-  private shouldNegate: boolean = true
+  private shouldNegate: boolean = false
   private insensitive: boolean = false
   private modeInsensitive: boolean = false
+  private isDistinct: boolean = false
   private rawTarget: any = null
+  private isArrayEquivalence: boolean = false
 
   constructor(
     private targetValue: T | QueryOption<T> | null,
@@ -37,40 +39,49 @@ export class InequalityFilter<T> implements EvaluateFilter {
       if (keys.length === 1) {
         const key = keys[0]
         const value = (this.targetValue as any)[key]
-        // Prisma/TypeORM negación de operadores de array
+        if (key === 'distinct') {
+          this.isDistinct = true
+          return
+        }
+        // Equivalencias Prisma/TypeORM para not: { some/none/every }
         if (key === 'some') {
           this.evaluator = new NoneFilter(value)
-          this.shouldNegate = false // Ya es el filtro correcto
+          this.isArrayEquivalence = true
+          return
         } else if (key === 'none') {
           this.evaluator = new SomeFilter(value)
-          this.shouldNegate = false // Ya es el filtro correcto
+          this.isArrayEquivalence = true
+          return
         } else if (key === 'every') {
-          // NOT every: { ... }  <=>  some: { not: ... }
-          this.evaluator = new SomeFilter({ not: value })
-          this.shouldNegate = false // Ya es el filtro correcto
-        } else {
-          // Propagar modo insensible si está presente
-          let subInsensitive = this.insensitive || this.modeInsensitive
-          if (
-            typeof value === 'object' &&
-            value !== null &&
-            'mode' in value &&
-            value.mode === 'insensitive'
-          ) {
-            subInsensitive = true
+          // not: { every: F } ≡ some: { not: F }, pero debe retornar false para arrays vacíos
+          this.evaluator = {
+            evaluate: (arr: any) => {
+              if (!Array.isArray(arr) || arr.length === 0) return false
+              // Si todos cumplen F, retorna false; si alguno no cumple, retorna true
+              return arr.some(
+                (item: any) => !new FilterEvaluator(value).evaluate(item)
+              )
+            },
           }
-          this.evaluator = createFilterClassMap(
-            key as any,
-            value,
-            subInsensitive
-          )
+          this.isArrayEquivalence = true
+          return
         }
+        let subInsensitive = this.insensitive || this.modeInsensitive
+        if (
+          typeof value === 'object' &&
+          value !== null &&
+          'mode' in value &&
+          value.mode === 'insensitive'
+        ) {
+          subInsensitive = true
+        }
+        this.evaluator = createFilterClassMap(key as any, value, subInsensitive)
       }
     }
   }
 
   evaluate(value: any): boolean {
-    // Si hay un evaluador, negar su resultado si corresponde
+    if (this.isDistinct) return false
     if (this.evaluator) {
       // Caso especial: NOT every (SomeFilter con not) sobre array vacío debe retornar false
       if (
@@ -81,9 +92,12 @@ export class InequalityFilter<T> implements EvaluateFilter {
       ) {
         return false
       }
-      return this.shouldNegate
-        ? !this.evaluator.evaluate(value)
-        : this.evaluator.evaluate(value)
+      // Si es equivalencia de array, no negar el resultado
+      if (this.isArrayEquivalence) {
+        return this.evaluator.evaluate(value)
+      }
+      // Para los demás casos, negar el resultado
+      return !this.evaluator.evaluate(value)
     }
     // Si es un QueryOption, negar el resultado de evaluar ese filtro
     if (
@@ -168,7 +182,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     ) {
       return this.targetValue !== value
     }
-    // Comparación primitiva
+    // Comparación primitiva - NOT equals: retornar true cuando NO son iguales
     return value !== this.targetValue
   }
 }

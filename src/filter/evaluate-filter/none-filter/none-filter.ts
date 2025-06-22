@@ -3,98 +3,119 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
 
 export class NoneFilter implements EvaluateFilter {
-  private evaluator: EvaluateFilter | null = null
+  private evaluator: EvaluateFilter | FilterEvaluator<any> | null = null
+  private isEmptyFilter: boolean = false
+  private isDistinct: boolean = false
+  private isNegation: boolean = false
 
   constructor(private filter: any) {
-    // Si el filtro es un objeto con operadores directos, crear el filtro correspondiente
-    if (typeof this.filter === 'object' && this.filter !== null) {
-      const keys = Object.keys(this.filter)
-      if (keys.length === 1) {
-        const key = keys[0]
-        const value = this.filter[key]
-        // Si la key es un operador o una operación de array, usar el filtro correspondiente
-        if (
-          [
-            'equals',
-            'not',
-            'in',
-            'notIn',
-            'lt',
-            'lte',
-            'gt',
-            'gte',
-            'contains',
-            'notContains',
-            'startsWith',
-            'notStartsWith',
-            'endsWith',
-            'notEndsWith',
-            'mode',
-            'regex',
-            'before',
-            'after',
-            'between',
-            'has',
-            'hasEvery',
-            'hasSome',
-            'length',
-            'AND',
-            'OR',
-            'NOT',
-            'isNull',
-            'distinct',
-            'some',
-            'none',
-            'every',
-          ].includes(key)
-        ) {
-          this.evaluator = createFilterClassMap(key as any, value)
-        } else {
-          // Si la key no es un operador ni operación de array, crear FilterEvaluator
-          this.evaluator = new FilterEvaluator(this.filter)
-        }
-      }
-      // Si hay múltiples keys, es un subfiltro complejo, crear FilterEvaluator
-      else if (keys.length > 1) {
-        this.evaluator = new FilterEvaluator(this.filter)
-      }
-    }
-  }
-
-  evaluate(data: any): boolean {
-    if (data === null || data === undefined) return true
-    if (!Array.isArray(data)) return false
-    if (data.length === 0) return true
-
-    // Prisma: filtro vacío sobre array de objetos retorna false si hay al menos un objeto con propiedades, true si solo hay objetos vacíos, primitivos, null o undefined
+    // Check if it's an empty filter
     if (
       typeof this.filter === 'object' &&
       this.filter !== null &&
       Object.keys(this.filter).length === 0
     ) {
-      let hasObjectWithProps = false
-      let hasPrimitive = false
-      for (const item of data) {
-        if (item == null) continue
-        if (typeof item === 'object') {
-          if (Object.keys(item).length > 0) hasObjectWithProps = true
-        } else {
-          hasPrimitive = true
-        }
+      this.isEmptyFilter = true
+      return
+    }
+
+    // If filter is a primitive, create a simple evaluator
+    if (
+      typeof this.filter !== 'object' ||
+      this.filter === null ||
+      Array.isArray(this.filter)
+    ) {
+      this.evaluator = {
+        evaluate: (data: any) => data === this.filter,
       }
-      // Si hay objetos con propiedades o primitivos, retornar false
-      return !(hasObjectWithProps || hasPrimitive)
+      return
     }
 
-    // Si no hay evaluador, usar comparación directa
-    if (!this.evaluator) {
-      return data.every((item) => item !== this.filter)
+    // If filter is an object with operators, create a proper evaluator
+    const keys = Object.keys(this.filter)
+    if (keys.length === 1) {
+      const key = keys[0]
+      const value = this.filter[key]
+
+      // Handle special operators
+      if (key === 'distinct') {
+        this.isDistinct = true
+        return
+      }
+      if (key === 'not') {
+        this.isNegation = true
+        this.evaluator = createFilterClassMap(key as any, value)
+        return
+      }
+
+      // Check if this is a known filter operator
+      const knownOperators = [
+        'equals',
+        'not',
+        'in',
+        'notIn',
+        'lt',
+        'lte',
+        'gt',
+        'gte',
+        'contains',
+        'notContains',
+        'startsWith',
+        'notStartsWith',
+        'endsWith',
+        'notEndsWith',
+        'mode',
+        'regex',
+        'before',
+        'after',
+        'between',
+        'has',
+        'hasEvery',
+        'hasSome',
+        'length',
+        'AND',
+        'OR',
+        'NOT',
+        'isNull',
+        'distinct',
+      ]
+
+      if (knownOperators.includes(key)) {
+        this.evaluator = createFilterClassMap(key as any, value)
+      } else {
+        // Complex object - use FilterEvaluator
+        this.evaluator = new FilterEvaluator(this.filter)
+      }
+    } else if (keys.length > 1) {
+      // Complex filter object - use FilterEvaluator
+      this.evaluator = new FilterEvaluator(this.filter)
+    }
+  }
+
+  evaluate(data: any): boolean {
+    // Prisma/TypeORM behavior: null/undefined arrays return true
+    if (data === null || data === undefined) return true
+    // Prisma/TypeORM behavior: non-arrays return false
+    if (!Array.isArray(data)) return false
+    // Prisma/TypeORM behavior: empty arrays return true
+    if (data.length === 0) return true
+
+    // Special case: none: { distinct: true } should always return false
+    if (this.isDistinct) return false
+
+    // Empty filter: solo retorna true si el array está vacío, null o undefined
+    if (this.isEmptyFilter) {
+      return false // Si el array tiene elementos, no pasa el filtro vacío
     }
 
-    // Usar el evaluador para verificar que ningún elemento coincida
-    return data.every((item) => {
-      if (item == null) return true
-      return !this.evaluator!.evaluate(item)
-    })
+    // Regular filter evaluation
+    if (this.evaluator) {
+      return !data.some((item) => {
+        if (item == null) return false
+        return this.evaluator!.evaluate(item)
+      })
+    }
+
+    return true
   }
 }

@@ -3,61 +3,103 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
 
 export class SomeFilter implements EvaluateFilter {
-  private evaluator: EvaluateFilter | null = null
+  private evaluator: EvaluateFilter | FilterEvaluator<any> | null = null
+  private isEmptyFilter: boolean = false
+  private isNegation: boolean = false
 
   constructor(private filter: any) {
-    // Si el filtro es un objeto con operadores directos, crear el filtro correspondiente
-    if (typeof this.filter === 'object' && this.filter !== null) {
-      const keys = Object.keys(this.filter)
-      if (keys.length === 1) {
-        const key = keys[0]
-        const value = this.filter[key]
-        // Si la key es un operador o una operación de array, usar el filtro correspondiente
-        if (
-          [
-            'equals',
-            'not',
-            'in',
-            'notIn',
-            'lt',
-            'lte',
-            'gt',
-            'gte',
-            'contains',
-            'notContains',
-            'startsWith',
-            'notStartsWith',
-            'endsWith',
-            'notEndsWith',
-            'mode',
-            'regex',
-            'before',
-            'after',
-            'between',
-            'has',
-            'hasEvery',
-            'hasSome',
-            'length',
-            'AND',
-            'OR',
-            'NOT',
-            'isNull',
-            'distinct',
-            'some',
-            'none',
-            'every',
-          ].includes(key)
-        ) {
-          this.evaluator = createFilterClassMap(key as any, value)
-        } else {
-          // Si la key no es un operador ni operación de array, crear FilterEvaluator
-          this.evaluator = new FilterEvaluator(this.filter)
-        }
+    // Check if it's an empty filter
+    if (
+      typeof this.filter === 'object' &&
+      this.filter !== null &&
+      Object.keys(this.filter).length === 0
+    ) {
+      this.isEmptyFilter = true
+      return
+    }
+
+    // If filter is a primitive, create a simple evaluator
+    if (
+      typeof this.filter !== 'object' ||
+      this.filter === null ||
+      Array.isArray(this.filter)
+    ) {
+      this.evaluator = {
+        evaluate: (data: any) => data === this.filter,
       }
-      // Si hay múltiples keys, es un subfiltro complejo, crear FilterEvaluator
-      else if (keys.length > 1) {
+      return
+    }
+
+    // If filter is an object with operators, create a proper evaluator
+    const keys = Object.keys(this.filter)
+    if (keys.length === 1) {
+      const key = keys[0]
+      const value = this.filter[key]
+      if (key === 'not') {
+        this.isNegation = true
+        // Create evaluator with the inner filter (without 'not')
+        if (
+          typeof value === 'object' &&
+          value !== null &&
+          !Array.isArray(value)
+        ) {
+          const innerKeys = Object.keys(value)
+          if (innerKeys.length === 1) {
+            const innerKey = innerKeys[0]
+            const innerValue = value[innerKey]
+            this.evaluator = createFilterClassMap(innerKey as any, innerValue)
+          } else {
+            this.evaluator = new FilterEvaluator(value)
+          }
+        } else {
+          this.evaluator = {
+            evaluate: (data: any) => data === value,
+          }
+        }
+        return
+      }
+
+      // Check if this is a known filter operator
+      const knownOperators = [
+        'equals',
+        'not',
+        'in',
+        'notIn',
+        'lt',
+        'lte',
+        'gt',
+        'gte',
+        'contains',
+        'notContains',
+        'startsWith',
+        'notStartsWith',
+        'endsWith',
+        'notEndsWith',
+        'mode',
+        'regex',
+        'before',
+        'after',
+        'between',
+        'has',
+        'hasEvery',
+        'hasSome',
+        'length',
+        'AND',
+        'OR',
+        'NOT',
+        'isNull',
+        'distinct',
+      ]
+
+      if (knownOperators.includes(key)) {
+        this.evaluator = createFilterClassMap(key as any, value)
+      } else {
+        // Complex object - use FilterEvaluator
         this.evaluator = new FilterEvaluator(this.filter)
       }
+    } else if (keys.length > 1) {
+      // Complex filter object - use FilterEvaluator
+      this.evaluator = new FilterEvaluator(this.filter)
     }
   }
 
@@ -66,65 +108,30 @@ export class SomeFilter implements EvaluateFilter {
     if (data.length === 0) return false
 
     // Prisma: filtro vacío sobre array de objetos retorna true si hay al menos un objeto
-    if (
-      typeof this.filter === 'object' &&
-      this.filter !== null &&
-      Object.keys(this.filter).length === 0
-    ) {
-      // Si el array contiene objetos
-      if (typeof data[0] === 'object' && data[0] !== null) return true
-      // Si el array contiene primitivos
-      return false
+    if (this.isEmptyFilter) {
+      return data.some(
+        (item) =>
+          item !== null && item !== undefined && typeof item === 'object'
+      )
     }
 
-    // Si el filtro es un objeto complejo (no solo un operador), usar FilterEvaluator
-    const isComplexObject =
-      typeof this.filter === 'object' &&
-      this.filter !== null &&
-      (Object.keys(this.filter).length > 1 ||
-        (Object.keys(this.filter).length === 1 &&
-          ![
-            'equals',
-            'not',
-            'in',
-            'notIn',
-            'lt',
-            'lte',
-            'gt',
-            'gte',
-            'contains',
-            'notContains',
-            'startsWith',
-            'notStartsWith',
-            'endsWith',
-            'notEndsWith',
-            'mode',
-            'regex',
-            'before',
-            'after',
-            'between',
-            'has',
-            'hasEvery',
-            'hasSome',
-            'length',
-            'AND',
-            'OR',
-            'NOT',
-            'isNull',
-            'distinct',
-          ].includes(Object.keys(this.filter)[0])))
-
-    let complexEvaluator: FilterEvaluator<any> | null = null
-    if (isComplexObject) {
-      complexEvaluator = new FilterEvaluator(this.filter)
+    // If negation, apply NOT to the evaluation
+    if (this.isNegation) {
+      return data.some((item) => {
+        if (item == null) return false
+        return !this.evaluator!.evaluate(item)
+      })
     }
 
-    return data.some((item) => {
-      if (item == null) return false
-      if (this.evaluator) {
-        return this.evaluator.evaluate(item)
-      }
-      return item === this.filter
-    })
+    // Regular evaluation
+    if (this.evaluator) {
+      return data.some((item) => {
+        if (item == null) return false
+        return this.evaluator!.evaluate(item)
+      })
+    }
+
+    // If no evaluator, use simple comparison
+    return data.some((item) => item === this.filter)
   }
 }
