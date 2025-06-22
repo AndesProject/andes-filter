@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { filterFrom } from '../../filter-from'
+import { ContainsFilter } from '../contains-filter/contains-filter'
+import { StartsWithFilter } from '../starts-with-filter/starts-with-filter'
+import { InsensitiveModeFilter } from './insensitive-mode-filter'
 
 describe('InsensitiveModeFilter', () => {
   it('contains string', () => {
@@ -21,42 +24,42 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'CERATI' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'BOB' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'MARIANA' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ALICE' } },
-      }).length
+      }).data.length
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'EVA' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ANK' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: ' ' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: '' } },
-      }).length
+      }).data.length
     ).toBe(12)
 
     expect(
@@ -105,52 +108,52 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'CERATI' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'BOB' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'ALICE' } },
-      }).length
+      }).data.length
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'EVA' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'ANK' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: ' ' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: '' } },
-      }).length
+      }).data.length
     ).toBe(12)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'A' } },
-      }).length
+      }).data.length
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'GUS' } },
-      }).length
+      }).data.length
     ).toBe(1)
 
     expect(
@@ -199,27 +202,27 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'ICE' } },
-      }).length
+      }).data.length
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'CERATI' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'DAVID' } },
-      }).length
+      }).data.length
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'SMI' } },
-      }).length
+      }).data.length
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: ' ' } },
-      }).length
+      }).data.length
     ).toBe(0)
 
     expect(
@@ -270,13 +273,13 @@ describe('InsensitiveModeFilter', () => {
         where: {
           name: { mode: 'insensitive', contains: 'ra', startsWith: 'f' },
         },
-      }).length
+      }).data.length
     ).toBe(1)
 
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } },
-      }).length
+      }).data.length
     ).toBe(2)
 
     expect(
@@ -289,7 +292,58 @@ describe('InsensitiveModeFilter', () => {
             notIn: ['Gustavo Cerati'],
           },
         },
-      }).length
+      }).data.length
     ).toBe(1)
+  })
+})
+
+describe('InsensitiveModeFilter Unit Tests', () => {
+  it('debe retornar true si todos los filtros retornan true', () => {
+    const containsFilter = new ContainsFilter('hello', true)
+    const startsWithFilter = new StartsWithFilter('hello', true)
+    const modeFilter = new InsensitiveModeFilter([
+      containsFilter,
+      startsWithFilter,
+    ])
+
+    expect(modeFilter.evaluate('hello world')).toBe(true) // contiene y empieza con 'hello'
+    expect(modeFilter.evaluate('hello')).toBe(true) // contiene y empieza con 'hello'
+  })
+
+  it('debe retornar false si algún filtro retorna false', () => {
+    const containsFilter = new ContainsFilter('hello', true)
+    const startsWithFilter = new StartsWithFilter('hello', true)
+    const modeFilter = new InsensitiveModeFilter([
+      containsFilter,
+      startsWithFilter,
+    ])
+
+    expect(modeFilter.evaluate('world hello')).toBe(false) // contiene pero no empieza con 'hello'
+    expect(modeFilter.evaluate('bye')).toBe(false) // no contiene ni empieza con 'hello'
+  })
+
+  it('debe manejar arrays vacíos de filtros', () => {
+    const modeFilter = new InsensitiveModeFilter([])
+    expect(modeFilter.evaluate('hello')).toBe(true)
+    expect(modeFilter.evaluate('world')).toBe(true)
+    expect(modeFilter.evaluate('')).toBe(true)
+  })
+
+  it('debe manejar null y undefined', () => {
+    const containsFilter = new ContainsFilter('hello', true)
+    const modeFilter = new InsensitiveModeFilter([containsFilter])
+
+    expect(modeFilter.evaluate(null)).toBe(false)
+    expect(modeFilter.evaluate(undefined)).toBe(false)
+  })
+
+  it('debe manejar tipos no string', () => {
+    const containsFilter = new ContainsFilter('hello', true)
+    const modeFilter = new InsensitiveModeFilter([containsFilter])
+
+    expect(modeFilter.evaluate(123)).toBe(false)
+    expect(modeFilter.evaluate({})).toBe(false)
+    expect(modeFilter.evaluate([])).toBe(false)
+    expect(modeFilter.evaluate(true)).toBe(false)
   })
 })

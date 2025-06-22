@@ -1,11 +1,18 @@
 import { QueryOption } from '../../filter.interface'
-import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
+import { matchesFilter } from '../matches-filter'
 
 export class NotFilterGroup<T> implements EvaluateFilter {
-  constructor(private filterKeys: QueryOption<T, keyof T>[]) {}
+  private filters: QueryOption<T, keyof T>[]
 
-  evaluate(value: any): boolean {
-    return this.filterKeys.every(f => !new FilterEvaluator(f).evaluate(value))
+  constructor(filters: QueryOption<T, keyof T>[]) {
+    this.filters = filters
+  }
+
+  evaluate(data: any): boolean {
+    if (!this.filters || this.filters.length === 0) return true
+
+    // NOT group: negate the disjunction of all subfilters
+    return !this.filters.some(filter => matchesFilter(filter, data))
   }
 }

@@ -10,9 +10,14 @@ import { EveryFilter } from './every-filter'
 import { ExclusionFilter } from './exclusion-filter'
 import { GreaterThanFilter } from './greater-than-filter'
 import { GreaterThanOrEqualFilter } from './greater-than-or-equal-filter'
+import { HasEveryFilter } from './has-every-filter'
+import { HasFilter } from './has-filter'
+import { HasSomeFilter } from './has-some-filter'
 import { InclusionFilter } from './inclusion-filter'
 import { InequalityFilter } from './inequality-filter'
 import { InsensitiveModeFilter } from './insensitive-mode-filter'
+import { IsNullFilter } from './is-null-filter'
+import { LengthFilter } from './length-filter'
 import { LessThanFilter } from './less-than-filter'
 import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
 import { NoneFilter } from './none-filter'
@@ -60,7 +65,8 @@ export function createFilterClassMap<T>(
     case 'notEndsWith':
       return new NotEndsWithFilter(filter, insensitive)
     case 'mode':
-      return new InsensitiveModeFilter(filter)
+      // Mode is handled as a configuration flag, not a separate filter
+      return null
     case 'regex':
       return new RegexFilter(filter)
     case 'before':
@@ -75,18 +81,24 @@ export function createFilterClassMap<T>(
       return new NoneFilter(filter)
     case 'every':
       return new EveryFilter(filter)
-    // has
-    // hasEvery
-    // hasSome
-    // length
+    case 'has':
+      return new HasFilter(filter)
+    case 'hasEvery':
+      return new HasEveryFilter(filter)
+    case 'hasSome':
+      return new HasSomeFilter(filter)
+    case 'length':
+      return new LengthFilter(filter)
     case 'AND':
       return new AndFilterGroup(filter)
     case 'OR':
       return new OrFilterGroup(filter)
     case 'NOT':
       return new NotFilterGroup(filter)
-    // isNull
-    // distinct
-    // include
+    case 'isNull':
+      return new IsNullFilter(filter)
+    default:
+      console.warn(`Unknown filter type: ${type}`)
+      return null
   }
 }

@@ -6,11 +6,11 @@ export class NotEndsWithFilter implements EvaluateFilter {
     private insensitive: boolean = false
   ) {}
 
-  evaluate(input: string): boolean {
-    const compareInput = this.insensitive ? input.toLowerCase() : input
-    const compareValue = this.insensitive
-      ? this.value.toLowerCase()
-      : this.value
-    return !compareInput.endsWith(compareValue)
+  evaluate(data: any): boolean {
+    if (typeof data !== 'string' || typeof this.value !== 'string') return true
+    if (this.insensitive) {
+      return !data.toLowerCase().endsWith(this.value.toLowerCase())
+    }
+    return !data.endsWith(this.value)
   }
 }

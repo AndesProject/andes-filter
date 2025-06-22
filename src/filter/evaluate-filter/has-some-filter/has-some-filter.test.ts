@@ -1,0 +1,195 @@
+import { describe, expect, it } from 'vitest'
+import { filterFrom } from '../../filter-from'
+import { HasSomeFilter } from './has-some-filter'
+
+describe('HasSomeFilter', () => {
+  it('arrays que contienen al menos uno de los elementos requeridos', () => {
+    const filter = filterFrom<{ items: number[] }>([
+      { items: [1, 2, 3, 4] },
+      { items: [5, 6, 7] },
+      { items: [8, 9, 10] },
+      { items: [11, 12] },
+    ])
+
+    // Los primeros dos arrays contienen al menos uno de los elementos [1, 5]
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1, 5] } } }).data.length
+    ).toBe(2)
+
+    // Solo el primer array contiene al menos uno de los elementos [1, 2, 3]
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length
+    ).toBe(1)
+
+    // Ningún array contiene al menos uno de los elementos [99, 100]
+    expect(
+      filter.findMany({ where: { items: { hasSome: [99, 100] } } }).data.length
+    ).toBe(0)
+  })
+
+  it('arrays con strings', () => {
+    const filter = filterFrom<{ tags: string[] }>([
+      { tags: ['javascript', 'typescript', 'react'] },
+      { tags: ['python', 'java'] },
+      { tags: ['c++', 'c#'] },
+    ])
+
+    // Los primeros dos arrays contienen al menos uno de los elementos ['javascript', 'python']
+    expect(
+      filter.findMany({
+        where: { tags: { hasSome: ['javascript', 'python'] } },
+      }).data.length
+    ).toBe(2)
+
+    // Solo el primer array contiene al menos uno de los elementos ['javascript', 'typescript']
+    expect(
+      filter.findMany({
+        where: { tags: { hasSome: ['javascript', 'typescript'] } },
+      }).data.length
+    ).toBe(1)
+  })
+
+  it('arrays vacíos, null y undefined', () => {
+    const filter = filterFrom<{ items: any }>([
+      { items: [] },
+      { items: null },
+      { items: undefined },
+      { items: [1, 2, 3] },
+    ])
+
+    // Solo el array vacío y el array con elementos pasan cuando no hay elementos requeridos
+    expect(
+      filter.findMany({ where: { items: { hasSome: [] } } }).data.length
+    ).toBe(2)
+
+    // Solo el último array contiene elementos
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length
+    ).toBe(1)
+  })
+
+  it('findUnique', () => {
+    const filter = filterFrom<{ items: number[] }>([
+      { items: [1, 2, 3, 4] },
+      { items: [5, 6, 7] },
+    ])
+
+    const result = filter.findUnique({ where: { items: { hasSome: [1, 5] } } })
+    expect(result).toEqual({ items: [1, 2, 3, 4] })
+
+    const result2 = filter.findUnique({
+      where: { items: { hasSome: [99, 100] } },
+    })
+    expect(result2).toBe(null)
+  })
+
+  it('arrays con booleanos', () => {
+    const filter = filterFrom<{ flags: boolean[] }>([
+      { flags: [true, false, true] },
+      { flags: [false, false] },
+      { flags: [true] },
+    ])
+
+    // Todos los arrays contienen al menos uno de los elementos [true, false]
+    expect(
+      filter.findMany({ where: { flags: { hasSome: [true, false] } } }).data
+        .length
+    ).toBe(3)
+  })
+
+  it('arrays con elementos duplicados', () => {
+    const filter = filterFrom<{ items: number[] }>([
+      { items: [1, 1, 2, 2, 3] },
+      { items: [4, 5, 6] },
+      { items: [7, 8] },
+    ])
+
+    // Los primeros dos arrays contienen al menos un 1 o un 4
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1, 4] } } }).data.length
+    ).toBe(2)
+
+    // Solo el primer array contiene al menos un 1, 2 o 3
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length
+    ).toBe(1)
+  })
+
+  it('arrays con un solo elemento requerido', () => {
+    const filter = filterFrom<{ items: number[] }>([
+      { items: [1, 2, 3] },
+      { items: [4, 5, 6] },
+      { items: [7, 8, 9] },
+    ])
+
+    // Solo el primer array contiene el elemento 1
+    expect(
+      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length
+    ).toBe(1)
+
+    // Solo el segundo array contiene el elemento 4
+    expect(
+      filter.findMany({ where: { items: { hasSome: [4] } } }).data.length
+    ).toBe(1)
+  })
+})
+
+describe('HasSomeFilter Unit', () => {
+  it('debe retornar true si el array contiene al menos uno de los elementos requeridos', () => {
+    const filter = new HasSomeFilter<number>([1, 2, 3])
+    expect(filter.evaluate([1, 4, 5])).toBe(true)
+    expect(filter.evaluate([4, 2, 6])).toBe(true)
+    expect(filter.evaluate([7, 8, 3])).toBe(true)
+  })
+
+  it('debe retornar false si el array no contiene ninguno de los elementos requeridos', () => {
+    const filter = new HasSomeFilter<number>([1, 2, 3])
+    expect(filter.evaluate([4, 5, 6])).toBe(false)
+    expect(filter.evaluate([7, 8, 9])).toBe(false)
+  })
+
+  it('debe retornar false si el valor no es un array, es null o undefined', () => {
+    const filter = new HasSomeFilter<number>([1, 2])
+    expect(filter.evaluate('not-an-array')).toBe(false)
+    expect(filter.evaluate(null)).toBe(false)
+    expect(filter.evaluate(undefined)).toBe(false)
+    expect(filter.evaluate({})).toBe(false)
+  })
+
+  it('debe retornar true si el array está vacío y no hay elementos requeridos', () => {
+    const filter = new HasSomeFilter<number>([])
+    expect(filter.evaluate([])).toBe(true)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+  })
+
+  it('debe retornar false si el array está vacío pero hay elementos requeridos', () => {
+    const filter = new HasSomeFilter<number>([1, 2])
+    expect(filter.evaluate([])).toBe(false)
+  })
+
+  it('debe funcionar con strings', () => {
+    const filter = new HasSomeFilter<string>(['javascript', 'typescript'])
+    expect(filter.evaluate(['javascript', 'react'])).toBe(true)
+    expect(filter.evaluate(['python', 'typescript'])).toBe(true)
+    expect(filter.evaluate(['python', 'java'])).toBe(false)
+  })
+
+  it('debe funcionar con booleanos', () => {
+    const filter = new HasSomeFilter<boolean>([true, false])
+    expect(filter.evaluate([true, true])).toBe(true)
+    expect(filter.evaluate([false, false])).toBe(true)
+    expect(filter.evaluate([true, false])).toBe(true)
+  })
+
+  it('debe funcionar con arrays vacíos de elementos requeridos', () => {
+    const filter = new HasSomeFilter<number>([])
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+  })
+
+  it('debe funcionar con un solo elemento requerido', () => {
+    const filter = new HasSomeFilter<number>([1])
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([4, 5, 6])).toBe(false)
+  })
+})

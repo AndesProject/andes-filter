@@ -1,9 +1,11 @@
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
-export class EqualityFilter<T> implements EvaluateFilter {
-  constructor(private targetValue: T | null) {}
+export class EqualityFilter implements EvaluateFilter {
+  constructor(private value: any) {}
 
-  evaluate(value: any): boolean {
-    return value === this.targetValue
+  evaluate(data: any): boolean {
+    if (this.value === undefined || this.value === null) return false
+    if (data === undefined || data === null) return false
+    return data === this.value
   }
 }

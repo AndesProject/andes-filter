@@ -6,11 +6,11 @@ export class StartsWithFilter implements EvaluateFilter {
     private insensitive: boolean = false
   ) {}
 
-  evaluate(input: string): boolean {
-    const compareInput = this.insensitive ? input.toLowerCase() : input
-    const compareValue = this.insensitive
-      ? this.value.toLowerCase()
-      : this.value
-    return compareInput.startsWith(compareValue)
+  evaluate(data: any): boolean {
+    if (typeof data !== 'string' || typeof this.value !== 'string') return false
+    if (this.insensitive) {
+      return data.toLowerCase().startsWith(this.value.toLowerCase())
+    }
+    return data.startsWith(this.value)
   }
 }

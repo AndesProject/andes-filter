@@ -1,4 +1,4 @@
-import { QueryFilterOrderByEnum } from '@app/filter/filter.interface'
+import { QueryFilterOrderByEnum } from '../../filter.interface'
 
 export function sortObjects<T>(
   items: T[],

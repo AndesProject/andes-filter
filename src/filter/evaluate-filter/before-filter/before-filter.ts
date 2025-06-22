@@ -9,7 +9,11 @@ export class BeforeFilter implements EvaluateFilter {
   }
 
   public evaluate(value: DateOrNumber): boolean {
+    if (value === null || value === undefined) return false
+    if (this.referenceDate == null || isNaN(this.referenceDate.getTime()))
+      return false
     const dateValue = new Date(value)
+    if (isNaN(dateValue.getTime())) return false
     return dateValue < this.referenceDate
   }
 }

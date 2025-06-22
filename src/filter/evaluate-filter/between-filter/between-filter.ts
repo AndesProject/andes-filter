@@ -11,7 +11,16 @@ export class BetweenFilter implements EvaluateFilter {
   }
 
   evaluate(value: DateOrNumber): boolean {
+    if (value === null || value === undefined) return false
+    if (
+      this.startDate == null ||
+      this.endDate == null ||
+      isNaN(this.startDate.getTime()) ||
+      isNaN(this.endDate.getTime())
+    )
+      return false
     const dateValue = new Date(value)
+    if (isNaN(dateValue.getTime())) return false
     return dateValue >= this.startDate && dateValue <= this.endDate
   }
 }

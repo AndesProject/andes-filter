@@ -72,6 +72,7 @@ export type QueryFilter<T> = {
   }
   pagination?: QueryFilterPagination
   orderBy?: { [K in keyof T]?: QueryFilterOrderByEnum }
+  distinct?: boolean | string | string[]
 }
 
 export interface FilterMethods<T> {

@@ -17,17 +17,23 @@ describe('InequalityFilter', () => {
       { name: 'Jasmine' },
     ])
 
-    expect(filter.findMany({ where: { name: { not: 'Alice' } } }).length).toBe(
-      9
-    )
-    expect(filter.findMany({ where: { name: { not: 'Bob' } } }).length).toBe(10)
-    expect(filter.findMany({ where: { name: { not: 'Andrea' } } }).length).toBe(
+    expect(
+      filter.findMany({ where: { name: { not: 'Alice' } } }).data.length
+    ).toBe(9)
+    expect(
+      filter.findMany({ where: { name: { not: 'Bob' } } }).data.length
+    ).toBe(10)
+    expect(
+      filter.findMany({ where: { name: { not: 'Andrea' } } }).data.length
+    ).toBe(11)
+    expect(filter.findMany({ where: { name: { not: '' } } }).data.length).toBe(
       11
     )
-    expect(filter.findMany({ where: { name: { not: '' } } }).length).toBe(11)
-    expect(filter.findMany({ where: { name: { not: null } } }).length).toBe(11)
     expect(
-      filter.findMany({ where: { name: { not: undefined } } }).length
+      filter.findMany({ where: { name: { not: null } } }).data.length
+    ).toBe(11)
+    expect(
+      filter.findMany({ where: { name: { not: undefined } } }).data.length
     ).toBe(11)
 
     expect(
@@ -52,12 +58,14 @@ describe('InequalityFilter', () => {
       { size: 5 },
     ])
 
-    expect(filter.findMany({ where: { size: { not: 1 } } }).length).toBe(4)
-    expect(filter.findMany({ where: { size: { not: 2 } } }).length).toBe(4)
-    expect(filter.findMany({ where: { size: { not: 3 } } }).length).toBe(4)
-    expect(filter.findMany({ where: { size: { not: null } } }).length).toBe(5)
+    expect(filter.findMany({ where: { size: { not: 1 } } }).data.length).toBe(4)
+    expect(filter.findMany({ where: { size: { not: 2 } } }).data.length).toBe(4)
+    expect(filter.findMany({ where: { size: { not: 3 } } }).data.length).toBe(4)
     expect(
-      filter.findMany({ where: { size: { not: undefined } } }).length
+      filter.findMany({ where: { size: { not: null } } }).data.length
+    ).toBe(5)
+    expect(
+      filter.findMany({ where: { size: { not: undefined } } }).data.length
     ).toBe(5)
 
     expect(
@@ -74,17 +82,17 @@ describe('InequalityFilter', () => {
       { isValid: false },
     ])
 
-    expect(filter.findMany({ where: { isValid: { not: true } } }).length).toBe(
-      1
-    )
-    expect(filter.findMany({ where: { isValid: { not: false } } }).length).toBe(
-      2
-    )
-    expect(filter.findMany({ where: { isValid: { not: null } } }).length).toBe(
-      3
-    )
     expect(
-      filter.findMany({ where: { isValid: { not: undefined } } }).length
+      filter.findMany({ where: { isValid: { not: true } } }).data.length
+    ).toBe(1)
+    expect(
+      filter.findMany({ where: { isValid: { not: false } } }).data.length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { isValid: { not: null } } }).data.length
+    ).toBe(3)
+    expect(
+      filter.findMany({ where: { isValid: { not: undefined } } }).data.length
     ).toBe(3)
 
     expect(
@@ -96,5 +104,53 @@ describe('InequalityFilter', () => {
     expect(
       filter.findUnique({ where: { isValid: { not: false } } })?.isValid
     ).toBe(true)
+  })
+
+  it('not con objeto QueryOption (condición anidada)', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+    ])
+    // Negar el filtro: name contiene 'a' (case sensitive)
+    expect(
+      filter
+        .findMany({ where: { name: { not: { contains: 'a' } } } })
+        .data.map(x => x.name)
+    ).toEqual(['Alice', 'Bob'])
+    // Negar el filtro: name empieza con 'A'
+    expect(
+      filter
+        .findMany({ where: { name: { not: { startsWith: 'A' } } } })
+        .data.map(x => x.name)
+    ).toEqual(['Bob', 'Charlie', 'David'])
+    // Negar el filtro: name igual a 'Bob'
+    expect(
+      filter
+        .findMany({ where: { name: { not: { equals: 'Bob' } } } })
+        .data.map(x => x.name)
+    ).toEqual(['Alice', 'Charlie', 'David'])
+    // Negar el filtro: name termina con 'e'
+    expect(
+      filter
+        .findMany({ where: { name: { not: { endsWith: 'e' } } } })
+        .data.map(x => x.name)
+    ).toEqual(['Bob', 'David'])
+  })
+
+  it('not anidado (doble negación)', () => {
+    const filter = filterFrom<{ name: string }>([
+      { name: 'Alice' },
+      { name: 'Bob' },
+      { name: 'Charlie' },
+      { name: 'David' },
+    ])
+    // Doble negación: name igual a 'Bob'
+    expect(
+      filter
+        .findMany({ where: { name: { not: { not: { equals: 'Bob' } } } } })
+        .data.map(x => x.name)
+    ).toEqual(['Bob'])
   })
 })
