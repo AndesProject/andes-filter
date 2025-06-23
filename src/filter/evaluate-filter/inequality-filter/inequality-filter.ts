@@ -1,4 +1,4 @@
-import { QueryOption } from '../../filter.interface'
+import { FilterCriteria } from '../../filter.interface'
 import { isObject, isString } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
@@ -15,7 +15,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
   private rawTarget: any = null
   private isArrayEquivalence: boolean = false
   constructor(
-    private targetValue: T | QueryOption<T> | null,
+    private targetValue: T | FilterCriteria<T> | null,
     insensitive?: boolean
   ) {
     this.insensitive = !!insensitive
@@ -129,16 +129,9 @@ export class InequalityFilter<T> implements EvaluateFilter {
         ].includes(k)
       )
     ) {
-      let subInsensitive = this.insensitive || this.modeInsensitive
-      if (
-        'mode' in (this.targetValue as any) &&
-        (this.targetValue as any).mode === 'insensitive'
-      ) {
-        subInsensitive = true
-      }
-      return !new FilterEvaluator(this.targetValue as QueryOption<T>).evaluate(
-        value
-      )
+      return !new FilterEvaluator(
+        this.targetValue as FilterCriteria<T>
+      ).evaluate(value)
     }
     if (this.targetValue instanceof Date && value instanceof Date) {
       return this.targetValue.getTime() !== value.getTime()

@@ -131,7 +131,7 @@ export class FilterEvaluator<T> {
         if (isDirectOperatorField) {
           dataToEvaluate = targetData
         } else {
-          dataToEvaluate = targetData[fieldKey]
+          dataToEvaluate = (targetData as Record<string, any>)[fieldKey]
         }
       }
       return filterInstance.evaluate(dataToEvaluate)

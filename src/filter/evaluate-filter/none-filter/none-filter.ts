@@ -22,7 +22,7 @@ export class NoneFilter implements EvaluateFilter {
     const keys = Object.keys(this.filter)
     if (keys.length === 1) {
       const key = keys[0]
-      const value = this.filter[key]
+      const value = (this.filter as Record<string, any>)[key]
       if (key === 'distinct') {
         this.isDistinct = true
         return

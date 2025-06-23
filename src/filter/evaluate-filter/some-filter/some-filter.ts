@@ -30,14 +30,14 @@ export class SomeFilter implements EvaluateFilter {
     const keys = Object.keys(this.filter)
     if (keys.length === 1) {
       const key = keys[0]
-      const value = this.filter[key]
+      const value = (this.filter as Record<string, any>)[key]
       if (key === 'not') {
         this.isNegation = true
         if (isObject(value) && !Array.isArray(value) && value !== null) {
           const innerKeys = Object.keys(value)
           if (innerKeys.length === 1) {
             const innerKey = innerKeys[0]
-            const innerValue = value[innerKey]
+            const innerValue = (value as Record<string, any>)[innerKey]
             this.evaluator = createFilterClassMap(innerKey as any, innerValue)
           } else {
             this.evaluator = new FilterEvaluator(value)

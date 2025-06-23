@@ -1,4 +1,5 @@
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
+
 const testData = [
   {
     id: 1,
@@ -54,7 +55,7 @@ const testData = [
     ],
   },
 ]
-const filter = filterFrom(testData)
+const filter = createFilterEngine(testData)
 console.log('=== Test 1: Solo rating >= 4.5 ===')
 const result1 = filter.findMany({
   where: {
@@ -69,7 +70,7 @@ const result1 = filter.findMany({
 })
 console.log(
   'Result 1:',
-  result1.data.map((item) => item.name)
+  result1.data.map((item: any) => item.name)
 )
 console.log('=== Test 2: Rating >= 4.5 Y reviews con score >= 4.5 ===')
 const result2 = filter.findMany({
@@ -90,7 +91,7 @@ const result2 = filter.findMany({
 })
 console.log(
   'Result 2:',
-  result2.data.map((item) => item.name)
+  result2.data.map((item: any) => item.name)
 )
 console.log('=== Test 3: Solo reviews con score >= 4.5 ===')
 const result3 = filter.findMany({
@@ -110,5 +111,5 @@ const result3 = filter.findMany({
 })
 console.log(
   'Result 3:',
-  result3.data.map((item) => item.name)
+  result3.data.map((item: any) => item.name)
 )
