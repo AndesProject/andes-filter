@@ -22,26 +22,26 @@ jobs:
         run: npm ci
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: npm test --workspace=packages/libraries/filter -- --coverage
 
       - name: List coverage directory
-        run: ls -la ./coverage/
+        run: ls -la ./packages/libraries/filter/coverage/
 
       - name: Check if lcov.info exists
         run: |
-          if [ -f "./coverage/lcov.info" ]; then
+          if [ -f "./packages/libraries/filter/coverage/lcov.info" ]; then
             echo "lcov.info found"
-            cat ./coverage/lcov.info | head -10
+            cat ./packages/libraries/filter/coverage/lcov.info | head -10
           else
             echo "lcov.info not found"
-            ls -la ./coverage/
+            ls -la ./packages/libraries/filter/coverage/
           fi
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
+          files: ./packages/libraries/filter/coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
