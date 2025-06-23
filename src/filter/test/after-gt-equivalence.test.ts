@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () => {
   const testData = [
@@ -42,7 +42,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
 
   describe('Date Objects', () => {
     it('after and gt should be equivalent for Date objects', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -62,7 +62,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
     })
 
     it('after and gt should exclude the reference date', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -84,7 +84,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
 
   describe('Timestamp Numbers', () => {
     it('after and gt should be equivalent for timestamp numbers', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -106,7 +106,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
 
   describe('Date Strings', () => {
     it('after and gt should be equivalent for date strings', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -128,7 +128,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
 
   describe('Regular Numbers', () => {
     it('after and gt should be equivalent for regular numbers', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -156,7 +156,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
         { id: 3, date: new Date('2023-02-01') },
       ]
 
-      const filter = filterFrom(dataWithNull)
+      const filter = createFilterEngine(dataWithNull)
 
       const afterResult = filter.findMany({
         where: {
@@ -182,7 +182,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
         { id: 3, date: '2023-02-01' },
       ]
 
-      const filter = filterFrom(dataWithInvalid)
+      const filter = createFilterEngine(dataWithInvalid)
 
       const afterResult = filter.findMany({
         where: {
@@ -202,7 +202,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
     })
 
     it('should handle invalid reference dates identically', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findMany({
         where: {
@@ -223,7 +223,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
 
   describe('findUnique Equivalence', () => {
     it('after and gt should work identically with findUnique', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       const afterResult = filter.findUnique({
         where: {

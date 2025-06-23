@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { matchesFilter } from '../matches-filter'
 import { AndFilterGroup } from './and-filter-group'
 
 describe('AndFilterGroup', () => {
   it('should evaluate all conditions as true when all filters pass', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -29,7 +33,11 @@ describe('AndFilterGroup', () => {
   })
 
   it('should return empty array when any condition fails', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -50,7 +58,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should work with different filter types', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       email: string
@@ -84,7 +92,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should work with nested AND conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -114,7 +122,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should work with OR conditions inside AND', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -141,7 +149,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should handle empty AND array', () => {
-    const filter = filterFrom<{ id: number; name: string }>([
+    const filter = createFilterEngine<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
     ])
@@ -156,7 +164,11 @@ describe('AndFilterGroup', () => {
   })
 
   it('should work with findUnique', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -172,7 +184,11 @@ describe('AndFilterGroup', () => {
   })
 
   it('should return null when findUnique has no matches', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
     ])
@@ -187,7 +203,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should work with complex nested conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -231,7 +247,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('should handle null and undefined values in conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string | null
       email: string | undefined
@@ -252,7 +268,7 @@ describe('AndFilterGroup', () => {
   })
 
   it('debug: simple AND test', () => {
-    const filter = filterFrom<{ id: number; name: string }>([
+    const filter = createFilterEngine<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
       { id: 3, name: 'test3' },

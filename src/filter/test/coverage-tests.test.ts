@@ -1,22 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Coverage Tests - Covering Missing Lines', () => {
   describe('FilterEvaluator Edge Cases', () => {
     it('should handle empty filters array', () => {
-      const filter = filterFrom([{ id: 1, name: 'test' }])
+      const filter = createFilterEngine([{ id: 1, name: 'test' }])
       const result = filter.findMany({ where: {} })
       expect(result.data).toHaveLength(1)
     })
 
     it('should handle null data in evaluate', () => {
-      const filter = filterFrom([{ id: 1, name: 'test' }])
+      const filter = createFilterEngine([{ id: 1, name: 'test' }])
       const result = filter.findMany({ where: { name: { equals: 'test' } } })
       expect(result.data).toHaveLength(1)
     })
 
     it('should handle array data in evaluate', () => {
-      const filter = filterFrom([{ id: 1, items: [1, 2, 3] }])
+      const filter = createFilterEngine([{ id: 1, items: [1, 2, 3] }])
       const result = filter.findMany({
         where: { items: { length: { gte: 2 } } } as any,
       })
@@ -30,7 +30,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, posts: [{ title: 'Post 1', published: false }] },
         { id: 2, posts: [{ title: 'Post 2', published: true }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           posts: {
@@ -48,7 +48,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, items: [{ value: 5 }, { value: 10 }] },
         { id: 2, items: [{ value: 3 }, { value: 7 }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: {
@@ -68,7 +68,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, items: [{ value: 5 }, { value: 3 }] },
         { id: 2, items: [{ value: 1 }, { value: 2 }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: {
@@ -86,7 +86,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, items: [{ value: 1 }, { value: 2 }] },
         { id: 2, items: [{ value: 3 }, { value: 4 }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: {
@@ -106,7 +106,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, items: [{ value: 1 }, { value: 2 }] },
         { id: 2, items: [{ value: 5 }, { value: 6 }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: {
@@ -124,7 +124,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, items: [{ value: 5 }, { value: 6 }] },
         { id: 2, items: [{ value: 7 }, { value: 8 }] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: {
@@ -145,7 +145,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 2, items: undefined },
         { id: 3, items: [1, 2, 3] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           items: { length: { gte: 2 } },
@@ -159,7 +159,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, name: 'test' },
         { id: 2, name: 'longer test' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           name: { length: { gte: 10 } },
@@ -175,7 +175,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, value: 5 },
         { id: 2, value: 10 },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           value: { not: 5 },
@@ -191,7 +191,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, config: config1 },
         { id: 2, config: config2 },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           config: { not: config1 },
@@ -208,7 +208,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, tags: ['tag1', 'tag2', 'tag3'] },
         { id: 2, tags: ['tag1', 'tag2'] },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           tags: {
@@ -226,7 +226,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, value: null },
         { id: 2, value: 'test' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           value: { equals: null },
@@ -240,7 +240,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, value: undefined },
         { id: 2, value: 'test' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: {
           value: { equals: undefined },
@@ -256,7 +256,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         id: i + 1,
         name: `item${i + 1}`,
       }))
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: { id: { gte: 1 } },
         take: 5,
@@ -272,7 +272,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 1, name: 'a' },
         { id: 2, name: 'b' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: { id: { gte: 1 } },
         orderBy: { id: 'asc' },
@@ -287,7 +287,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
   describe('PaginateArray Edge Cases', () => {
     it('should handle pagination with empty array', () => {
       const data: any[] = []
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         take: 10,
         skip: 0,
@@ -297,7 +297,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
 
     it('should handle pagination with skip larger than array', () => {
       const data = [{ id: 1 }, { id: 2 }]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         take: 10,
         skip: 5,
@@ -313,7 +313,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 2, name: 'b' },
         { id: 3, name: 'a' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: { id: { gte: 1 } },
         orderBy: { name: 'asc' },
@@ -327,7 +327,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 2, name: 'b' },
         { id: 3, name: 'a' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: { id: { gte: 1 } },
         orderBy: { name: 'asc' },
@@ -341,7 +341,7 @@ describe('Coverage Tests - Covering Missing Lines', () => {
         { id: 2, value: 5 },
         { id: 3, value: null },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
       const result = filter.findMany({
         where: { id: { gte: 1 } },
         orderBy: { value: 'asc' },

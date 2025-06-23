@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug NOT Filter', () => {
   it('should debug NOT with contains', () => {
@@ -9,7 +9,7 @@ describe('Debug NOT Filter', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = filterFrom(data)
+    const filter = createFilterEngine(data)
 
     // Debug individual results
     console.log('=== Debug NOT contains ===')
@@ -40,7 +40,7 @@ describe('Debug NOT Filter', () => {
       { id: 3, arr: [2, 2, 2] },
       { id: 4, arr: [] },
     ]
-    const filter = filterFrom(data)
+    const filter = createFilterEngine(data)
 
     // Debug individual results
     console.log('=== Debug NOT every ===')

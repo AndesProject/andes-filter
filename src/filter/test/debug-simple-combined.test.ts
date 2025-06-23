@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug Simple Combined Filters', () => {
   const simpleData = [
@@ -31,7 +31,7 @@ describe('Debug Simple Combined Filters', () => {
   ]
 
   it('should debug combined length and some filters', () => {
-    const filter = filterFrom(simpleData)
+    const filter = createFilterEngine(simpleData)
 
     console.log('=== DEBUGGING COMBINED FILTERS ===')
 

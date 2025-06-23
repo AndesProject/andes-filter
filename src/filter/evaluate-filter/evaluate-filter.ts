@@ -1,8 +1,8 @@
-import { QueryOption } from '../filter.interface'
+import { FilterCriteria } from '../filter.interface'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
 
-const OPERATORS = [
+const SUPPORTED_OPERATORS = [
   'equals',
   'not',
   'in',
@@ -33,138 +33,121 @@ const OPERATORS = [
   'distinct',
 ]
 
-// Array operations that should be treated as field operations
-const ARRAY_OPERATIONS = ['some', 'none', 'every']
+const ARRAY_OPERATION_KEYS = ['some', 'none', 'every']
 
 export class FilterEvaluator<T> {
-  private filters: {
-    key: string
-    filter: EvaluateFilter | FilterEvaluator<any>
+  private activeFilters: {
+    fieldKey: string
+    filterInstance: EvaluateFilter | FilterEvaluator<any>
   }[] = []
-  private filterKeys: QueryOption<T, keyof T>
+  private filterCriteria: FilterCriteria<T, keyof T>
 
-  constructor(filter: QueryOption<T, keyof T>) {
-    this.filterKeys = filter
-    this.initializeFilters()
+  constructor(filterCriteria: FilterCriteria<T, keyof T>) {
+    this.filterCriteria = filterCriteria
+    this.initializeFilterInstances()
   }
 
-  private initializeFilters(): void {
-    const hasInsensitiveMode = this.filterKeys.mode === 'insensitive'
+  private initializeFilterInstances(): void {
+    const isCaseInsensitiveMode = this.filterCriteria.mode === 'insensitive'
 
-    Object.keys(this.filterKeys).forEach((key) => {
-      if (key === 'mode') return
-      const value = this.filterKeys[key as keyof QueryOption<T, keyof T>]
+    Object.keys(this.filterCriteria).forEach((criteriaKey) => {
+      if (criteriaKey === 'mode') return
+      const criteriaValue =
+        this.filterCriteria[criteriaKey as keyof FilterCriteria<T, keyof T>]
 
-      // Si es un operador directo (equals, length, etc.)
-      if (OPERATORS.includes(key)) {
-        const filter = createFilterClassMap<T>(
-          key as keyof QueryOption<T, keyof T>,
-          value,
-          hasInsensitiveMode
+      if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
+        const filterInstance = createFilterClassMap<T>(
+          criteriaKey as keyof FilterCriteria<T, keyof T>,
+          criteriaValue,
+          isCaseInsensitiveMode
         )
-        if (filter) {
-          this.filters.push({ key, filter })
+        if (filterInstance) {
+          this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
         }
-      }
-      // Si es una operación de array (some, every, none)
-      else if (ARRAY_OPERATIONS.includes(key)) {
-        const filter = createFilterClassMap<T>(
-          key as keyof QueryOption<T, keyof T>,
-          value,
-          hasInsensitiveMode
+      } else if (ARRAY_OPERATION_KEYS.includes(criteriaKey)) {
+        const filterInstance = createFilterClassMap<T>(
+          criteriaKey as keyof FilterCriteria<T, keyof T>,
+          criteriaValue,
+          isCaseInsensitiveMode
         )
-        if (filter) {
-          this.filters.push({ key, filter })
+        if (filterInstance) {
+          this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
         }
-      }
-      // Si es un campo del objeto con subfiltros
-      else if (typeof value === 'object' && value !== null) {
-        // Verificar si es un filtro con modo insensible
-        if ('mode' in value && value.mode === 'insensitive') {
-          // Es un filtro con modo insensible, crear los filtros directamente
-          Object.keys(value).forEach((subKey) => {
-            if (subKey === 'mode') return
-            const subValue = (value as any)[subKey]
-            const filter = createFilterClassMap(
-              subKey as keyof QueryOption<T, keyof T>,
-              subValue,
-              true // hasInsensitiveMode = true
+      } else if (typeof criteriaValue === 'object' && criteriaValue !== null) {
+        if ('mode' in criteriaValue && criteriaValue.mode === 'insensitive') {
+          Object.keys(criteriaValue).forEach((subCriteriaKey) => {
+            if (subCriteriaKey === 'mode') return
+            const subCriteriaValue = (criteriaValue as any)[subCriteriaKey]
+            const filterInstance = createFilterClassMap(
+              subCriteriaKey as keyof FilterCriteria<T, keyof T>,
+              subCriteriaValue,
+              true
             )
-            if (filter) {
-              this.filters.push({ key, filter })
+            if (filterInstance) {
+              this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
             }
           })
-        }
-        // Verificar si el valor es un objeto con un solo operador
-        else if (
-          Object.keys(value).length === 1 &&
-          OPERATORS.includes(Object.keys(value)[0])
+        } else if (
+          Object.keys(criteriaValue).length === 1 &&
+          SUPPORTED_OPERATORS.includes(Object.keys(criteriaValue)[0])
         ) {
-          const opKey = Object.keys(value)[0]
-          const filter = createFilterClassMap(
-            opKey as keyof QueryOption<T, keyof T>,
-            (value as any)[opKey],
-            hasInsensitiveMode
+          const singleOperatorKey = Object.keys(criteriaValue)[0]
+          const filterInstance = createFilterClassMap(
+            singleOperatorKey as keyof FilterCriteria<T, keyof T>,
+            (criteriaValue as any)[singleOperatorKey],
+            isCaseInsensitiveMode
           )
-          if (filter) {
-            this.filters.push({ key, filter })
+          if (filterInstance) {
+            this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
           }
-        }
-        // Verificar si el valor es un objeto con una sola operación de array
-        else if (
-          Object.keys(value).length === 1 &&
-          ARRAY_OPERATIONS.includes(Object.keys(value)[0])
+        } else if (
+          Object.keys(criteriaValue).length === 1 &&
+          ARRAY_OPERATION_KEYS.includes(Object.keys(criteriaValue)[0])
         ) {
-          const arrayOpKey = Object.keys(value)[0]
-          const filter = createFilterClassMap(
-            arrayOpKey as keyof QueryOption<T, keyof T>,
-            (value as any)[arrayOpKey],
-            hasInsensitiveMode
+          const singleArrayOperationKey = Object.keys(criteriaValue)[0]
+          const filterInstance = createFilterClassMap(
+            singleArrayOperationKey as keyof FilterCriteria<T, keyof T>,
+            (criteriaValue as any)[singleArrayOperationKey],
+            isCaseInsensitiveMode
           )
-          if (filter) {
-            this.filters.push({ key, filter })
+          if (filterInstance) {
+            this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
           }
         } else {
-          // Si el objeto tiene múltiples keys, crear un FilterEvaluator para el objeto completo
-          // Esto permite combinar múltiples filtros en el mismo campo (ej: length + some)
-          this.filters.push({
-            key,
-            filter: new FilterEvaluator(value as any),
+          this.activeFilters.push({
+            fieldKey: criteriaKey,
+            filterInstance: new FilterEvaluator(criteriaValue as any),
           })
         }
       } else {
-        // Para cualquier otro caso, tratar como subfiltro complejo
-        this.filters.push({
-          key,
-          filter: new FilterEvaluator(value as any),
+        this.activeFilters.push({
+          fieldKey: criteriaKey,
+          filterInstance: new FilterEvaluator(criteriaValue as any),
         })
       }
     })
   }
 
-  evaluate(data: any): boolean {
-    if (this.filters.length === 0) return true
+  evaluate(targetData: any): boolean {
+    if (this.activeFilters.length === 0) return true
 
-    return this.filters.every(({ key, filter }) => {
-      // If this FilterEvaluator is for a field (like 'projects'), extract the value for that key
-      // and pass it as data to the sub-FilterEvaluator or filter
-      let valueToEvaluate = data
+    return this.activeFilters.every(({ fieldKey, filterInstance }) => {
+      let dataToEvaluate = targetData
 
-      // Special case: if this FilterEvaluator is for a field with direct operators (like date: { after: ..., before: ... })
-      // then pass the field value directly to each operator filter
-      if (data && typeof data === 'object' && !Array.isArray(data)) {
-        // Check if this is a field with direct operators (like date, length, etc.)
-        const isDirectOperator = OPERATORS.includes(key)
-        if (isDirectOperator) {
-          // For direct operators, use the field value as data
-          valueToEvaluate = data
+      if (
+        targetData &&
+        typeof targetData === 'object' &&
+        !Array.isArray(targetData)
+      ) {
+        const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
+        if (isDirectOperatorField) {
+          dataToEvaluate = targetData
         } else {
-          // For nested fields, extract the value for that key
-          valueToEvaluate = data[key]
+          dataToEvaluate = targetData[fieldKey]
         }
       }
 
-      return filter.evaluate(valueToEvaluate)
+      return filterInstance.evaluate(dataToEvaluate)
     })
   }
 }

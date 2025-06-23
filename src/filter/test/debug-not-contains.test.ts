@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug NOT Contains Step by Step', () => {
   it('should debug NOT contains step by step', () => {
@@ -9,7 +9,7 @@ describe('Debug NOT Contains Step by Step', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = filterFrom(data)
+    const filter = createFilterEngine(data)
 
     console.log('=== Step by step debug ===')
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { NoneFilter } from '../evaluate-filter/none-filter/none-filter'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug NoneFilter', () => {
   it('should debug none filter behavior', () => {
@@ -23,7 +23,7 @@ describe('Debug NoneFilter', () => {
     })
 
     // Test with filter
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
     const result = filter.findMany({
       where: {
         tags: { none: { name: { equals: 'foo' } } as any },
@@ -56,7 +56,7 @@ describe('Debug NoneFilter', () => {
       console.log(`ID ${item.id}: ${JSON.stringify(item.values)} -> ${result}`)
     })
 
-    const filter = filterFrom(data)
+    const filter = createFilterEngine(data)
     const result = filter.findMany({
       where: {
         values: { none: {} as any },

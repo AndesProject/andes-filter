@@ -1,16 +1,19 @@
+import { performStringOperation } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class EndsWithFilter implements EvaluateFilter {
   constructor(
-    private value: string,
-    private insensitive: boolean = false
+    private suffixValue: string,
+    private isCaseInsensitive: boolean = false
   ) {}
 
-  evaluate(data: any): boolean {
-    if (typeof data !== 'string' || typeof this.value !== 'string') return false
-    if (this.insensitive) {
-      return data.toLowerCase().endsWith(this.value.toLowerCase())
-    }
-    return data.endsWith(this.value)
+  evaluate(targetString: any): boolean {
+    return performStringOperation(
+      'endsWith',
+      targetString,
+      this.suffixValue,
+      this.isCaseInsensitive,
+      false
+    )
   }
 }

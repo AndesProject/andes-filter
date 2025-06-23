@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   type Tag = { name: string }
@@ -14,7 +14,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   ]
 
   it('should return true if at least one element matches the filter', () => {
-    const filter = filterFrom<Obj>(testData)
+    const filter = createFilterEngine<Obj>(testData)
     const result = filter.findMany({
       where: {
         tags: { some: { name: { equals: 'foo' } } as any },
@@ -24,7 +24,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   })
 
   it('should return false if no element matches the filter', () => {
-    const filter = filterFrom<Obj>(testData)
+    const filter = createFilterEngine<Obj>(testData)
     const result = filter.findMany({
       where: {
         tags: { some: { name: { equals: 'notfound' } } as any },
@@ -34,7 +34,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   })
 
   it('should return false for empty arrays', () => {
-    const filter = filterFrom<Obj>(testData)
+    const filter = createFilterEngine<Obj>(testData)
     const result = filter.findMany({
       where: {
         tags: { some: { name: { equals: 'foo' } } as any },
@@ -44,7 +44,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   })
 
   it('should return false for null or undefined arrays', () => {
-    const filter = filterFrom<Obj>(testData)
+    const filter = createFilterEngine<Obj>(testData)
     const result = filter.findMany({
       where: {
         tags: { some: { name: { equals: 'foo' } } as any },
@@ -55,7 +55,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   })
 
   it('should return true for empty filter and array of objects (at least one object)', () => {
-    const filter = filterFrom<Obj>(testData)
+    const filter = createFilterEngine<Obj>(testData)
     const result = filter.findMany({
       where: {
         tags: { some: {} as any },
@@ -71,7 +71,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
       { id: 2, values: [] },
       { id: 3, values: null },
     ]
-    const filter = filterFrom<Data>(data)
+    const filter = createFilterEngine<Data>(data)
     const result = filter.findMany({
       where: {
         values: { some: {} as any },
@@ -86,7 +86,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
       { id: 1, values: ['hello', 'TEST', 'world'] },
       { id: 2, values: ['hello', 'world'] },
     ]
-    const filter = filterFrom<Data>(data)
+    const filter = createFilterEngine<Data>(data)
     const result = filter.findMany({
       where: {
         values: { some: { regex: { pattern: 'test', flags: 'i' } } as any },
@@ -98,7 +98,7 @@ describe('Some Filter - Prisma/TypeORM Compatibility', () => {
   it('should return false for some with regex filter and no match', () => {
     type Data = { id: number; values: string[] }
     const data: Data[] = [{ id: 1, values: ['hello', 'world'] }]
-    const filter = filterFrom<Data>(data)
+    const filter = createFilterEngine<Data>(data)
     const result = filter.findMany({
       where: {
         values: { some: { regex: { pattern: 'test', flags: 'i' } } as any },

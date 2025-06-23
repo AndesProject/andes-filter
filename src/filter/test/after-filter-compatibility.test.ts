@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('After Filter - Prisma/TypeORM Compatibility', () => {
   const testData = [
@@ -37,7 +37,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Date Objects', () => {
     it('should filter dates after a specific date', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after: Date filters dates strictly greater than
       const result = filter.findMany({
@@ -51,7 +51,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should not include the reference date (strictly after)', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after excludes the reference date
       const result = filter.findMany({
@@ -65,7 +65,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should handle edge case with exact date', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with exact date should exclude that date
       const result = filter.findMany({
@@ -81,7 +81,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Timestamp Numbers', () => {
     it('should filter timestamps after a specific timestamp', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with number (timestamp)
       const result = filter.findMany({
@@ -95,7 +95,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should handle timestamp edge cases', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with exact timestamp should exclude that timestamp
       const result = filter.findMany({
@@ -111,7 +111,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Date Strings', () => {
     it('should filter date strings after a specific date string', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with date string
       const result = filter.findMany({
@@ -125,7 +125,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should handle date string edge cases', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with exact date string should exclude that date
       const result = filter.findMany({
@@ -141,7 +141,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Mixed Date Types', () => {
     it('should handle mixed date types in reference', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after accepts Date, number, or string
       const result1 = filter.findMany({
@@ -168,7 +168,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
         { id: 3, date: new Date('2023-02-01') },
       ]
 
-      const filter = filterFrom(dataWithNull)
+      const filter = createFilterEngine(dataWithNull)
 
       // Prisma/TypeORM: null values are excluded from after filters
       const result = filter.findMany({
@@ -188,7 +188,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
         { id: 3, date: new Date('2023-02-01') },
       ]
 
-      const filter = filterFrom(dataWithUndefined)
+      const filter = createFilterEngine(dataWithUndefined)
 
       // Prisma/TypeORM: undefined values are excluded from after filters
       const result = filter.findMany({
@@ -208,7 +208,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
         { id: 3, date: '2023-02-01' },
       ]
 
-      const filter = filterFrom(dataWithInvalid)
+      const filter = createFilterEngine(dataWithInvalid)
 
       // Prisma/TypeORM: invalid dates are excluded from after filters
       const result = filter.findMany({
@@ -222,7 +222,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should return false when reference date is invalid', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: invalid reference dates cause no matches
       const result = filter.findMany({
@@ -237,7 +237,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty result set', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with date beyond all data returns empty
       const result = filter.findMany({
@@ -250,7 +250,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should handle all data matches', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after with date before all data returns all
       const result = filter.findMany({
@@ -263,7 +263,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
     })
 
     it('should work with findUnique', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: findUnique with after filter
       const result = filter.findUnique({
@@ -280,7 +280,7 @@ describe('After Filter - Prisma/TypeORM Compatibility', () => {
 
   describe('Comparison with gt', () => {
     it('should behave identically to gt filter', () => {
-      const filter = filterFrom(testData)
+      const filter = createFilterEngine(testData)
 
       // Prisma/TypeORM: after and gt are equivalent
       const afterResult = filter.findMany({

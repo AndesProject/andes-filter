@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { EqualityFilter } from './equality-filter'
 
 describe('EqualityFilter', () => {
   it('string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -60,7 +60,7 @@ describe('EqualityFilter', () => {
   })
 
   it('boolean', () => {
-    const filter = filterFrom<{ isValid: boolean }>([
+    const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: true },
       { isValid: false },
       { isValid: false },
@@ -81,7 +81,7 @@ describe('EqualityFilter', () => {
   })
 
   it('numeric', () => {
-    const filter = filterFrom<{ size: number }>([
+    const filter = createFilterEngine<{ size: number }>([
       { size: 10 },
       { size: 11 },
       { size: 12 },
@@ -113,7 +113,7 @@ describe('EqualityFilter', () => {
   })
 
   it('null and undefined values', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 'hello' },

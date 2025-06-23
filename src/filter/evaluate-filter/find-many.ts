@@ -1,75 +1,76 @@
 import {
-  FindManyQueryResponse,
-  QueryFilter,
-  QueryFilterPagination,
+  FilterQuery,
+  FindManyResult,
+  PaginationOptions,
 } from '../filter.interface'
 import { matchesFilter } from './matches-filter'
 import { paginateArray } from './paginator'
 import { sortObjects } from './sort-objects'
 
-function distinctArray<T>(
-  arr: T[],
-  distinct?: boolean | string | string[]
+function removeDuplicateItems<T>(
+  items: T[],
+  distinctOption?: boolean | string | string[]
 ): T[] {
-  if (!distinct) return arr
-  if (distinct === true) {
-    // Distinct por todo el objeto (referencia)
-    const seen = new Set()
-    return arr.filter((item) => {
-      const key = JSON.stringify(item)
-      if (seen.has(key)) return false
-      seen.add(key)
+  if (!distinctOption) return items
+  if (distinctOption === true) {
+    const seenItems = new Set()
+    return items.filter((item) => {
+      const itemKey = JSON.stringify(item)
+      if (seenItems.has(itemKey)) return false
+      seenItems.add(itemKey)
       return true
     })
   }
-  const fields = Array.isArray(distinct) ? distinct : [distinct]
-  const seen = new Set()
-  return arr.filter((item) => {
-    const key = fields
-      .map((f) =>
+  const distinctFields = Array.isArray(distinctOption)
+    ? distinctOption
+    : [distinctOption]
+  const seenFieldValues = new Set()
+  return items.filter((item) => {
+    const fieldKey = distinctFields
+      .map((field) =>
         JSON.stringify(
-          item && typeof item === 'object' ? item[f as keyof T] : undefined
+          item && typeof item === 'object' ? item[field as keyof T] : undefined
         )
       )
       .join('|')
-    if (seen.has(key)) return false
-    seen.add(key)
+    if (seenFieldValues.has(fieldKey)) return false
+    seenFieldValues.add(fieldKey)
     return true
   })
 }
 
 export function findMany<T>(
-  filter: QueryFilter<T>,
-  data: T[]
-): FindManyQueryResponse<T> {
-  const result = data.filter((item) => {
-    // Siempre pasar el filtro completo y el objeto completo
-    return matchesFilter(filter.where as any, item)
+  filterQuery: FilterQuery<T>,
+  dataSource: T[]
+): FindManyResult<T> {
+  const filteredItems = dataSource.filter((item) => {
+    return matchesFilter(filterQuery.where as any, item)
   })
 
-  const distincted = distinctArray(result, (filter as any).distinct)
-  const items = sortObjects(distincted, filter.orderBy || {})
-  return paginateArray(items, getQueryFilterPagination(filter))
+  const uniqueItems = removeDuplicateItems(
+    filteredItems,
+    (filterQuery as any).distinct
+  )
+  const sortedItems = sortObjects(uniqueItems, filterQuery.orderBy || {})
+  return paginateArray(sortedItems, extractPaginationOptions(filterQuery))
 }
 
-function getQueryFilterPagination<T>(
-  filter: QueryFilter<T>
-): QueryFilterPagination {
-  // Si ya hay pagination definida, usarla
-  if (filter?.pagination) {
-    return filter.pagination
+function extractPaginationOptions<T>(
+  filterQuery: FilterQuery<T>
+): PaginationOptions {
+  if (filterQuery?.pagination) {
+    return filterQuery.pagination
   }
 
-  // Si hay take/skip, convertirlos a page/size
-  const take = (filter as any)?.take
-  const skip = (filter as any)?.skip
+  const takeLimit = (filterQuery as any)?.take
+  const skipOffset = (filterQuery as any)?.skip
 
-  if (take !== undefined || skip !== undefined) {
-    const size = take || 24
-    const page = skip !== undefined ? Math.floor(skip / size) + 1 : 1
-    return { page, size }
+  if (takeLimit !== undefined || skipOffset !== undefined) {
+    const pageSize = takeLimit || 24
+    const currentPage =
+      skipOffset !== undefined ? Math.floor(skipOffset / pageSize) + 1 : 1
+    return { page: currentPage, size: pageSize }
   }
 
-  // Default pagination
   return { page: 1, size: 24 }
 }

@@ -1,4 +1,4 @@
-import { QueryOption } from '../filter.interface'
+import { FilterCriteria } from '../filter.interface'
 import { AfterFilter } from './after-filter'
 import { AndFilterGroup } from './and-filter-group'
 import { BeforeFilter } from './before-filter'
@@ -30,83 +30,83 @@ import { SomeFilter } from './some-filter'
 import { StartsWithFilter } from './starts-with-filter'
 
 export function createFilterClassMap<T>(
-  type: keyof QueryOption<T>,
-  filter: any,
-  insensitive?: boolean
+  filterType: keyof FilterCriteria<T>,
+  filterValue: any,
+  isCaseInsensitive?: boolean
 ): any {
-  switch (type) {
+  switch (filterType) {
     case 'equals':
-      return new EqualityFilter(filter, insensitive)
+      return new EqualityFilter(filterValue, isCaseInsensitive)
     case 'not':
-      return new InequalityFilter(filter, insensitive)
+      return new InequalityFilter(filterValue, isCaseInsensitive)
     case 'in':
-      return new InclusionFilter(filter, insensitive)
+      return new InclusionFilter(filterValue, isCaseInsensitive)
     case 'notIn':
-      return new ExclusionFilter(filter, insensitive)
+      return new ExclusionFilter(filterValue, isCaseInsensitive)
     case 'lt':
-      return new LessThanFilter(filter)
+      return new LessThanFilter(filterValue)
     case 'lte':
-      return new LessThanOrEqualFilter(filter)
+      return new LessThanOrEqualFilter(filterValue)
     case 'gt':
-      return new GreaterThanFilter(filter)
+      return new GreaterThanFilter(filterValue)
     case 'gte':
-      return new GreaterThanOrEqualFilter(filter)
+      return new GreaterThanOrEqualFilter(filterValue)
     case 'contains':
-      return new ContainsFilter(filter, insensitive)
+      return new ContainsFilter(filterValue, isCaseInsensitive)
     case 'notContains':
-      return new NotContainsFilter(filter, insensitive)
+      return new NotContainsFilter(filterValue, isCaseInsensitive)
     case 'startsWith':
-      return new StartsWithFilter(filter, insensitive)
+      return new StartsWithFilter(filterValue, isCaseInsensitive)
     case 'notStartsWith':
-      return new NotStartsWithFilter(filter, insensitive)
+      return new NotStartsWithFilter(filterValue, isCaseInsensitive)
     case 'endsWith':
-      return new EndsWithFilter(filter, insensitive)
+      return new EndsWithFilter(filterValue, isCaseInsensitive)
     case 'notEndsWith':
-      return new NotEndsWithFilter(filter, insensitive)
+      return new NotEndsWithFilter(filterValue, isCaseInsensitive)
     case 'mode':
       // Mode is handled as a configuration flag, not a separate filter
       return null
     case 'regex':
-      return new RegexFilter(filter)
+      return new RegexFilter(filterValue)
     case 'before':
-      return new BeforeFilter(filter)
+      return new BeforeFilter(filterValue)
     case 'after':
-      return new AfterFilter(filter)
+      return new AfterFilter(filterValue)
     case 'between':
-      return new BetweenFilter(filter)
+      return new BetweenFilter(filterValue)
     case 'some':
-      return new SomeFilter(filter)
+      return new SomeFilter(filterValue)
     case 'none':
-      return new NoneFilter(filter)
+      return new NoneFilter(filterValue)
     case 'every':
-      return new EveryFilter(filter)
+      return new EveryFilter(filterValue)
     case 'has':
-      return new HasFilter(filter)
+      return new HasFilter(filterValue)
     case 'hasEvery':
-      return new HasEveryFilter(filter)
+      return new HasEveryFilter(filterValue)
     case 'hasSome':
-      return new HasSomeFilter(filter)
+      return new HasSomeFilter(filterValue)
     case 'length':
-      return new LengthFilter(filter)
+      return new LengthFilter(filterValue)
     case 'AND':
-      return new AndFilterGroup(filter)
+      return new AndFilterGroup(filterValue)
     case 'OR':
-      return new OrFilterGroup(filter)
+      return new OrFilterGroup(filterValue)
     case 'NOT':
-      return new NotFilterGroup(filter)
+      return new NotFilterGroup(filterValue)
     case 'isNull':
-      return new IsNullFilter(filter)
+      return new IsNullFilter(filterValue)
     case 'distinct':
       // Distinct filter - returns true if all values in array are unique
       return {
-        evaluate: (data: any) => {
-          if (!Array.isArray(data)) return false
-          const uniqueValues = new Set(data)
-          return uniqueValues.size === data.length
+        evaluate: (arrayData: any) => {
+          if (!Array.isArray(arrayData)) return false
+          const uniqueValues = new Set(arrayData)
+          return uniqueValues.size === arrayData.length
         },
       }
     default:
-      console.warn(`Unknown filter type: ${type}`)
+      console.warn(`Unknown filter type: ${filterType}`)
       return null
   }
 }

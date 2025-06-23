@@ -1,13 +1,11 @@
+import { isNonEmptyArray } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class HasFilter<T> implements EvaluateFilter {
-  constructor(private targetValue: T) {}
+  constructor(private requiredValue: T) {}
 
-  evaluate(value: any): boolean {
-    if (value === null || value === undefined) return false
-    if (!Array.isArray(value)) return false
-    if (value.length === 0) return false
-
-    return value.includes(this.targetValue)
+  evaluate(arrayValue: any): boolean {
+    if (!isNonEmptyArray(arrayValue)) return false
+    return arrayValue.includes(this.requiredValue)
   }
 }

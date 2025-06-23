@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { NoneFilter } from './none-filter'
 
 // Reemplazar FilterEvaluator globalmente con TestFilterEvaluator en cada prueba
 describe('NoneFilter', () => {
   it('arrays con elementos', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
       { items: [7, 8, 9] },
@@ -24,7 +24,7 @@ describe('NoneFilter', () => {
   })
 
   it('arrays vacíos, null y undefined', () => {
-    const filter = filterFrom<{ items: any }>([
+    const filter = createFilterEngine<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -38,7 +38,7 @@ describe('NoneFilter', () => {
   })
 
   it('findUnique', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
     ])
@@ -55,7 +55,7 @@ describe('NoneFilter', () => {
   })
 
   it('filtros complejos', () => {
-    const filter = filterFrom<{ posts: number[] }>([
+    const filter = createFilterEngine<{ posts: number[] }>([
       { posts: [1, 2] },
       { posts: [3, 4] },
     ])

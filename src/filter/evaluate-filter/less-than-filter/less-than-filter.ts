@@ -1,11 +1,11 @@
+import { isNil } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class LessThanFilter implements EvaluateFilter {
   constructor(private value: any) {}
 
   evaluate(data: any): boolean {
-    if (this.value === undefined || this.value === null) return false
-    if (data === undefined || data === null) return false
+    if (isNil(this.value) || isNil(data)) return false
     return data < this.value
   }
 }

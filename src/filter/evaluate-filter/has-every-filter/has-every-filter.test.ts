@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { HasEveryFilter } from './has-every-filter'
 
 describe('HasEveryFilter', () => {
   it('arrays que contienen todos los elementos requeridos', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [1, 2, 3] },
       { items: [1, 2] },
@@ -30,7 +30,7 @@ describe('HasEveryFilter', () => {
   })
 
   it('arrays con strings', () => {
-    const filter = filterFrom<{ tags: string[] }>([
+    const filter = createFilterEngine<{ tags: string[] }>([
       { tags: ['javascript', 'typescript', 'react'] },
       { tags: ['javascript', 'typescript'] },
       { tags: ['javascript'] },
@@ -52,7 +52,7 @@ describe('HasEveryFilter', () => {
   })
 
   it('arrays vacíos, null y undefined', () => {
-    const filter = filterFrom<{ items: any }>([
+    const filter = createFilterEngine<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -71,7 +71,7 @@ describe('HasEveryFilter', () => {
   })
 
   it('findUnique', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [1, 2, 3] },
     ])
@@ -88,7 +88,7 @@ describe('HasEveryFilter', () => {
   })
 
   it('arrays con booleanos', () => {
-    const filter = filterFrom<{ flags: boolean[] }>([
+    const filter = createFilterEngine<{ flags: boolean[] }>([
       { flags: [true, false, true] },
       { flags: [true, false] },
       { flags: [true] },
@@ -102,7 +102,7 @@ describe('HasEveryFilter', () => {
   })
 
   it('arrays con elementos duplicados', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 1, 2, 2, 3] },
       { items: [1, 2, 3] },
       { items: [1, 2] },

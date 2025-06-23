@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { ExclusionFilter } from './exclusion-filter'
 
 describe('ExclusionFilter', () => {
   it('string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -49,7 +49,7 @@ describe('ExclusionFilter', () => {
   })
 
   it('number', () => {
-    const filter = filterFrom<{ size: number }>([
+    const filter = createFilterEngine<{ size: number }>([
       { size: 0 },
       { size: 0 },
       { size: 1 },
@@ -78,7 +78,7 @@ describe('ExclusionFilter', () => {
   })
 
   it('boolean', () => {
-    const filter = filterFrom<{ isValid: boolean }>([
+    const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: true },
       { isValid: true },
       { isValid: false },
@@ -110,7 +110,7 @@ describe('ExclusionFilter', () => {
   })
 
   it('casos de borde', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: '' },
@@ -157,7 +157,7 @@ describe('ExclusionFilter', () => {
     const arr1 = [1, 2, 3]
     const arr2 = [4, 5, 6]
 
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: obj1 },
       { value: obj2 },
       { value: arr1 },

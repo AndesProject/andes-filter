@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
   describe('Basic Equality Behavior', () => {
@@ -12,7 +12,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, name: null },
         { id: 6, name: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Exact string match - should work like Prisma/TypeORM
       expect(
@@ -51,7 +51,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 6, value: null },
         { id: 7, value: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Exact number match
       expect(
@@ -84,7 +84,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, active: null },
         { id: 5, active: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Boolean values
       expect(
@@ -115,7 +115,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, date: null },
         { id: 5, date: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Date equality should compare by value, not reference
       expect(
@@ -149,7 +149,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, value: undefined },
         { id: 6, value: NaN },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Falsy values should be treated as distinct
       expect(
@@ -185,7 +185,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, obj: null },
         { id: 5, obj: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Object equality should be by reference, not by value (like Prisma/TypeORM)
       expect(
@@ -218,7 +218,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, arr: null },
         { id: 5, arr: undefined },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Array equality should be by reference, not by value (like Prisma/TypeORM)
       expect(
@@ -250,7 +250,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, value: 1 },
         { id: 5, value: 'true' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // String vs Number - should not coerce
       expect(
@@ -285,7 +285,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 2, name: 'alice' },
         { id: 3, name: 'ALICE' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Case sensitive comparison
       expect(
@@ -305,7 +305,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 2, name: 'alice' },
         { id: 3, name: 'ALICE' },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Case insensitive comparison
       expect(
@@ -333,7 +333,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         name: `User${i + 1}`,
         value: i % 100,
       }))
-      const filter = filterFrom(largeData)
+      const filter = createFilterEngine(largeData)
 
       // Should find exact matches quickly
       const start = performance.now()
@@ -356,7 +356,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 3, name: 'Bob', age: 25, active: true },
         { id: 4, name: 'Charlie', age: 35, active: true },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // Multiple equals conditions
       expect(
@@ -385,7 +385,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 2, name: 'Bob', age: 30 },
         { id: 3, name: 'Charlie', age: 35 },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // OR with equals
       expect(
@@ -403,7 +403,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 2, name: 'Bob', age: 30 },
         { id: 3, name: 'Charlie', age: 35 },
       ]
-      const filter = filterFrom(data)
+      const filter = createFilterEngine(data)
 
       // NOT with equals
       expect(

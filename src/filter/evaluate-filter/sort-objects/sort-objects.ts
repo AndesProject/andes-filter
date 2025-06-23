@@ -1,21 +1,21 @@
-import { QueryFilterOrderByEnum } from '../../filter.interface'
+import { SortDirection } from '../../filter.interface'
 
 export function sortObjects<T>(
   items: T[],
-  orderBy?: { [K in keyof T]?: QueryFilterOrderByEnum }
+  sortCriteria?: { [K in keyof T]?: SortDirection }
 ): T[] {
-  if (!items || items.length === 0 || !orderBy) return items
+  if (!items || items.length === 0 || !sortCriteria) return items
 
-  items.sort((a, b) => {
-    for (const key in orderBy) {
-      if (Object.prototype.hasOwnProperty.call(orderBy, key)) {
-        const sortDirection = orderBy[key]
-        const comparison = compare(a, b, key)
+  items.sort((firstItem, secondItem) => {
+    for (const fieldKey in sortCriteria) {
+      if (Object.prototype.hasOwnProperty.call(sortCriteria, fieldKey)) {
+        const sortDirection = sortCriteria[fieldKey]
+        const comparisonResult = compareValues(firstItem, secondItem, fieldKey)
 
-        if (comparison !== 0) {
-          return sortDirection === QueryFilterOrderByEnum.DESC
-            ? -comparison
-            : comparison
+        if (comparisonResult !== 0) {
+          return sortDirection === SortDirection.DESC
+            ? -comparisonResult
+            : comparisonResult
         }
       }
     }
@@ -25,43 +25,41 @@ export function sortObjects<T>(
   return items
 }
 
-function compare<T>(a: T, b: T, key: keyof T): number {
-  const valueA = a[key]
-  const valueB = b[key]
+function compareValues<T>(
+  firstItem: T,
+  secondItem: T,
+  fieldKey: keyof T
+): number {
+  const firstValue = firstItem[fieldKey]
+  const secondValue = secondItem[fieldKey]
 
-  // Manejar null y undefined - colocarlos al final
-  if (valueA === null && valueB === null) return 0
-  if (valueA === null) return 1
-  if (valueB === null) return -1
-  if (valueA === undefined && valueB === undefined) return 0
-  if (valueA === undefined) return 1
-  if (valueB === undefined) return -1
+  if (firstValue === null && secondValue === null) return 0
+  if (firstValue === null) return 1
+  if (secondValue === null) return -1
+  if (firstValue === undefined && secondValue === undefined) return 0
+  if (firstValue === undefined) return 1
+  if (secondValue === undefined) return -1
 
-  // Si ambos son números, comparar numéricamente
-  if (typeof valueA === 'number' && typeof valueB === 'number') {
-    return valueA - valueB
+  if (typeof firstValue === 'number' && typeof secondValue === 'number') {
+    return firstValue - secondValue
   }
 
-  // Si ambos son strings, comparar alfabéticamente
-  if (typeof valueA === 'string' && typeof valueB === 'string') {
-    return valueA.localeCompare(valueB)
+  if (typeof firstValue === 'string' && typeof secondValue === 'string') {
+    return firstValue.localeCompare(secondValue)
   }
 
-  // Si ambos son booleanos, comparar como números
-  if (typeof valueA === 'boolean' && typeof valueB === 'boolean') {
-    return Number(valueA) - Number(valueB)
+  if (typeof firstValue === 'boolean' && typeof secondValue === 'boolean') {
+    return Number(firstValue) - Number(secondValue)
   }
 
-  // Si ambos son fechas, comparar como fechas
-  if (valueA instanceof Date && valueB instanceof Date) {
-    return valueA.getTime() - valueB.getTime()
+  if (firstValue instanceof Date && secondValue instanceof Date) {
+    return firstValue.getTime() - secondValue.getTime()
   }
 
-  // Para tipos mixtos o diferentes, convertir a string y comparar
-  const strA = String(valueA).toLowerCase()
-  const strB = String(valueB).toLowerCase()
+  const firstStringValue = String(firstValue).toLowerCase()
+  const secondStringValue = String(secondValue).toLowerCase()
 
-  if (strA < strB) return -1
-  if (strA > strB) return 1
+  if (firstStringValue < secondStringValue) return -1
+  if (firstStringValue > secondStringValue) return 1
   return 0
 }

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { HasSomeFilter } from './has-some-filter'
 
 describe('HasSomeFilter', () => {
   it('arrays que contienen al menos uno de los elementos requeridos', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [5, 6, 7] },
       { items: [8, 9, 10] },
@@ -28,7 +28,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('arrays con strings', () => {
-    const filter = filterFrom<{ tags: string[] }>([
+    const filter = createFilterEngine<{ tags: string[] }>([
       { tags: ['javascript', 'typescript', 'react'] },
       { tags: ['python', 'java'] },
       { tags: ['c++', 'c#'] },
@@ -50,7 +50,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('arrays vacíos, null y undefined', () => {
-    const filter = filterFrom<{ items: any }>([
+    const filter = createFilterEngine<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -69,7 +69,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('findUnique', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [5, 6, 7] },
     ])
@@ -84,7 +84,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('arrays con booleanos', () => {
-    const filter = filterFrom<{ flags: boolean[] }>([
+    const filter = createFilterEngine<{ flags: boolean[] }>([
       { flags: [true, false, true] },
       { flags: [false, false] },
       { flags: [true] },
@@ -98,7 +98,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('arrays con elementos duplicados', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 1, 2, 2, 3] },
       { items: [4, 5, 6] },
       { items: [7, 8] },
@@ -116,7 +116,7 @@ describe('HasSomeFilter', () => {
   })
 
   it('arrays con un solo elemento requerido', () => {
-    const filter = filterFrom<{ items: number[] }>([
+    const filter = createFilterEngine<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
       { items: [7, 8, 9] },

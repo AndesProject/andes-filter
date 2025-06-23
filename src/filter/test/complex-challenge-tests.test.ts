@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
   // Datos complejos con múltiples niveles de anidación
@@ -324,7 +324,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Multi-Level Nested Object Filters', () => {
     it('should handle deep nested some filters with multiple conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -352,7 +352,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle complex every filter with nested conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -378,7 +378,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle none filter with deep nested conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -404,7 +404,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Complex Logical Group Combinations', () => {
     it('should handle deeply nested AND/OR combinations', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -446,7 +446,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle complex NOT with nested conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           NOT: [
@@ -485,7 +485,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle multiple levels of nested logical groups', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -534,7 +534,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Complex Array and Object Combinations', () => {
     it('should handle hasSome with nested object conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -560,7 +560,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle hasEvery with complex nested conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           departments: {
@@ -583,7 +583,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle length with nested object filtering', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -616,7 +616,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Date and String Complex Filters', () => {
     it('should handle before/after with nested date conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -647,7 +647,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle string filters with insensitive mode in nested objects', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -664,7 +664,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle regex with nested string conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -683,7 +683,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Performance and Edge Cases', () => {
     it('should handle very deep nested conditions efficiently', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const startTime = Date.now()
 
       const result = filter.findMany({
@@ -736,7 +736,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle empty arrays and null values gracefully', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -755,7 +755,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle complex numeric comparisons with nested conditions', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -794,7 +794,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
 
   describe('Ultra Complex Scenarios', () => {
     it('should handle maximum complexity with all filter types combined', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -869,7 +869,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
     })
 
     it('should handle recursive nested conditions with multiple levels', () => {
-      const filter = filterFrom(complexData)
+      const filter = createFilterEngine(complexData)
       const result = filter.findMany({
         where: {
           employees: {

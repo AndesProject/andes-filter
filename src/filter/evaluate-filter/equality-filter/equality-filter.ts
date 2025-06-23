@@ -2,54 +2,55 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class EqualityFilter implements EvaluateFilter {
   constructor(
-    private value: any,
-    private insensitive: boolean = false
+    private expectedValue: any,
+    private isCaseInsensitive: boolean = false
   ) {}
 
-  evaluate(data: any): boolean {
-    // Handle null equality: null equals null
-    if (this.value === null && data === null) return true
-    if (this.value === undefined && data === undefined) return true
+  evaluate(actualValue: any): boolean {
+    if (this.expectedValue === null && actualValue === null) return true
+    if (this.expectedValue === undefined && actualValue === undefined)
+      return true
 
-    // If filter value is null/undefined but data is not, return false
-    if (this.value === null || this.value === undefined) return false
-    if (data === null || data === undefined) return false
+    if (this.expectedValue === null || this.expectedValue === undefined)
+      return false
+    if (actualValue === null || actualValue === undefined) return false
 
-    // Handle string comparison with insensitive mode
-    if (typeof this.value === 'string' && typeof data === 'string') {
-      if (this.insensitive) {
-        return this.value.toLowerCase() === data.toLowerCase()
-      }
-      return this.value === data
-    }
-
-    // Handle Date comparison - compare by value, not reference (like Prisma/TypeORM)
-    if (this.value instanceof Date && data instanceof Date) {
-      return this.value.getTime() === data.getTime()
-    }
-
-    // Handle Date comparison when one is Date and other is string/number
-    if (this.value instanceof Date || data instanceof Date) {
-      const date1 =
-        this.value instanceof Date ? this.value : new Date(this.value)
-      const date2 = data instanceof Date ? data : new Date(data)
-      return date1.getTime() === date2.getTime()
-    }
-
-    // Handle NaN comparison - NaN !== NaN in JavaScript (like Prisma/TypeORM)
-    if (Number.isNaN(this.value) || Number.isNaN(data)) return false
-
-    // Handle object comparison - compare by reference for objects and arrays (like Prisma/TypeORM)
     if (
-      typeof this.value === 'object' &&
-      this.value !== null &&
-      typeof data === 'object' &&
-      data !== null
+      typeof this.expectedValue === 'string' &&
+      typeof actualValue === 'string'
     ) {
-      return this.value === data
+      if (this.isCaseInsensitive) {
+        return this.expectedValue.toLowerCase() === actualValue.toLowerCase()
+      }
+      return this.expectedValue === actualValue
     }
 
-    // Handle primitive comparison
-    return data === this.value
+    if (this.expectedValue instanceof Date && actualValue instanceof Date) {
+      return this.expectedValue.getTime() === actualValue.getTime()
+    }
+
+    if (this.expectedValue instanceof Date || actualValue instanceof Date) {
+      const firstDate =
+        this.expectedValue instanceof Date
+          ? this.expectedValue
+          : new Date(this.expectedValue)
+      const secondDate =
+        actualValue instanceof Date ? actualValue : new Date(actualValue)
+      return firstDate.getTime() === secondDate.getTime()
+    }
+
+    if (Number.isNaN(this.expectedValue) || Number.isNaN(actualValue))
+      return false
+
+    if (
+      typeof this.expectedValue === 'object' &&
+      this.expectedValue !== null &&
+      typeof actualValue === 'object' &&
+      actualValue !== null
+    ) {
+      return this.expectedValue === actualValue
+    }
+
+    return actualValue === this.expectedValue
   }
 }

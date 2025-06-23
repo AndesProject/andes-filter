@@ -1,5 +1,5 @@
 import { describe, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug Contains Filter', () => {
   it('should test contains behavior', () => {
@@ -9,7 +9,7 @@ describe('Debug Contains Filter', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = filterFrom(data)
+    const filter = createFilterEngine(data)
 
     console.log('=== Debug contains: lic ===')
     data.forEach((item) => {

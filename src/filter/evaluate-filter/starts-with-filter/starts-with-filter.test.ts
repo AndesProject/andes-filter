@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { StartsWithFilter } from './starts-with-filter'
 
 describe('StartsWithFilter', () => {
   it('string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -69,7 +69,7 @@ describe('StartsWithFilter', () => {
   })
 
   it('case insensitive', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'BOB' },
       { name: 'Charlie' },
@@ -116,7 +116,7 @@ describe('StartsWithFilter', () => {
   })
 
   it('null y undefined', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 'hello' },
@@ -134,7 +134,7 @@ describe('StartsWithFilter', () => {
   })
 
   it('strings vacíos y casos especiales', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: '' },
       { value: 'hello' },
       { value: 'world' },

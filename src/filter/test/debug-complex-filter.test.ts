@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug Complex Filter', () => {
   // Simplified version of the complex data for debugging
@@ -99,7 +99,7 @@ describe('Debug Complex Filter', () => {
   ]
 
   it('should debug the failing complex filter step by step', () => {
-    const filter = filterFrom(complexData)
+    const filter = createFilterEngine(complexData)
 
     // Let's break down the complex filter into parts
     console.log('=== DEBUGGING COMPLEX FILTER ===')

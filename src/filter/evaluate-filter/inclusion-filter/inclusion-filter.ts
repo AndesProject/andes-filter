@@ -1,63 +1,63 @@
+import {
+  compareDateValues,
+  compareStringsWithCase,
+} from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class InclusionFilter<T> implements EvaluateFilter {
-  private insensitive: boolean = false
+  private isCaseInsensitive: boolean = false
 
   constructor(
-    private targetValues: T[],
-    insensitive?: boolean
+    private allowedValues: T[],
+    isCaseInsensitive?: boolean
   ) {
-    this.insensitive = !!insensitive
+    this.isCaseInsensitive = !!isCaseInsensitive
   }
 
-  evaluate(value: T): boolean {
-    // Prisma/TypeORM: in: [] nunca retorna nada
-    if (!Array.isArray(this.targetValues) || this.targetValues.length === 0)
+  evaluate(actualValue: T): boolean {
+    if (!Array.isArray(this.allowedValues) || this.allowedValues.length === 0)
       return false
 
-    for (const v of this.targetValues) {
-      // NaN
+    for (const allowedValue of this.allowedValues) {
       if (
-        typeof value === 'number' &&
-        typeof v === 'number' &&
-        Number.isNaN(value) &&
-        Number.isNaN(v)
-      ) {
+        typeof actualValue === 'number' &&
+        typeof allowedValue === 'number' &&
+        Number.isNaN(actualValue) &&
+        Number.isNaN(allowedValue)
+      )
         return true
-      }
-      // Fechas por valor
-      if (value instanceof Date && v instanceof Date) {
-        if (value.getTime() === v.getTime()) return true
+
+      if (actualValue === null && allowedValue === null) return true
+      if (actualValue === undefined && allowedValue === undefined) return true
+
+      if (actualValue instanceof Date && allowedValue instanceof Date) {
+        if (compareDateValues(actualValue, allowedValue)) return true
         continue
       }
-      // null y undefined - comparación estricta
-      if (value === null && v === null) {
-        return true
-      }
-      if (value === undefined && v === undefined) {
-        return true
-      }
-      // Objetos por referencia (no deep equality)
+
       if (
-        typeof value === 'object' &&
-        value !== null &&
-        typeof v === 'object' &&
-        v !== null
+        typeof actualValue === 'object' &&
+        actualValue !== null &&
+        typeof allowedValue === 'object' &&
+        allowedValue !== null
       ) {
-        if (value === v) return true
+        if (actualValue === allowedValue) return true
         continue
       }
-      // Strings con modo insensible
-      if (typeof value === 'string' && typeof v === 'string') {
-        if (this.insensitive) {
-          if (value.toLowerCase() === v.toLowerCase()) return true
-        } else {
-          if (value === v) return true
-        }
+
+      if (typeof actualValue === 'string' && typeof allowedValue === 'string') {
+        if (
+          compareStringsWithCase(
+            actualValue,
+            allowedValue,
+            this.isCaseInsensitive
+          )
+        )
+          return true
         continue
       }
-      // Primitivos (case-sensitive)
-      if (value === v) return true
+
+      if (actualValue === allowedValue) return true
     }
     return false
   }

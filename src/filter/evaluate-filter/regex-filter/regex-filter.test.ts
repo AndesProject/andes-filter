@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { RegexFilter } from './regex-filter'
 
 describe('RegexFilter', () => {
   it('string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -37,7 +37,7 @@ describe('RegexFilter', () => {
   })
 
   it('null y undefined', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 'hello' },
@@ -55,7 +55,7 @@ describe('RegexFilter', () => {
   })
 
   it('patrones de regex especiales', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: 'hello123' },
       { value: 'world456' },
       { value: 'test' },
@@ -78,7 +78,7 @@ describe('RegexFilter', () => {
   })
 
   it('patrones de regex inválidos', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: 'hello' },
       { value: 'world' },
     ])
@@ -94,7 +94,7 @@ describe('RegexFilter', () => {
   })
 
   it('regex con flags como string', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: 'Hello' },
       { value: 'hello' },
       { value: 'HELLO' },
@@ -125,7 +125,7 @@ describe('RegexFilter', () => {
   })
 
   it('regex como objeto con flags edge cases', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: 'abc123' },
       { value: 'ABC123' },
       { value: 'def456' },

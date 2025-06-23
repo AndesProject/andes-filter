@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 const complexData = [
   {
@@ -274,7 +274,7 @@ const complexData = [
 
 describe('Debug HasEvery Filter', () => {
   it('should debug hasEvery filter with productivity >= 0.8', () => {
-    const filter = filterFrom(complexData)
+    const filter = createFilterEngine(complexData)
     const result = filter.findMany({
       where: {
         departments: {
@@ -324,7 +324,7 @@ describe('Debug HasEvery Filter', () => {
       },
     ]
 
-    const filter = filterFrom(simpleData)
+    const filter = createFilterEngine(simpleData)
     const result = filter.findMany({
       where: {
         departments: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug Mode Insensitive', () => {
   const testData = [
@@ -12,7 +12,7 @@ describe('Debug Mode Insensitive', () => {
   ]
 
   it('should debug mode insensitive behavior', () => {
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
 
     console.log('=== Debug Mode Insensitive ===')
 

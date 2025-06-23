@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { ContainsFilter } from '../contains-filter/contains-filter'
 import { StartsWithFilter } from '../starts-with-filter/starts-with-filter'
 import { InsensitiveModeFilter } from './insensitive-mode-filter'
 
 describe('InsensitiveModeFilter', () => {
   it('contains string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -90,7 +90,7 @@ describe('InsensitiveModeFilter', () => {
   })
 
   it('startsWith string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -184,7 +184,7 @@ describe('InsensitiveModeFilter', () => {
   })
 
   it('endsWith string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -253,7 +253,7 @@ describe('InsensitiveModeFilter', () => {
   })
 
   it('multi string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },

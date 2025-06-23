@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { FilterEvaluator } from '../evaluate-filter/evaluate-filter'
 import { LengthFilter } from '../evaluate-filter/length-filter/length-filter'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 const simpleData = [
   {
@@ -52,7 +52,7 @@ describe('Debug Length Filter', () => {
   })
 
   it('should debug length filter with simple data', () => {
-    const filter = filterFrom(simpleData)
+    const filter = createFilterEngine(simpleData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -90,7 +90,7 @@ describe('Debug Length Filter', () => {
   })
 
   it('should test length filter directly', () => {
-    const filter = filterFrom(simpleData)
+    const filter = createFilterEngine(simpleData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -122,7 +122,7 @@ describe('Debug Length Filter', () => {
       { id: 3, items: [] },
     ]
 
-    const filter = filterFrom(simpleArrayData)
+    const filter = createFilterEngine(simpleArrayData)
     const result = filter.findMany({
       where: {
         items: { length: { gte: 1 } },

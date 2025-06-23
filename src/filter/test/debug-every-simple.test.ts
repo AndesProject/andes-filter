@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug Every Filter', () => {
   const testData = [
@@ -76,7 +76,7 @@ describe('Debug Every Filter', () => {
   ]
 
   it('should debug every filter with rating only', () => {
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -97,7 +97,7 @@ describe('Debug Every Filter', () => {
   })
 
   it('should debug every filter with rating and reviews (every)', () => {
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -127,7 +127,7 @@ describe('Debug Every Filter', () => {
   })
 
   it('should debug every filter with reviews only', () => {
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -152,7 +152,7 @@ describe('Debug Every Filter', () => {
   })
 
   it('should debug every filter with rating and reviews (every) - complex data', () => {
-    const filter = filterFrom(testData)
+    const filter = createFilterEngine(testData)
     const result = filter.findMany({
       where: {
         employees: {

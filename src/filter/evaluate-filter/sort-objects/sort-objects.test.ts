@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest'
-import { QueryFilterOrderByEnum } from '../../filter.interface'
+import { SortDirection } from '../../filter.interface'
 import { sortObjects } from './sort-objects'
 
 describe('sortObjects', () => {
   it('should return items unchanged when items is null', () => {
-    const result = sortObjects(null as any, { id: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(null as any, { id: SortDirection.ASC })
     expect(result).toBeNull()
   })
 
   it('should return items unchanged when items is undefined', () => {
     const result = sortObjects(undefined as any, {
-      id: QueryFilterOrderByEnum.ASC,
+      id: SortDirection.ASC,
     })
     expect(result).toBeUndefined()
   })
 
   it('should return items unchanged when items is empty array', () => {
     const items: any[] = []
-    const result = sortObjects(items, { id: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { id: SortDirection.ASC })
     expect(result).toBe(items)
   })
 
@@ -35,19 +35,19 @@ describe('sortObjects', () => {
 
   it('should sort numbers in ascending order', () => {
     const items = [{ id: 3 }, { id: 1 }, { id: 2 }]
-    const result = sortObjects(items, { id: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { id: SortDirection.ASC })
     expect(result).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }])
   })
 
   it('should sort numbers in descending order', () => {
     const items = [{ id: 1 }, { id: 3 }, { id: 2 }]
-    const result = sortObjects(items, { id: QueryFilterOrderByEnum.DESC })
+    const result = sortObjects(items, { id: SortDirection.DESC })
     expect(result).toEqual([{ id: 3 }, { id: 2 }, { id: 1 }])
   })
 
   it('should sort strings in ascending order', () => {
     const items = [{ name: 'Charlie' }, { name: 'Alice' }, { name: 'Bob' }]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: 'Alice' },
       { name: 'Bob' },
@@ -57,7 +57,7 @@ describe('sortObjects', () => {
 
   it('should sort strings in descending order', () => {
     const items = [{ name: 'Alice' }, { name: 'Charlie' }, { name: 'Bob' }]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.DESC })
+    const result = sortObjects(items, { name: SortDirection.DESC })
     expect(result).toEqual([
       { name: 'Charlie' },
       { name: 'Bob' },
@@ -67,7 +67,7 @@ describe('sortObjects', () => {
 
   it('should sort booleans in ascending order', () => {
     const items = [{ active: true }, { active: false }, { active: true }]
-    const result = sortObjects(items, { active: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { active: SortDirection.ASC })
     expect(result).toEqual([
       { active: false },
       { active: true },
@@ -77,7 +77,7 @@ describe('sortObjects', () => {
 
   it('should sort booleans in descending order', () => {
     const items = [{ active: false }, { active: true }, { active: false }]
-    const result = sortObjects(items, { active: QueryFilterOrderByEnum.DESC })
+    const result = sortObjects(items, { active: SortDirection.DESC })
     expect(result).toEqual([
       { active: true },
       { active: false },
@@ -90,7 +90,7 @@ describe('sortObjects', () => {
     const date2 = new Date('2023-02-01')
     const date3 = new Date('2023-03-01')
     const items = [{ date: date3 }, { date: date1 }, { date: date2 }]
-    const result = sortObjects(items, { date: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { date: SortDirection.ASC })
     expect(result).toEqual([{ date: date1 }, { date: date2 }, { date: date3 }])
   })
 
@@ -99,7 +99,7 @@ describe('sortObjects', () => {
     const date2 = new Date('2023-02-01')
     const date3 = new Date('2023-03-01')
     const items = [{ date: date1 }, { date: date3 }, { date: date2 }]
-    const result = sortObjects(items, { date: QueryFilterOrderByEnum.DESC })
+    const result = sortObjects(items, { date: SortDirection.DESC })
     expect(result).toEqual([{ date: date3 }, { date: date2 }, { date: date1 }])
   })
 
@@ -110,7 +110,7 @@ describe('sortObjects', () => {
       { name: 'Bob' },
       { name: null },
     ]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: 'Alice' },
       { name: 'Bob' },
@@ -126,7 +126,7 @@ describe('sortObjects', () => {
       { name: 'Bob' },
       { name: undefined },
     ]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: 'Alice' },
       { name: 'Bob' },
@@ -142,7 +142,7 @@ describe('sortObjects', () => {
       { name: 'Bob' },
       { name: undefined },
     ]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: 'Alice' },
       { name: 'Bob' },
@@ -158,7 +158,7 @@ describe('sortObjects', () => {
       { value: true },
       { value: null },
     ]
-    const result = sortObjects(items, { value: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { value: SortDirection.ASC })
     expect(result).toEqual([
       { value: 5 },
       { value: 'string' },
@@ -175,8 +175,8 @@ describe('sortObjects', () => {
       { id: 2, name: 'Bob' },
     ]
     const result = sortObjects(items, {
-      id: QueryFilterOrderByEnum.ASC,
-      name: QueryFilterOrderByEnum.ASC,
+      id: SortDirection.ASC,
+      name: SortDirection.ASC,
     })
     expect(result).toEqual([
       { id: 1, name: 'Alice' },
@@ -194,8 +194,8 @@ describe('sortObjects', () => {
       { id: 2, name: 'Bob' },
     ]
     const result = sortObjects(items, {
-      id: QueryFilterOrderByEnum.ASC,
-      name: QueryFilterOrderByEnum.DESC,
+      id: SortDirection.ASC,
+      name: SortDirection.DESC,
     })
     expect(result).toEqual([
       { id: 1, name: 'Bob' },
@@ -212,8 +212,8 @@ describe('sortObjects', () => {
       { id: 2, name: 'Bob' },
     ]
     const result = sortObjects(items, {
-      id: QueryFilterOrderByEnum.ASC,
-      name: QueryFilterOrderByEnum.ASC,
+      id: SortDirection.ASC,
+      name: SortDirection.ASC,
     })
     expect(result).toEqual([
       { id: 1, name: 'Alice' },
@@ -229,7 +229,7 @@ describe('sortObjects', () => {
       { name: 'BOB' },
       { name: 'bob' },
     ]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: 'alice' },
       { name: 'Alice' },
@@ -245,7 +245,7 @@ describe('sortObjects', () => {
       { name: 'Bob' },
       { name: null },
     ]
-    const result = sortObjects(items, { name: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { name: SortDirection.ASC })
     expect(result).toEqual([
       { name: '' },
       { name: 'Alice' },
@@ -256,7 +256,7 @@ describe('sortObjects', () => {
 
   it('should handle zero values in numbers', () => {
     const items = [{ id: 5 }, { id: 0 }, { id: -1 }, { id: 10 }]
-    const result = sortObjects(items, { id: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { id: SortDirection.ASC })
     expect(result).toEqual([{ id: -1 }, { id: 0 }, { id: 5 }, { id: 10 }])
   })
 
@@ -267,7 +267,7 @@ describe('sortObjects', () => {
       { active: true },
       { active: false },
     ]
-    const result = sortObjects(items, { active: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { active: SortDirection.ASC })
     expect(result).toEqual([
       { active: false },
       { active: false },
@@ -283,7 +283,7 @@ describe('sortObjects', () => {
       { name: 'Bob' },
       { id: 3, name: 'Charlie' },
     ]
-    const result = sortObjects(items, { id: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { id: SortDirection.ASC })
     expect(result).toEqual([
       { id: 1, name: 'Alice' },
       { id: 2 },
@@ -294,7 +294,7 @@ describe('sortObjects', () => {
 
   it('should handle equal string values in mixed type comparison', () => {
     const items = [{ value: 'test' }, { value: 'TEST' }, { value: 'test' }]
-    const result = sortObjects(items, { value: QueryFilterOrderByEnum.ASC })
+    const result = sortObjects(items, { value: SortDirection.ASC })
     expect(result).toEqual([
       { value: 'test' },
       { value: 'test' },

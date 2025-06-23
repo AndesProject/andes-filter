@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { InclusionFilter } from './inclusion-filter'
 
 describe('InclusionFilter', () => {
   it('string', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -46,7 +46,7 @@ describe('InclusionFilter', () => {
   })
 
   it('number', () => {
-    const filter = filterFrom<{ size: number }>([
+    const filter = createFilterEngine<{ size: number }>([
       { size: 0 },
       { size: 1 },
       { size: 2 },
@@ -73,7 +73,7 @@ describe('InclusionFilter', () => {
   })
 
   it('boolean', () => {
-    const filter = filterFrom<{ isValid: boolean }>([
+    const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: false },
       { isValid: false },
       { isValid: true },
@@ -100,7 +100,7 @@ describe('InclusionFilter', () => {
   })
 
   it('casos de borde', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: '' },
@@ -146,7 +146,7 @@ describe('InclusionFilter', () => {
     const arr1 = [1, 2, 3]
     const arr2 = [4, 5, 6]
 
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: obj1 },
       { value: obj2 },
       { value: arr1 },
@@ -222,7 +222,7 @@ describe('InclusionFilter Unit Tests', () => {
   })
 
   it('debe verificar contratos de retorno de findMany y findUnique', () => {
-    const filter = filterFrom<{ name: string }>([
+    const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Bob' },
       { name: 'Charlie' },

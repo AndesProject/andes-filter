@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createFilterClassMap } from '../evaluate-filter/evaluate-filter.map'
-import { QueryOption } from '../filter.interface'
+import { FilterCriteria } from '../filter.interface'
 
 // Mocks mínimos para los filtros
 class Dummy {}
@@ -41,7 +41,7 @@ const typeToClass = {
 describe('createFilterClassMap', () => {
   Object.keys(typeToClass).forEach((type) => {
     it(`should create correct filter for type '${type}'`, () => {
-      const filter = createFilterClassMap(type as keyof QueryOption<any>, {})
+      const filter = createFilterClassMap(type as keyof FilterCriteria<any>, {})
       // El nombre de la clase debe coincidir
       expect(filter?.constructor?.name).toBe(typeToClass[type])
     })

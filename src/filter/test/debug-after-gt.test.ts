@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { AfterFilter } from '../evaluate-filter/after-filter/after-filter'
 import { GreaterThanFilter } from '../evaluate-filter/greater-than-filter/greater-than-filter'
-import { filterFrom } from '../filter-from'
+import { createFilterEngine } from '../filter-from'
 
 describe('Debug After vs GT', () => {
   it('should debug invalid date handling', () => {
@@ -24,7 +24,7 @@ describe('Debug After vs GT', () => {
     })
 
     // Test full filter results
-    const filter = filterFrom(dataWithInvalid)
+    const filter = createFilterEngine(dataWithInvalid)
 
     const afterResult = filter.findMany({
       where: {

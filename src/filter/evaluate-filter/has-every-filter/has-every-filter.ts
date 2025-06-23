@@ -1,3 +1,4 @@
+import { allItemsMatch, anyItemMatches } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
@@ -5,55 +6,59 @@ import { matchesFilter } from '../matches-filter'
 export class HasEveryFilter<T> implements EvaluateFilter {
   private filterEvaluators: FilterEvaluator<any>[] = []
 
-  constructor(private targetValues: T[]) {
+  constructor(private requiredValues: T[]) {
     // Si los valores objetivo son objetos complejos, crear FilterEvaluators
     if (
-      this.targetValues.length > 0 &&
-      typeof this.targetValues[0] === 'object' &&
-      this.targetValues[0] !== null
+      this.requiredValues.length > 0 &&
+      typeof this.requiredValues[0] === 'object' &&
+      this.requiredValues[0] !== null
     ) {
-      this.filterEvaluators = this.targetValues.map(
-        (targetValue) => new FilterEvaluator(targetValue as any)
+      this.filterEvaluators = this.requiredValues.map(
+        (requiredValue) => new FilterEvaluator(requiredValue as any)
       )
     }
   }
 
-  evaluate(value: any): boolean {
-    if (value === null || value === undefined) return false
-    if (!Array.isArray(value)) return false
-    if (value.length === 0) return this.targetValues.length === 0 // Si el array está vacío, solo pasa si no hay elementos requeridos
+  evaluate(arrayValue: any): boolean {
+    if (!Array.isArray(arrayValue)) return false
+    if (arrayValue.length === 0) return this.requiredValues.length === 0 // Si el array está vacío, solo pasa si no hay elementos requeridos
 
     // Si no hay elementos requeridos, siempre pasa
-    if (this.targetValues.length === 0) return true
+    if (this.requiredValues.length === 0) return true
 
     // CASO CORRECTO: Si el filtro es un solo objeto, verificar que todos los elementos del array lo cumplan
     if (
-      this.targetValues.length === 1 &&
-      typeof this.targetValues[0] === 'object'
+      this.requiredValues.length === 1 &&
+      typeof this.requiredValues[0] === 'object'
     ) {
-      const evaluator = new FilterEvaluator(this.targetValues[0] as any)
-      return value.every((item) => evaluator.evaluate(item))
+      const singleEvaluator = new FilterEvaluator(this.requiredValues[0] as any)
+      return allItemsMatch(arrayValue, (item) => singleEvaluator.evaluate(item))
     }
 
     // Si tenemos FilterEvaluators, verificar que todos los elementos requeridos cumplan la condición
     if (this.filterEvaluators.length > 0) {
       return this.filterEvaluators.every((evaluator) => {
-        return value.some((item) => evaluator.evaluate(item))
+        return anyItemMatches(arrayValue, (item) => evaluator.evaluate(item))
       })
     }
 
     // Si los valores objetivo son objetos simples, usar matchesFilter para comparación
     if (
-      this.targetValues.some(
-        (target) => typeof target === 'object' && target !== null
+      this.requiredValues.some(
+        (requiredValue) =>
+          typeof requiredValue === 'object' && requiredValue !== null
       )
     ) {
-      return this.targetValues.every((targetValue) => {
-        return value.some((item) => matchesFilter(targetValue as any, item))
+      return this.requiredValues.every((requiredValue) => {
+        return anyItemMatches(arrayValue, (item) =>
+          matchesFilter(requiredValue as any, item)
+        )
       })
     }
 
     // Para valores primitivos, verificar que todos los elementos requeridos estén en el array
-    return this.targetValues.every((targetValue) => value.includes(targetValue))
+    return this.requiredValues.every((requiredValue) =>
+      arrayValue.includes(requiredValue)
+    )
   }
 }

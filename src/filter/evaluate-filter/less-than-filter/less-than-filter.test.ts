@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { LessThanFilter } from './less-than-filter'
 
 describe('LessThanFilter', () => {
   it('number', () => {
-    const filter = filterFrom<{ size: number }>([
+    const filter = createFilterEngine<{ size: number }>([
       { size: -2 },
       { size: -1 },
       { size: 0 },
@@ -33,7 +33,7 @@ describe('LessThanFilter', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
     const d3 = new Date('2022-01-01')
-    const filter = filterFrom<{ date: Date }>([
+    const filter = createFilterEngine<{ date: Date }>([
       { date: d1 },
       { date: d2 },
       { date: d3 },
@@ -46,7 +46,7 @@ describe('LessThanFilter', () => {
   })
 
   it('string', () => {
-    const filter = filterFrom<{ value: string }>([
+    const filter = createFilterEngine<{ value: string }>([
       { value: 'a' },
       { value: 'b' },
       { value: 'c' },
@@ -67,7 +67,7 @@ describe('LessThanFilter', () => {
   })
 
   it('null y undefined', () => {
-    const filter = filterFrom<{ value: any }>([
+    const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 0 },

@@ -1,91 +1,70 @@
+import { isNil, isValidDate } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class GreaterThanFilter implements EvaluateFilter {
-  private referenceValue: any
+  private thresholdValue: any
 
-  constructor(value: any) {
-    this.referenceValue = value
+  constructor(thresholdValue: any) {
+    this.thresholdValue = thresholdValue
   }
 
-  evaluate(data: any): boolean {
-    // Handle null/undefined cases - Prisma/TypeORM behavior
-    if (data === null || data === undefined) return false
-    if (this.referenceValue === null || this.referenceValue === undefined)
-      return false
+  evaluate(actualValue: any): boolean {
+    if (isNil(actualValue) || isNil(this.thresholdValue)) return false
 
-    // Handle NaN cases - Prisma/TypeORM behavior
-    if (typeof data === 'number' && Number.isNaN(data)) return false
     if (
-      typeof this.referenceValue === 'number' &&
-      Number.isNaN(this.referenceValue)
-    )
-      return false
-
-    // Handle number comparisons (including floating point)
-    if (typeof data === 'number' && typeof this.referenceValue === 'number') {
-      return Number(data) > Number(this.referenceValue)
-    }
-
-    // Handle Date comparisons - compare by value, not reference
-    if (this.isDateLike(data) && this.isDateLike(this.referenceValue)) {
-      const dateValue = new Date(data)
-      const refDate = new Date(this.referenceValue)
-      if (isNaN(dateValue.getTime()) || isNaN(refDate.getTime())) return false
-      return dateValue.getTime() > refDate.getTime()
-    }
-
-    // Handle string comparisons - use lexicographic comparison
-    if (typeof data === 'string' && typeof this.referenceValue === 'string') {
-      // Si ambos strings parecen fechas, comparar como fechas
-      const dateA = new Date(data)
-      const dateB = new Date(this.referenceValue)
-      const isDateA = !isNaN(dateA.getTime())
-      const isDateB = !isNaN(dateB.getTime())
-      if (isDateA && isDateB) {
-        return dateA.getTime() > dateB.getTime()
-      }
-      if (isDateA !== isDateB) {
-        // Si uno es fecha válida y el otro no, retorna false (no comparable)
+      typeof actualValue === 'number' &&
+      typeof this.thresholdValue === 'number'
+    ) {
+      if (Number.isNaN(actualValue) || Number.isNaN(this.thresholdValue))
         return false
-      }
-      // Si ninguno es fecha válida, comparar como string
-      return data > this.referenceValue
+      return actualValue > this.thresholdValue
     }
 
-    // Handle mixed type comparisons
-    if (typeof data === 'string' && typeof this.referenceValue === 'number') {
-      const numData = parseFloat(data)
-      if (!isNaN(numData)) {
-        return numData > this.referenceValue
-      }
-      // If string cannot be converted to number, use string comparison
-      return data > this.referenceValue.toString()
+    if (isValidDate(actualValue) && isValidDate(this.thresholdValue)) {
+      return (
+        new Date(actualValue).getTime() >
+        new Date(this.thresholdValue).getTime()
+      )
     }
 
-    if (typeof data === 'number' && typeof this.referenceValue === 'string') {
-      const numRef = parseFloat(this.referenceValue)
-      if (!isNaN(numRef)) {
-        return data > numRef
+    if (
+      typeof actualValue === 'string' &&
+      typeof this.thresholdValue === 'string'
+    ) {
+      const firstDate = new Date(actualValue)
+      const secondDate = new Date(this.thresholdValue)
+      const isFirstDateValid = !isNaN(firstDate.getTime())
+      const isSecondDateValid = !isNaN(secondDate.getTime())
+
+      if (isFirstDateValid && isSecondDateValid) {
+        return firstDate.getTime() > secondDate.getTime()
       }
-      // If reference cannot be converted to number, use string comparison
-      return data.toString() > this.referenceValue
+      if (isFirstDateValid !== isSecondDateValid) return false
+      return actualValue > this.thresholdValue
     }
 
-    // For other types, try to convert to comparable values
+    if (
+      typeof actualValue === 'string' &&
+      typeof this.thresholdValue === 'number'
+    ) {
+      const numericValue = parseFloat(actualValue)
+      if (!isNaN(numericValue)) return numericValue > this.thresholdValue
+      return actualValue > this.thresholdValue.toString()
+    }
+
+    if (
+      typeof actualValue === 'number' &&
+      typeof this.thresholdValue === 'string'
+    ) {
+      const numericThreshold = parseFloat(this.thresholdValue)
+      if (!isNaN(numericThreshold)) return actualValue > numericThreshold
+      return actualValue.toString() > this.thresholdValue
+    }
+
     try {
-      return data > this.referenceValue
+      return actualValue > this.thresholdValue
     } catch {
       return false
     }
-  }
-
-  private isDateLike(value: any): boolean {
-    if (value instanceof Date) return true
-    if (typeof value === 'number') return !isNaN(value) && value > 0
-    if (typeof value === 'string') {
-      const date = new Date(value)
-      return !isNaN(date.getTime())
-    }
-    return false
   }
 }

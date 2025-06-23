@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { filterFrom } from '../../filter-from'
+import { createFilterEngine } from '../../filter-from'
 import { OrFilterGroup } from './or-filter-group'
 
 describe('OrFilterGroup', () => {
   it('should evaluate as true when any filter passes', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -28,7 +32,11 @@ describe('OrFilterGroup', () => {
   })
 
   it('should return empty array when no conditions match', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -48,7 +56,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with different filter types', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       email: string
@@ -82,7 +90,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with nested OR conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -116,7 +124,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with AND conditions inside OR', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -147,7 +155,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should handle empty OR array', () => {
-    const filter = filterFrom<{ id: number; name: string }>([
+    const filter = createFilterEngine<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
     ])
@@ -162,7 +170,11 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with findUnique', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
       { id: 3, name: 'test3', active: true },
@@ -178,7 +190,11 @@ describe('OrFilterGroup', () => {
   })
 
   it('should return null when findUnique has no matches', () => {
-    const filter = filterFrom<{ id: number; name: string; active: boolean }>([
+    const filter = createFilterEngine<{
+      id: number
+      name: string
+      active: boolean
+    }>([
       { id: 1, name: 'test1', active: true },
       { id: 2, name: 'test2', active: false },
     ])
@@ -193,7 +209,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with complex nested conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string
       category: string
@@ -237,7 +253,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should handle null and undefined values in conditions', () => {
-    const filter = filterFrom<{
+    const filter = createFilterEngine<{
       id: number
       name: string | null
       email: string | undefined
@@ -258,7 +274,7 @@ describe('OrFilterGroup', () => {
   })
 
   it('should work with single condition', () => {
-    const filter = filterFrom<{ id: number; name: string }>([
+    const filter = createFilterEngine<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
       { id: 3, name: 'test3' },
