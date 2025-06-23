@@ -17,8 +17,8 @@
     "lint": "eslint --fix .",
     "prepare": "husky",
     "start": "webpack watch --mode development",
-    "test": "npx vitest --coverage --watch=false",
-    "test:coverage": "npx vitest --coverage",
+    "test": "npx vitest --coverage --run",
+    "test:coverage": "npx vitest --coverage --run",
     "test:watch": "npx vitest --watch --coverage"
   },
   "dependencies": {

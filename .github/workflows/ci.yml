@@ -10,26 +10,39 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run tests
-        run: npm test -- --coverage
+      - name: Run tests with coverage
+        run: npm run test:coverage
 
       - name: List coverage directory
-        run: ls -R ./coverage
+        run: ls -la ./coverage/
+
+      - name: Check if lcov.info exists
+        run: |
+          if [ -f "./coverage/lcov.info" ]; then
+            echo "lcov.info found"
+            cat ./coverage/lcov.info | head -10
+          else
+            echo "lcov.info not found"
+            ls -la ./coverage/
+          fi
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
