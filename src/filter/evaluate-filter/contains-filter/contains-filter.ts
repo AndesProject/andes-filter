@@ -6,8 +6,7 @@ export class ContainsFilter implements EvaluateFilter {
     private searchValue: string,
     private isCaseInsensitive: boolean = false
   ) {}
-
-  evaluate(targetString: any): boolean {
+  public evaluate(targetString: any): boolean {
     return performStringOperation(
       'includes',
       targetString,

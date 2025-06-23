@@ -28,7 +28,6 @@ import { OrFilterGroup } from './or-filter-group'
 import { RegexFilter } from './regex-filter'
 import { SomeFilter } from './some-filter'
 import { StartsWithFilter } from './starts-with-filter'
-
 export function createFilterClassMap<T>(
   filterType: keyof FilterCriteria<T>,
   filterValue: any,
@@ -64,7 +63,6 @@ export function createFilterClassMap<T>(
     case 'notEndsWith':
       return new NotEndsWithFilter(filterValue, isCaseInsensitive)
     case 'mode':
-      // Mode is handled as a configuration flag, not a separate filter
       return null
     case 'regex':
       return new RegexFilter(filterValue)
@@ -97,7 +95,6 @@ export function createFilterClassMap<T>(
     case 'isNull':
       return new IsNullFilter(filterValue)
     case 'distinct':
-      // Distinct filter - returns true if all values in array are unique
       return {
         evaluate: (arrayData: any) => {
           if (!Array.isArray(arrayData)) return false

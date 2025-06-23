@@ -1,25 +1,18 @@
-// Utilidades para filtros: chequeos, normalización y operaciones genéricas
-
 export function isNil(value: any): boolean {
   return value === null || value === undefined
 }
-
 export function isString(value: any): value is string {
   return typeof value === 'string'
 }
-
 export function isNumber(value: any): value is number {
   return typeof value === 'number'
 }
-
 export function isBoolean(value: any): value is boolean {
   return typeof value === 'boolean'
 }
-
 export function isObject(value: any): value is object {
   return typeof value === 'object' && value !== null
 }
-
 export function isValidDate(value: any): boolean {
   if (value instanceof Date) return true
   if (typeof value === 'number') return !isNaN(value) && value >= 0
@@ -29,14 +22,12 @@ export function isValidDate(value: any): boolean {
   }
   return false
 }
-
 export function normalizeStringCase(
   inputString: string,
   caseInsensitive: boolean
 ): string {
   return caseInsensitive ? inputString.toLowerCase() : inputString
 }
-
 export function compareStringsWithCase(
   firstString: string,
   secondString: string,
@@ -46,14 +37,12 @@ export function compareStringsWithCase(
   const normalizedSecond = normalizeStringCase(secondString, caseInsensitive)
   return normalizedFirst === normalizedSecond
 }
-
 export function compareDateValues(
   firstDate: Date | string | number,
   secondDate: Date | string | number
 ): boolean {
   return new Date(firstDate).getTime() === new Date(secondDate).getTime()
 }
-
 export function performStringOperation(
   operation: 'includes' | 'startsWith' | 'endsWith',
   sourceString: string,
@@ -67,11 +56,9 @@ export function performStringOperation(
   const operationResult = normalizedSource[operation](normalizedTarget)
   return shouldNegate ? !operationResult : operationResult
 }
-
 export function isNonEmptyArray(arrayValue: any): arrayValue is any[] {
   return Array.isArray(arrayValue) && arrayValue.length > 0
 }
-
 export function allItemsMatch<T>(
   arrayItems: T[],
   condition: (item: T) => boolean
@@ -79,7 +66,6 @@ export function allItemsMatch<T>(
   if (!Array.isArray(arrayItems)) return false
   return arrayItems.every(condition)
 }
-
 export function anyItemMatches<T>(
   arrayItems: T[],
   condition: (item: T) => boolean
@@ -87,7 +73,6 @@ export function anyItemMatches<T>(
   if (!Array.isArray(arrayItems)) return false
   return arrayItems.some(condition)
 }
-
 export function noItemMatches<T>(
   arrayItems: T[],
   condition: (item: T) => boolean
@@ -95,8 +80,6 @@ export function noItemMatches<T>(
   if (!Array.isArray(arrayItems)) return false
   return !arrayItems.some(condition)
 }
-
-// Aliases for backward compatibility with existing imports
 export const compareStrings = compareStringsWithCase
 export const compareDates = compareDateValues
 export const anyMatch = anyItemMatches

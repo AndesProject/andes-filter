@@ -14,14 +14,12 @@ export class InequalityFilter<T> implements EvaluateFilter {
   private isDistinct: boolean = false
   private rawTarget: any = null
   private isArrayEquivalence: boolean = false
-
   constructor(
     private targetValue: T | QueryOption<T> | null,
     insensitive?: boolean
   ) {
     this.insensitive = !!insensitive
     this.rawTarget = targetValue
-    // Detectar si el filtro tiene mode: 'insensitive' en la raíz
     if (
       isObject(targetValue) &&
       targetValue !== null &&
@@ -44,7 +42,6 @@ export class InequalityFilter<T> implements EvaluateFilter {
           this.isDistinct = true
           return
         }
-        // Equivalencias Prisma/TypeORM para not: { some/none/every }
         if (key === 'some') {
           this.evaluator = new NoneFilter(value)
           this.isArrayEquivalence = true
@@ -54,11 +51,9 @@ export class InequalityFilter<T> implements EvaluateFilter {
           this.isArrayEquivalence = true
           return
         } else if (key === 'every') {
-          // not: { every: F } ≡ some: { not: F }, pero debe retornar false para arrays vacíos
           this.evaluator = {
             evaluate: (arr: any) => {
               if (!Array.isArray(arr) || arr.length === 0) return false
-              // Si todos cumplen F, retorna false; si alguno no cumple, retorna true
               return arr.some(
                 (item: any) => !new FilterEvaluator(value).evaluate(item)
               )
@@ -80,11 +75,9 @@ export class InequalityFilter<T> implements EvaluateFilter {
       }
     }
   }
-
-  evaluate(value: any): boolean {
+  public evaluate(value: any): boolean {
     if (this.isDistinct) return false
     if (this.evaluator) {
-      // Caso especial: NOT every (SomeFilter con not) sobre array vacío debe retornar false
       if (
         this.evaluator instanceof SomeFilter &&
         this.shouldNegate === false &&
@@ -93,14 +86,11 @@ export class InequalityFilter<T> implements EvaluateFilter {
       ) {
         return false
       }
-      // Si es equivalencia de array, no negar el resultado
       if (this.isArrayEquivalence) {
         return this.evaluator.evaluate(value)
       }
-      // Para los demás casos, negar el resultado
       return !this.evaluator.evaluate(value)
     }
-    // Si es un QueryOption, negar el resultado de evaluar ese filtro
     if (
       this.targetValue &&
       isObject(this.targetValue) &&
@@ -139,7 +129,6 @@ export class InequalityFilter<T> implements EvaluateFilter {
         ].includes(k)
       )
     ) {
-      // Propagar modo insensible si está presente
       let subInsensitive = this.insensitive || this.modeInsensitive
       if (
         'mode' in (this.targetValue as any) &&
@@ -151,11 +140,9 @@ export class InequalityFilter<T> implements EvaluateFilter {
         value
       )
     }
-    // Comparación de fechas por valor
     if (this.targetValue instanceof Date && value instanceof Date) {
       return this.targetValue.getTime() !== value.getTime()
     }
-    // Comparación de fechas cuando uno es Date y otro string/number
     if (this.targetValue instanceof Date || value instanceof Date) {
       const date1 =
         this.targetValue instanceof Date
@@ -164,17 +151,14 @@ export class InequalityFilter<T> implements EvaluateFilter {
       const date2 = value instanceof Date ? value : new Date(value)
       return date1.getTime() !== date2.getTime()
     }
-    // Comparación de NaN
     if (Number.isNaN(this.targetValue) || Number.isNaN(value))
       return !(Number.isNaN(this.targetValue) && Number.isNaN(value))
-    // Comparación de strings con modo insensible
     if (isString(this.targetValue) && isString(value)) {
       if (this.insensitive || this.modeInsensitive) {
         return this.targetValue.toLowerCase() !== value.toLowerCase()
       }
       return this.targetValue !== value
     }
-    // Comparación de objetos por referencia (no deep equality)
     if (
       isObject(this.targetValue) &&
       this.targetValue !== null &&
@@ -183,7 +167,6 @@ export class InequalityFilter<T> implements EvaluateFilter {
     ) {
       return this.targetValue !== value
     }
-    // Comparación primitiva - NOT equals: retornar true cuando NO son iguales
     return value !== this.targetValue
   }
 }

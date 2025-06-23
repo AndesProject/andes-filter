@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () => {
   const testData = [
     {
@@ -39,115 +38,94 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
       number: 300,
     },
   ]
-
   describe('Date Objects', () => {
     it('after and gt should be equivalent for Date objects', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-01-15') },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           date: { gt: new Date('2023-01-15') },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(3)
       expect(afterResult.data.map((item) => item.id)).toEqual([3, 4, 5])
     })
-
     it('after and gt should exclude the reference date', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-02-01') },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           date: { gt: new Date('2023-02-01') },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(2)
       expect(afterResult.data.map((item) => item.id)).toEqual([4, 5])
     })
   })
-
   describe('Timestamp Numbers', () => {
     it('after and gt should be equivalent for timestamp numbers', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
-          timestamp: { after: 1673740800000 }, // 2023-01-15
+          timestamp: { after: 1673740800000 },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
-          timestamp: { gt: 1673740800000 }, // 2023-01-15
+          timestamp: { gt: 1673740800000 },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(3)
       expect(afterResult.data.map((item) => item.id)).toEqual([3, 4, 5])
     })
   })
-
   describe('Date Strings', () => {
     it('after and gt should be equivalent for date strings', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
           dateString: { after: '2023-01-15' },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           dateString: { gt: '2023-01-15' },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(3)
       expect(afterResult.data.map((item) => item.id)).toEqual([3, 4, 5])
     })
   })
-
   describe('Regular Numbers', () => {
     it('after and gt should be equivalent for regular numbers', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
           number: { after: 150 },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           number: { gt: 150 },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(3)
       expect(afterResult.data.map((item) => item.id)).toEqual([3, 4, 5])
     })
   })
-
   describe('Edge Cases', () => {
     it('should handle null values identically', () => {
       const dataWithNull = [
@@ -155,88 +133,71 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
         { id: 2, date: null },
         { id: 3, date: new Date('2023-02-01') },
       ]
-
       const filter = createFilterEngine(dataWithNull)
-
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-01-15') },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           date: { gt: new Date('2023-01-15') },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(1)
       expect(afterResult.data[0].id).toBe(3)
     })
-
     it('should handle invalid dates identically', () => {
       const dataWithInvalid = [
         { id: 1, date: '2023-01-01' },
         { id: 2, date: 'invalid-date' },
         { id: 3, date: '2023-02-01' },
       ]
-
       const filter = createFilterEngine(dataWithInvalid)
-
       const afterResult = filter.findMany({
         where: {
           date: { after: '2023-01-15' },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           date: { gt: '2023-01-15' },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(1)
       expect(afterResult.data[0].id).toBe(3)
     })
-
     it('should handle invalid reference dates identically', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findMany({
         where: {
           date: { after: 'invalid-date' },
         },
       })
-
       const gtResult = filter.findMany({
         where: {
           date: { gt: 'invalid-date' },
         },
       })
-
       expect(afterResult.data).toEqual(gtResult.data)
       expect(afterResult.data).toHaveLength(0)
     })
   })
-
   describe('findUnique Equivalence', () => {
     it('after and gt should work identically with findUnique', () => {
       const filter = createFilterEngine(testData)
-
       const afterResult = filter.findUnique({
         where: {
           date: { after: new Date('2023-01-15') },
         },
       })
-
       const gtResult = filter.findUnique({
         where: {
           date: { gt: new Date('2023-01-15') },
         },
       })
-
       expect(afterResult).toEqual(gtResult)
       expect(afterResult?.id).toBe(3)
     })

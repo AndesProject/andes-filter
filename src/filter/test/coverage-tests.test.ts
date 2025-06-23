@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Coverage Tests - Covering Missing Lines', () => {
   describe('FilterEvaluator Edge Cases', () => {
     it('should handle empty filters array', () => {
@@ -8,13 +7,11 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       const result = filter.findMany({ where: {} })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle null data in evaluate', () => {
       const filter = createFilterEngine([{ id: 1, name: 'test' }])
       const result = filter.findMany({ where: { name: { equals: 'test' } } })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle array data in evaluate', () => {
       const filter = createFilterEngine([{ id: 1, items: [1, 2, 3] }])
       const result = filter.findMany({
@@ -23,7 +20,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(1)
     })
   })
-
   describe('EveryFilter Edge Cases', () => {
     it('should handle complex nested filters with empty results', () => {
       const data = [
@@ -42,7 +38,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle every filter with complex nested conditions', () => {
       const data = [
         { id: 1, items: [{ value: 5 }, { value: 10 }] },
@@ -61,7 +56,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(1)
     })
   })
-
   describe('SomeFilter Edge Cases', () => {
     it('should handle some filter with complex nested conditions', () => {
       const data = [
@@ -80,7 +74,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle some filter with no matches', () => {
       const data = [
         { id: 1, items: [{ value: 1 }, { value: 2 }] },
@@ -99,7 +92,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(0)
     })
   })
-
   describe('NoneFilter Edge Cases', () => {
     it('should handle none filter with complex nested conditions', () => {
       const data = [
@@ -118,7 +110,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle none filter with matches', () => {
       const data = [
         { id: 1, items: [{ value: 5 }, { value: 6 }] },
@@ -137,7 +128,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(0)
     })
   })
-
   describe('LengthFilter Edge Cases', () => {
     it('should handle length filter with invalid values', () => {
       const data = [
@@ -153,7 +143,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle length filter with string values', () => {
       const data = [
         { id: 1, name: 'test' },
@@ -168,7 +157,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(1)
     })
   })
-
   describe('InequalityFilter Edge Cases', () => {
     it('should handle inequality filter with complex nested conditions', () => {
       const data = [
@@ -183,7 +171,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle inequality filter with object values', () => {
       const config1 = { enabled: true }
       const config2 = { enabled: false }
@@ -201,7 +188,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data[0].id).toBe(2)
     })
   })
-
   describe('HasEveryFilter Edge Cases', () => {
     it('should handle hasEvery filter with complex nested conditions', () => {
       const data = [
@@ -219,7 +205,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(2)
     })
   })
-
   describe('EqualityFilter Edge Cases', () => {
     it('should handle equality filter with null values', () => {
       const data = [
@@ -234,7 +219,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       })
       expect(result.data).toHaveLength(1)
     })
-
     it('should handle equality filter with undefined values', () => {
       const data = [
         { id: 1, value: undefined },
@@ -249,7 +233,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(1)
     })
   })
-
   describe('FindMany Edge Cases', () => {
     it('should handle findMany with complex pagination', () => {
       const data = Array.from({ length: 20 }, (_, i) => ({
@@ -265,7 +248,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(5)
       expect(result.data[0].id).toBe(11)
     })
-
     it('should handle findMany with sorting and pagination', () => {
       const data = [
         { id: 3, name: 'c' },
@@ -283,7 +265,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data[1].id).toBe(2)
     })
   })
-
   describe('PaginateArray Edge Cases', () => {
     it('should handle pagination with empty array', () => {
       const data: any[] = []
@@ -294,7 +275,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       } as any)
       expect(result.data).toHaveLength(0)
     })
-
     it('should handle pagination with skip larger than array', () => {
       const data = [{ id: 1 }, { id: 2 }]
       const filter = createFilterEngine(data)
@@ -305,7 +285,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       expect(result.data).toHaveLength(0)
     })
   })
-
   describe('SortObjects Edge Cases', () => {
     it('should handle sorting with null values', () => {
       const data = [
@@ -320,7 +299,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       } as any)
       expect(result.data).toHaveLength(3)
     })
-
     it('should handle sorting with undefined values', () => {
       const data = [
         { id: 1, name: undefined },
@@ -334,7 +312,6 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       } as any)
       expect(result.data).toHaveLength(3)
     })
-
     it('should handle sorting with mixed types', () => {
       const data = [
         { id: 1, value: 'string' },

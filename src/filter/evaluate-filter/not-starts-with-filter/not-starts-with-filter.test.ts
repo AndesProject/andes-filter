@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { NotStartsWithFilter } from './not-starts-with-filter'
-
 describe('NotStartsWithFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('NotStartsWithFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { notStartsWith: 'Cerati' } } }).data
         .length
@@ -52,7 +50,6 @@ describe('NotStartsWithFilter', () => {
     expect(
       filter.findMany({ where: { name: { notStartsWith: 'Gus' } } }).data.length
     ).toBe(11)
-
     expect(
       filter.findUnique({ where: { name: { notStartsWith: ' ' } } })?.name
     ).toBe('Alice')
@@ -69,7 +66,6 @@ describe('NotStartsWithFilter', () => {
       filter.findUnique({ where: { name: { notStartsWith: 'Alice' } } })?.name
     ).toBe('Bob')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -78,7 +74,6 @@ describe('NotStartsWithFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { notStartsWith: 'alice', mode: 'insensitive' } },
@@ -99,7 +94,6 @@ describe('NotStartsWithFilter', () => {
         where: { name: { notStartsWith: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(5)
-
     expect(
       filter.findUnique({
         where: { name: { notStartsWith: 'alice', mode: 'insensitive' } },
@@ -111,7 +105,6 @@ describe('NotStartsWithFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -122,17 +115,16 @@ describe('NotStartsWithFilter', () => {
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'world'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'world' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'hello'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'xyz' } } }).data
         .length
-    ).toBe(4) // todos
+    ).toBe(4)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -142,37 +134,34 @@ describe('NotStartsWithFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notStartsWith: '' } } }).data.length
-    ).toBe(0) // todos empiezan con string vacío
+    ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello' } } }).data
         .length
-    ).toBe(2) // solo '' y 'world' no empiezan con 'hello'
+    ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'world' } } }).data
         .length
-    ).toBe(3) // todos excepto 'world'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello world' } } })
         .data.length
-    ).toBe(3) // todos excepto 'hello world'
+    ).toBe(3)
   })
 })
-
 describe('NotStartsWithFilter Unit Tests', () => {
   it('debe retornar true si el string NO empieza con la subcadena', () => {
     const filter = new NotStartsWithFilter('hello')
     expect(filter.evaluate('world')).toBe(true)
     expect(filter.evaluate('bye')).toBe(true)
     expect(filter.evaluate('')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(true) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(true)
   })
-
   it('debe retornar false si el string empieza con la subcadena', () => {
     const filter = new NotStartsWithFilter('hello')
     expect(filter.evaluate('hello world')).toBe(false)
     expect(filter.evaluate('hello')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new NotStartsWithFilter('hello', true)
     expect(filter.evaluate('HELLO WORLD')).toBe(false)
@@ -180,25 +169,22 @@ describe('NotStartsWithFilter Unit Tests', () => {
     expect(filter.evaluate('hello world')).toBe(false)
     expect(filter.evaluate('WORLD')).toBe(true)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new NotStartsWithFilter('hello')
-    expect(filter.evaluate(null)).toBe(true) // null no empieza con nada
-    expect(filter.evaluate(undefined)).toBe(true) // undefined no empieza con nada
+    expect(filter.evaluate(null)).toBe(true)
+    expect(filter.evaluate(undefined)).toBe(true)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new NotStartsWithFilter('hello')
-    expect(filter.evaluate(123)).toBe(true) // números no empiezan con strings
-    expect(filter.evaluate({})).toBe(true) // objetos no empiezan con strings
-    expect(filter.evaluate([])).toBe(true) // arrays no empiezan con strings
-    expect(filter.evaluate(true)).toBe(true) // booleanos no empiezan con strings
+    expect(filter.evaluate(123)).toBe(true)
+    expect(filter.evaluate({})).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+    expect(filter.evaluate(true)).toBe(true)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new NotStartsWithFilter('')
-    expect(filter.evaluate('hello')).toBe(false) // todos los strings empiezan con string vacío
-    expect(filter.evaluate('')).toBe(false) // string vacío empieza con string vacío
-    expect(filter.evaluate('world')).toBe(false) // todos los strings empiezan con string vacío
+    expect(filter.evaluate('hello')).toBe(false)
+    expect(filter.evaluate('')).toBe(false)
+    expect(filter.evaluate('world')).toBe(false)
   })
 })

@@ -1,11 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createFilterClassMap } from '../evaluate-filter/evaluate-filter.map'
 import { FilterCriteria } from '../filter.interface'
-
-// Mocks mínimos para los filtros
 class Dummy {}
-
-// Map de tipos a clases para verificar instancias
 const typeToClass = {
   equals: 'EqualityFilter',
   not: 'InequalityFilter',
@@ -37,21 +33,17 @@ const typeToClass = {
   NOT: 'NotFilterGroup',
   isNull: 'IsNullFilter',
 }
-
 describe('createFilterClassMap', () => {
   Object.keys(typeToClass).forEach((type) => {
     it(`should create correct filter for type '${type}'`, () => {
       const filter = createFilterClassMap(type as keyof FilterCriteria<any>, {})
-      // El nombre de la clase debe coincidir
       expect(filter?.constructor?.name).toBe(typeToClass[type])
     })
   })
-
   it('should return null for mode type', () => {
     const filter = createFilterClassMap('mode' as any, {})
     expect(filter).toBeNull()
   })
-
   it('should warn and return null for unknown type', () => {
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const filter = createFilterClassMap('unknown' as any, {})

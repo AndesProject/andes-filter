@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Complex Filter', () => {
-  // Simplified version of the complex data for debugging
   const complexData = [
     {
       id: 1,
@@ -97,14 +95,9 @@ describe('Debug Complex Filter', () => {
       ],
     },
   ]
-
   it('should debug the failing complex filter step by step', () => {
     const filter = createFilterEngine(complexData)
-
-    // Let's break down the complex filter into parts
     console.log('=== DEBUGGING COMPLEX FILTER ===')
-
-    // Step 1: Test just the length filter on projects
     const step1Result = filter.findMany({
       where: {
         employees: {
@@ -120,8 +113,6 @@ describe('Debug Complex Filter', () => {
       'Step 1 - projects length >= 1:',
       step1Result.data.map((item) => item.name)
     )
-
-    // Step 2: Test length filter on milestones
     const step2Result = filter.findMany({
       where: {
         employees: {
@@ -141,8 +132,6 @@ describe('Debug Complex Filter', () => {
       'Step 2 - milestones length >= 2:',
       step2Result.data.map((item) => item.name)
     )
-
-    // Step 3: Test length filter on team
     const step3Result = filter.findMany({
       where: {
         employees: {
@@ -162,8 +151,6 @@ describe('Debug Complex Filter', () => {
       'Step 3 - team length >= 2:',
       step3Result.data.map((item) => item.name)
     )
-
-    // Step 4: Combine step 1 and step 2
     const step4Result = filter.findMany({
       where: {
         employees: {
@@ -184,8 +171,6 @@ describe('Debug Complex Filter', () => {
       'Step 4 - projects length >= 1 AND milestones length >= 2:',
       step4Result.data.map((item) => item.name)
     )
-
-    // Step 5: The full complex filter
     const fullResult = filter.findMany({
       where: {
         employees: {
@@ -211,8 +196,6 @@ describe('Debug Complex Filter', () => {
       'Step 5 - Full complex filter:',
       fullResult.data.map((item) => item.name)
     )
-
-    // Analyze the data structure
     console.log('\n=== DATA ANALYSIS ===')
     complexData.forEach((company, index) => {
       console.log(`\nCompany ${index + 1}: ${company.name}`)
@@ -227,12 +210,6 @@ describe('Debug Complex Filter', () => {
         })
       })
     })
-
-    // Expected: TechCorp and StartupXYZ should pass
-    // TechCorp: Alice has 1 project with 2 milestones and team of 3, Bob has 1 project with 2 milestones and team of 2
-    // StartupXYZ: Charlie and Diana both have 1 project with 2 milestones and team of 2
-    // GlobalTech: Eve has 1 project with 1 milestone (fails milestones >= 2)
-
     expect(fullResult.data).toHaveLength(2)
     expect(fullResult.data.map((item) => item.name)).toEqual([
       'TechCorp Inc',

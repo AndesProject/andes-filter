@@ -33,29 +33,23 @@ const SUPPORTED_OPERATORS = [
   'isNull',
   'distinct',
 ]
-
 const ARRAY_OPERATION_KEYS = ['some', 'none', 'every']
-
 export class FilterEvaluator<T> {
   private activeFilters: {
     fieldKey: string
     filterInstance: EvaluateFilter | FilterEvaluator<any>
   }[] = []
   private filterCriteria: FilterCriteria<T, keyof T>
-
   constructor(filterCriteria: FilterCriteria<T, keyof T>) {
     this.filterCriteria = filterCriteria
     this.initializeFilterInstances()
   }
-
   private initializeFilterInstances(): void {
     const isCaseInsensitiveMode = this.filterCriteria.mode === 'insensitive'
-
     Object.keys(this.filterCriteria).forEach((criteriaKey) => {
       if (criteriaKey === 'mode') return
       const criteriaValue =
         this.filterCriteria[criteriaKey as keyof FilterCriteria<T, keyof T>]
-
       if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
         const filterInstance = createFilterClassMap<T>(
           criteriaKey as keyof FilterCriteria<T, keyof T>,
@@ -128,13 +122,10 @@ export class FilterEvaluator<T> {
       }
     })
   }
-
-  evaluate(targetData: any): boolean {
+  public evaluate(targetData: any): boolean {
     if (this.activeFilters.length === 0) return true
-
     return this.activeFilters.every(({ fieldKey, filterInstance }) => {
       let dataToEvaluate = targetData
-
       if (targetData && isObject(targetData) && !Array.isArray(targetData)) {
         const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
         if (isDirectOperatorField) {
@@ -143,7 +134,6 @@ export class FilterEvaluator<T> {
           dataToEvaluate = targetData[fieldKey]
         }
       }
-
       return filterInstance.evaluate(dataToEvaluate)
     })
   }

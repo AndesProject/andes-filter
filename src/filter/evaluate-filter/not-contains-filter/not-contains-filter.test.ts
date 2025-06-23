@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { NotContainsFilter } from './not-contains-filter'
-
 describe('NotContainsFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('NotContainsFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { notContains: 'Gustavo Cerati' } } })
         .data.length
@@ -45,7 +43,6 @@ describe('NotContainsFilter', () => {
     expect(
       filter.findMany({ where: { name: { notContains: '' } } }).data.length
     ).toBe(0)
-
     expect(
       filter.findUnique({ where: { name: { notContains: ' ' } } })?.name
     ).toBe('Alice')
@@ -62,7 +59,6 @@ describe('NotContainsFilter', () => {
       filter.findUnique({ where: { name: { notContains: 'Alice' } } })?.name
     ).toBe('Bob')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -71,7 +67,6 @@ describe('NotContainsFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { notContains: 'alice', mode: 'insensitive' } },
@@ -92,7 +87,6 @@ describe('NotContainsFilter', () => {
         where: { name: { notContains: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(5)
-
     expect(
       filter.findUnique({
         where: { name: { notContains: 'alice', mode: 'insensitive' } },
@@ -104,7 +98,6 @@ describe('NotContainsFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -115,16 +108,15 @@ describe('NotContainsFilter', () => {
     expect(
       filter.findMany({ where: { value: { notContains: 'hello' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'world'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notContains: 'world' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'hello'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notContains: 'xyz' } } }).data.length
-    ).toBe(4) // todos
+    ).toBe(4)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -134,38 +126,35 @@ describe('NotContainsFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notContains: '' } } }).data.length
-    ).toBe(0) // todos contienen string vacío
+    ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notContains: 'hello' } } }).data
         .length
-    ).toBe(2) // solo '' y 'world' no contienen 'hello'
+    ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notContains: 'world' } } }).data
         .length
-    ).toBe(2) // solo '' y 'hello' no contienen 'world'
+    ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notContains: 'hello world' } } }).data
         .length
-    ).toBe(3) // todos excepto 'hello world'
+    ).toBe(3)
   })
 })
-
 describe('NotContainsFilter Unit Tests', () => {
   it('debe retornar true si el string NO contiene la subcadena', () => {
     const filter = new NotContainsFilter('hello')
     expect(filter.evaluate('world')).toBe(true)
     expect(filter.evaluate('bye')).toBe(true)
     expect(filter.evaluate('')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(true) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(true)
   })
-
   it('debe retornar false si el string contiene la subcadena', () => {
     const filter = new NotContainsFilter('hello')
     expect(filter.evaluate('hello world')).toBe(false)
     expect(filter.evaluate('world hello')).toBe(false)
     expect(filter.evaluate('hello')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new NotContainsFilter('hello', true)
     expect(filter.evaluate('HELLO WORLD')).toBe(false)
@@ -173,25 +162,22 @@ describe('NotContainsFilter Unit Tests', () => {
     expect(filter.evaluate('hello world')).toBe(false)
     expect(filter.evaluate('WORLD')).toBe(true)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new NotContainsFilter('hello')
-    expect(filter.evaluate(null)).toBe(true) // null no contiene nada
-    expect(filter.evaluate(undefined)).toBe(true) // undefined no contiene nada
+    expect(filter.evaluate(null)).toBe(true)
+    expect(filter.evaluate(undefined)).toBe(true)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new NotContainsFilter('hello')
-    expect(filter.evaluate(123)).toBe(true) // números no contienen strings
-    expect(filter.evaluate({})).toBe(true) // objetos no contienen strings
-    expect(filter.evaluate([])).toBe(true) // arrays no contienen strings
-    expect(filter.evaluate(true)).toBe(true) // booleanos no contienen strings
+    expect(filter.evaluate(123)).toBe(true)
+    expect(filter.evaluate({})).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+    expect(filter.evaluate(true)).toBe(true)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new NotContainsFilter('')
-    expect(filter.evaluate('hello')).toBe(false) // todos los strings contienen string vacío
-    expect(filter.evaluate('')).toBe(false) // string vacío contiene string vacío
-    expect(filter.evaluate('world')).toBe(false) // todos los strings contienen string vacío
+    expect(filter.evaluate('hello')).toBe(false)
+    expect(filter.evaluate('')).toBe(false)
+    expect(filter.evaluate('world')).toBe(false)
   })
 })

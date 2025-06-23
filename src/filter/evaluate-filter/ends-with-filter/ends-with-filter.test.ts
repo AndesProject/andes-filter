@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { EndsWithFilter } from './ends-with-filter'
-
 describe('EndsWithFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('EndsWithFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { endsWith: 'ice' } } }).data.length
     ).toBe(2)
@@ -34,7 +32,6 @@ describe('EndsWithFilter', () => {
     expect(
       filter.findMany({ where: { name: { endsWith: ' ' } } }).data.length
     ).toBe(0)
-
     expect(filter.findUnique({ where: { name: { endsWith: ' ' } } })).toBe(null)
     expect(filter.findUnique({ where: { name: { endsWith: '' } } })?.name).toBe(
       'Alice'
@@ -49,7 +46,6 @@ describe('EndsWithFilter', () => {
       filter.findUnique({ where: { name: { endsWith: 'Alice' } } })?.name
     ).toBe('Alice')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -58,7 +54,6 @@ describe('EndsWithFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { endsWith: 'alice', mode: 'insensitive' } },
@@ -84,7 +79,6 @@ describe('EndsWithFilter', () => {
         where: { name: { endsWith: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(0)
-
     expect(
       filter.findUnique({
         where: { name: { endsWith: 'alice', mode: 'insensitive' } },
@@ -96,7 +90,6 @@ describe('EndsWithFilter', () => {
       })
     ).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -114,7 +107,6 @@ describe('EndsWithFilter', () => {
       filter.findMany({ where: { value: { endsWith: 'xyz' } } }).data.length
     ).toBe(0)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -137,22 +129,19 @@ describe('EndsWithFilter', () => {
     ).toBe(1)
   })
 })
-
 describe('EndsWithFilter Unit Tests', () => {
   it('debe retornar true si el string termina con la subcadena', () => {
     const filter = new EndsWithFilter('hello')
     expect(filter.evaluate('say hello')).toBe(true)
     expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(false) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(false)
   })
-
   it('debe retornar false si el string no termina con la subcadena', () => {
     const filter = new EndsWithFilter('hello')
     expect(filter.evaluate('hello world')).toBe(false)
     expect(filter.evaluate('world')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new EndsWithFilter('hello', true)
     expect(filter.evaluate('say HELLO')).toBe(true)
@@ -160,13 +149,11 @@ describe('EndsWithFilter Unit Tests', () => {
     expect(filter.evaluate('say hello')).toBe(true)
     expect(filter.evaluate('WORLD')).toBe(false)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new EndsWithFilter('hello')
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new EndsWithFilter('hello')
     expect(filter.evaluate(123)).toBe(false)
@@ -174,7 +161,6 @@ describe('EndsWithFilter Unit Tests', () => {
     expect(filter.evaluate([])).toBe(false)
     expect(filter.evaluate(true)).toBe(false)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new EndsWithFilter('')
     expect(filter.evaluate('hello')).toBe(true)

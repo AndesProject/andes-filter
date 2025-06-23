@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 const complexData = [
   {
     id: 1,
@@ -271,7 +270,6 @@ const complexData = [
     ],
   },
 ]
-
 describe('Debug HasEvery Filter', () => {
   it('should debug hasEvery filter with productivity >= 0.8', () => {
     const filter = createFilterEngine(complexData)
@@ -288,7 +286,6 @@ describe('Debug HasEvery Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result:',
       result.data.map((item) => ({
@@ -299,14 +296,12 @@ describe('Debug HasEvery Filter', () => {
         })),
       }))
     )
-
-    expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions
+    expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',
       'GlobalTech Solutions',
     ])
   })
-
   it('should test hasEvery with simple data', () => {
     const simpleData = [
       {
@@ -323,7 +318,6 @@ describe('Debug HasEvery Filter', () => {
         departments: [{ name: 'Engineering', productivity: 0.92 }],
       },
     ]
-
     const filter = createFilterEngine(simpleData)
     const result = filter.findMany({
       where: {
@@ -336,7 +330,6 @@ describe('Debug HasEvery Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Simple test result:',
       result.data.map((item) => ({
@@ -347,9 +340,6 @@ describe('Debug HasEvery Filter', () => {
         })),
       }))
     )
-
-    // Company A should NOT pass (Sales has 0.78 < 0.8)
-    // Company B should pass (Engineering has 0.92 >= 0.8)
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Company B')
   })

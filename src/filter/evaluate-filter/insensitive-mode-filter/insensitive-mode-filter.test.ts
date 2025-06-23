@@ -3,7 +3,6 @@ import { createFilterEngine } from '../../filter-from'
 import { ContainsFilter } from '../contains-filter/contains-filter'
 import { StartsWithFilter } from '../starts-with-filter/starts-with-filter'
 import { InsensitiveModeFilter } from './insensitive-mode-filter'
-
 describe('InsensitiveModeFilter', () => {
   it('contains string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -20,7 +19,6 @@ describe('InsensitiveModeFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'CERATI' } },
@@ -61,7 +59,6 @@ describe('InsensitiveModeFilter', () => {
         where: { name: { mode: 'insensitive', contains: '' } },
       }).data.length
     ).toBe(12)
-
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: ' ' } },
@@ -88,7 +85,6 @@ describe('InsensitiveModeFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('startsWith string', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -104,7 +100,6 @@ describe('InsensitiveModeFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'CERATI' } },
@@ -155,7 +150,6 @@ describe('InsensitiveModeFilter', () => {
         where: { name: { mode: 'insensitive', startsWith: 'GUS' } },
       }).data.length
     ).toBe(1)
-
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: ' ' } },
@@ -182,7 +176,6 @@ describe('InsensitiveModeFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('endsWith string', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -198,7 +191,6 @@ describe('InsensitiveModeFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'ICE' } },
@@ -224,7 +216,6 @@ describe('InsensitiveModeFilter', () => {
         where: { name: { mode: 'insensitive', endsWith: ' ' } },
       }).data.length
     ).toBe(0)
-
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: ' ' } },
@@ -251,7 +242,6 @@ describe('InsensitiveModeFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('multi string', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -267,7 +257,6 @@ describe('InsensitiveModeFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({
         where: {
@@ -275,13 +264,11 @@ describe('InsensitiveModeFilter', () => {
         },
       }).data.length
     ).toBe(1)
-
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } },
       }).data.length
     ).toBe(2)
-
     expect(
       filter.findMany({
         where: {
@@ -296,7 +283,6 @@ describe('InsensitiveModeFilter', () => {
     ).toBe(1)
   })
 })
-
 describe('InsensitiveModeFilter Unit Tests', () => {
   it('debe retornar true si todos los filtros retornan true', () => {
     const containsFilter = new ContainsFilter('hello', true)
@@ -305,11 +291,9 @@ describe('InsensitiveModeFilter Unit Tests', () => {
       containsFilter,
       startsWithFilter,
     ])
-
-    expect(modeFilter.evaluate('hello world')).toBe(true) // contiene y empieza con 'hello'
-    expect(modeFilter.evaluate('hello')).toBe(true) // contiene y empieza con 'hello'
+    expect(modeFilter.evaluate('hello world')).toBe(true)
+    expect(modeFilter.evaluate('hello')).toBe(true)
   })
-
   it('debe retornar false si algún filtro retorna false', () => {
     const containsFilter = new ContainsFilter('hello', true)
     const startsWithFilter = new StartsWithFilter('hello', true)
@@ -317,30 +301,24 @@ describe('InsensitiveModeFilter Unit Tests', () => {
       containsFilter,
       startsWithFilter,
     ])
-
-    expect(modeFilter.evaluate('world hello')).toBe(false) // contiene pero no empieza con 'hello'
-    expect(modeFilter.evaluate('bye')).toBe(false) // no contiene ni empieza con 'hello'
+    expect(modeFilter.evaluate('world hello')).toBe(false)
+    expect(modeFilter.evaluate('bye')).toBe(false)
   })
-
   it('debe manejar arrays vacíos de filtros', () => {
     const modeFilter = new InsensitiveModeFilter([])
     expect(modeFilter.evaluate('hello')).toBe(true)
     expect(modeFilter.evaluate('world')).toBe(true)
     expect(modeFilter.evaluate('')).toBe(true)
   })
-
   it('debe manejar null y undefined', () => {
     const containsFilter = new ContainsFilter('hello', true)
     const modeFilter = new InsensitiveModeFilter([containsFilter])
-
     expect(modeFilter.evaluate(null)).toBe(false)
     expect(modeFilter.evaluate(undefined)).toBe(false)
   })
-
   it('debe manejar tipos no string', () => {
     const containsFilter = new ContainsFilter('hello', true)
     const modeFilter = new InsensitiveModeFilter([containsFilter])
-
     expect(modeFilter.evaluate(123)).toBe(false)
     expect(modeFilter.evaluate({})).toBe(false)
     expect(modeFilter.evaluate([])).toBe(false)

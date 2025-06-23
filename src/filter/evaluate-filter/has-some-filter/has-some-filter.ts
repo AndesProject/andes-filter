@@ -4,12 +4,10 @@ import { matchesFilter } from '../matches-filter'
 
 export class HasSomeFilter<T> implements EvaluateFilter {
   constructor(private targetValues: T[]) {}
-
-  evaluate(value: any): boolean {
+  public evaluate(value: any): boolean {
     if (!Array.isArray(value)) return false
     if (value.length === 0) return this.targetValues.length === 0
     if (this.targetValues.length === 0) return true
-
     if (this.targetValues.some((target) => isObject(target))) {
       return this.targetValues.some((targetValue) => {
         return anyMatch(value, (item) =>
@@ -17,7 +15,6 @@ export class HasSomeFilter<T> implements EvaluateFilter {
         )
       })
     }
-
     return this.targetValues.some((targetValue) => value.includes(targetValue))
   }
 }

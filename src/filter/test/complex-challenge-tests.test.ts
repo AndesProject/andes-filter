@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
-  // Datos complejos con múltiples niveles de anidación
   const complexData = [
     {
       id: 1,
@@ -321,7 +319,6 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
       ],
     },
   ]
-
   describe('Multi-Level Nested Object Filters', () => {
     it('should handle deep nested some filters with multiple conditions', () => {
       const filter = createFilterEngine(complexData)
@@ -343,14 +340,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and StartupXYZ have completed milestones in 2024
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
       ])
     })
-
     it('should handle complex every filter with nested conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -369,14 +364,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions have all employees with rating >= 4.5 and all reviews >= 4.5
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'StartupXYZ',
         'GlobalTech Solutions',
       ])
     })
-
     it('should handle none filter with deep nested conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -393,15 +386,13 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions have no employees with completed high-budget projects
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'StartupXYZ',
         'GlobalTech Solutions',
       ])
     })
   })
-
   describe('Complex Logical Group Combinations', () => {
     it('should handle deeply nested AND/OR combinations', () => {
       const filter = createFilterEngine(complexData)
@@ -437,14 +428,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and GlobalTech
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'GlobalTech Solutions',
       ])
     })
-
     it('should handle complex NOT with nested conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -475,15 +464,13 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
-      expect(result.data).toHaveLength(3) // Todas las empresas pasan el filtro NOT
+      expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
         'GlobalTech Solutions',
       ])
     })
-
     it('should handle multiple levels of nested logical groups', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -526,12 +513,10 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
-      expect(result.data).toHaveLength(1) // TechCorp Inc
+      expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('TechCorp Inc')
     })
   })
-
   describe('Complex Array and Object Combinations', () => {
     it('should handle hasSome with nested object conditions', () => {
       const filter = createFilterEngine(complexData)
@@ -551,14 +536,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and StartupXYZ
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
       ])
     })
-
     it('should handle hasEvery with complex nested conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -574,14 +557,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'StartupXYZ',
         'GlobalTech Solutions',
       ])
     })
-
     it('should handle length with nested object filtering', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -605,15 +586,13 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and StartupXYZ
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
       ])
     })
   })
-
   describe('Date and String Complex Filters', () => {
     it('should handle before/after with nested date conditions', () => {
       const filter = createFilterEngine(complexData)
@@ -637,15 +616,13 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(3) // TechCorp, StartupXYZ, and GlobalTech Solutions
+      expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
         'GlobalTech Solutions',
       ])
     })
-
     it('should handle string filters with insensitive mode in nested objects', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -658,11 +635,9 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(1) // TechCorp
+      expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('TechCorp Inc')
     })
-
     it('should handle regex with nested string conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -670,22 +645,19 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           employees: {
             some: {
               skills: { has: 'management' },
-              name: { regex: '^[A-C]' }, // Names starting with A, B, or C
+              name: { regex: '^[A-C]' },
             },
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(1) // TechCorp Inc (Alice has management and name starts with A)
+      expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('TechCorp Inc')
     })
   })
-
   describe('Performance and Edge Cases', () => {
     it('should handle very deep nested conditions efficiently', () => {
       const filter = createFilterEngine(complexData)
       const startTime = Date.now()
-
       const result = filter.findMany({
         where: {
           AND: [
@@ -727,14 +699,11 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
       const endTime = Date.now()
       const executionTime = endTime - startTime
-
-      expect(executionTime).toBeLessThan(100) // Should complete in less than 100ms
-      expect(result.data).toHaveLength(2) // TechCorp and StartupXYZ
+      expect(executionTime).toBeLessThan(100)
+      expect(result.data).toHaveLength(2)
     })
-
     it('should handle empty arrays and null values gracefully', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -750,10 +719,8 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(3) // All companies have projects with teams
+      expect(result.data).toHaveLength(3)
     })
-
     it('should handle complex numeric comparisons with nested conditions', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -783,15 +750,13 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and GlobalTech
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'GlobalTech Solutions',
       ])
     })
   })
-
   describe('Ultra Complex Scenarios', () => {
     it('should handle maximum complexity with all filter types combined', () => {
       const filter = createFilterEngine(complexData)
@@ -860,14 +825,12 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           ],
         } as any,
       })
-
-      expect(result.data).toHaveLength(2) // TechCorp and StartupXYZ
+      expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'TechCorp Inc',
         'StartupXYZ',
       ])
     })
-
     it('should handle recursive nested conditions with multiple levels', () => {
       const filter = createFilterEngine(complexData)
       const result = filter.findMany({
@@ -878,8 +841,6 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
                 some: {
                   team: {
                     some: {
-                      // This would require the system to handle employee references
-                      // For now, we'll test with a simpler condition
                       equals: 'emp-001',
                     },
                   },
@@ -895,8 +856,7 @@ describe('Complex Challenge Tests - Advanced Filter Scenarios', () => {
           },
         } as any,
       })
-
-      expect(result.data).toHaveLength(1) // TechCorp
+      expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('TechCorp Inc')
     })
   })

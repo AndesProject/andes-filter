@@ -6,8 +6,7 @@ export class NotEndsWithFilter implements EvaluateFilter {
     private excludedSuffix: string,
     private isCaseInsensitive: boolean = false
   ) {}
-
-  evaluate(targetString: any): boolean {
+  public evaluate(targetString: any): boolean {
     return performStringOperation(
       'endsWith',
       targetString,

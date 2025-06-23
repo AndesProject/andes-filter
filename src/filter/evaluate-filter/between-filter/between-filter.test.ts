@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { BetweenFilter } from './between-filter'
-
 describe('BetweenFilter', () => {
   it('string (fechas)', () => {
     const filter = createFilterEngine<{ date: string }>([
@@ -11,7 +10,6 @@ describe('BetweenFilter', () => {
       { date: '2024-09-10' },
       { date: '2024-09-11' },
     ])
-
     expect(
       filter.findMany({
         where: {
@@ -19,7 +17,6 @@ describe('BetweenFilter', () => {
         },
       }).data.length
     ).toBe(5)
-
     expect(
       filter.findMany({
         where: {
@@ -27,7 +24,6 @@ describe('BetweenFilter', () => {
         },
       }).data.length
     ).toBe(4)
-
     expect(
       filter.findMany({
         where: {
@@ -36,7 +32,6 @@ describe('BetweenFilter', () => {
       }).data.length
     ).toBe(4)
   })
-
   it('number', () => {
     const filter = createFilterEngine<{ value: number }>([
       { value: 1 },
@@ -55,7 +50,6 @@ describe('BetweenFilter', () => {
       filter.findMany({ where: { value: { between: [21, 30] } } }).data.length
     ).toBe(0)
   })
-
   it('Date', () => {
     const now = new Date()
     const filter = createFilterEngine<{ value: Date }>([
@@ -78,25 +72,21 @@ describe('BetweenFilter', () => {
       }).data.length
     ).toBe(3)
   })
-
   it('null, undefined y fechas inválidas', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: 'invalid-date' },
       { value: new Date() },
       { value: 0 },
     ])
-    // Solo 0 está entre 0 y 1000
     expect(
       filter.findMany({ where: { value: { between: [0, 1000] } } }).data.length
     ).toBe(1)
-    // Si los extremos son inválidos, no debe filtrar nada
     expect(
       filter.findMany({
         where: { value: { between: ['invalid-date', 'invalid-date'] } },
       }).data.length
     ).toBe(0)
   })
-
   it('findUnique', () => {
     const filter = createFilterEngine<{ value: number }>([
       { value: 1 },
@@ -110,7 +100,6 @@ describe('BetweenFilter', () => {
     })
     expect(result2).toBe(null)
   })
-
   it('should return true if value is between start and end date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -118,7 +107,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2023-06-01'))).toBe(true)
   })
-
   it('should return true if value is equal to start date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -126,7 +114,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2023-01-01'))).toBe(true)
   })
-
   it('should return true if value is equal to end date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -134,7 +121,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2023-12-31'))).toBe(true)
   })
-
   it('should return false if value is before start date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -142,7 +128,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2022-12-31'))).toBe(false)
   })
-
   it('should return false if value is after end date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -150,7 +135,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2024-01-01'))).toBe(false)
   })
-
   it('should handle start and end as numbers', () => {
     const start = new Date('2023-01-01').getTime()
     const end = new Date('2023-12-31').getTime()
@@ -158,7 +142,6 @@ describe('BetweenFilter', () => {
     expect(filter.evaluate(new Date('2023-06-01').getTime())).toBe(true)
     expect(filter.evaluate(new Date('2022-12-31').getTime())).toBe(false)
   })
-
   it('should return false if value is null or undefined', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -167,7 +150,6 @@ describe('BetweenFilter', () => {
     expect(filter.evaluate(null as any)).toBe(false)
     expect(filter.evaluate(undefined as any)).toBe(false)
   })
-
   it('should return false if startDate is invalid', () => {
     const filter = new BetweenFilter([
       'invalid-date' as any,
@@ -175,7 +157,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2023-06-01'))).toBe(false)
   })
-
   it('should return false if endDate is invalid', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -183,7 +164,6 @@ describe('BetweenFilter', () => {
     ])
     expect(filter.evaluate(new Date('2023-06-01'))).toBe(false)
   })
-
   it('should return false if value is invalid date', () => {
     const filter = new BetweenFilter([
       new Date('2023-01-01'),
@@ -192,7 +172,6 @@ describe('BetweenFilter', () => {
     expect(filter.evaluate('invalid-date' as any)).toBe(false)
   })
 })
-
 describe('BetweenFilter Unit', () => {
   it('debe retornar true si el valor está entre los extremos', () => {
     const between = new BetweenFilter([1, 10])
@@ -202,14 +181,12 @@ describe('BetweenFilter Unit', () => {
     expect(between.evaluate(0)).toBe(false)
     expect(between.evaluate(11)).toBe(false)
   })
-
   it('debe retornar false si el valor es null, undefined o inválido', () => {
     const between = new BetweenFilter([1, 10])
     expect(between.evaluate(null as any)).toBe(false)
     expect(between.evaluate(undefined as any)).toBe(false)
     expect(between.evaluate('invalid-date')).toBe(false)
   })
-
   it('debe retornar false si los extremos son inválidos', () => {
     const between = new BetweenFilter(['invalid-date', 'invalid-date'])
     expect(between.evaluate(5)).toBe(false)

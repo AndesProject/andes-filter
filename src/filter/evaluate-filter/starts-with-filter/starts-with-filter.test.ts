@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { StartsWithFilter } from './starts-with-filter'
-
 describe('StartsWithFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('StartsWithFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { startsWith: 'Cerati' } } }).data.length
     ).toBe(0)
@@ -50,7 +48,6 @@ describe('StartsWithFilter', () => {
     expect(
       filter.findMany({ where: { name: { startsWith: 'Gus' } } }).data.length
     ).toBe(1)
-
     expect(filter.findUnique({ where: { name: { startsWith: ' ' } } })).toBe(
       null
     )
@@ -67,7 +64,6 @@ describe('StartsWithFilter', () => {
       filter.findUnique({ where: { name: { startsWith: 'Alice' } } })?.name
     ).toBe('Alice')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -76,7 +72,6 @@ describe('StartsWithFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { startsWith: 'alice', mode: 'insensitive' } },
@@ -102,7 +97,6 @@ describe('StartsWithFilter', () => {
         where: { name: { startsWith: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(0)
-
     expect(
       filter.findUnique({
         where: { name: { startsWith: 'alice', mode: 'insensitive' } },
@@ -114,7 +108,6 @@ describe('StartsWithFilter', () => {
       })
     ).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -132,7 +125,6 @@ describe('StartsWithFilter', () => {
       filter.findMany({ where: { value: { startsWith: 'xyz' } } }).data.length
     ).toBe(0)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -155,22 +147,19 @@ describe('StartsWithFilter', () => {
     ).toBe(1)
   })
 })
-
 describe('StartsWithFilter Unit Tests', () => {
   it('debe retornar true si el string empieza con la subcadena', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate('hello world')).toBe(true)
     expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(false) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(false)
   })
-
   it('debe retornar false si el string no empieza con la subcadena', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate('world hello')).toBe(false)
     expect(filter.evaluate('world')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new StartsWithFilter('hello', true)
     expect(filter.evaluate('HELLO WORLD')).toBe(true)
@@ -178,13 +167,11 @@ describe('StartsWithFilter Unit Tests', () => {
     expect(filter.evaluate('hello world')).toBe(true)
     expect(filter.evaluate('WORLD')).toBe(false)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate(123)).toBe(false)
@@ -192,7 +179,6 @@ describe('StartsWithFilter Unit Tests', () => {
     expect(filter.evaluate([])).toBe(false)
     expect(filter.evaluate(true)).toBe(false)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new StartsWithFilter('')
     expect(filter.evaluate('hello')).toBe(true)

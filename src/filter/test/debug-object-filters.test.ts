@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Object Filters', () => {
   const nestedData = [
     {
@@ -34,7 +33,6 @@ describe('Debug Object Filters', () => {
       ],
     },
   ]
-
   it('debug some filter', () => {
     const filter = createFilterEngine(nestedData)
     const result = filter.findMany({
@@ -50,21 +48,18 @@ describe('Debug Object Filters', () => {
         } as any,
       },
     })
-
     console.log('Result data:', result.data)
     console.log('Expected: Alice, Bob (USA addresses)')
     console.log(
       'Actual:',
       result.data.map((item) => item.profile[0].name)
     )
-
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.profile[0].name).sort()).toEqual([
       'Alice',
       'Bob',
     ])
   })
-
   it('debug every filter', () => {
     const result = createFilterEngine(nestedData).findMany({
       where: {
@@ -75,7 +70,6 @@ describe('Debug Object Filters', () => {
         },
       },
     })
-
     console.log('Result data:', result.data)
     console.log('Expected: All (age >= 25)')
     console.log(
@@ -84,10 +78,8 @@ describe('Debug Object Filters', () => {
         (item) => `${item.profile[0].name} (${item.profile[0].age})`
       )
     )
-
     expect(result.data).toHaveLength(3)
   })
-
   it('debug none filter', () => {
     const result = createFilterEngine(nestedData).findMany({
       where: {
@@ -98,7 +90,6 @@ describe('Debug Object Filters', () => {
         },
       },
     })
-
     console.log('Result data:', result.data)
     console.log('Expected: All (none age < 25)')
     console.log(
@@ -107,7 +98,6 @@ describe('Debug Object Filters', () => {
         (item) => `${item.profile[0].name} (${item.profile[0].age})`
       )
     )
-
     expect(result.data).toHaveLength(3)
   })
 })

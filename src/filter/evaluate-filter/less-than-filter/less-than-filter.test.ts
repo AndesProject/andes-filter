@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { LessThanFilter } from './less-than-filter'
-
 describe('LessThanFilter', () => {
   it('number', () => {
     const filter = createFilterEngine<{ size: number }>([
@@ -13,7 +12,6 @@ describe('LessThanFilter', () => {
       { size: 2 },
       { size: 3 },
     ])
-
     expect(filter.findMany({ where: { size: { lt: -2 } } }).data.length).toBe(0)
     expect(filter.findMany({ where: { size: { lt: -1 } } }).data.length).toBe(1)
     expect(filter.findMany({ where: { size: { lt: 0 } } }).data.length).toBe(2)
@@ -21,14 +19,12 @@ describe('LessThanFilter', () => {
     expect(filter.findMany({ where: { size: { lt: 100 } } }).data.length).toBe(
       7
     )
-
     expect(filter.findUnique({ where: { size: { lt: -2 } } })?.size).toBe(
       undefined
     )
     expect(filter.findUnique({ where: { size: { lt: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lt: 100 } } })?.size).toBe(-2)
   })
-
   it('date', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
@@ -44,7 +40,6 @@ describe('LessThanFilter', () => {
     expect(filter.findUnique({ where: { date: { lt: d2 } } })?.date).toEqual(d1)
     expect(filter.findUnique({ where: { date: { lt: d1 } } })).toBe(null)
   })
-
   it('string', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: 'a' },
@@ -65,7 +60,6 @@ describe('LessThanFilter', () => {
     )
     expect(filter.findUnique({ where: { value: { lt: 'a' } } })).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -73,7 +67,7 @@ describe('LessThanFilter', () => {
       { value: 0 },
       { value: 1 },
     ])
-    expect(filter.findMany({ where: { value: { lt: 1 } } }).data.length).toBe(1) // solo 0 < 1
+    expect(filter.findMany({ where: { value: { lt: 1 } } }).data.length).toBe(1)
     expect(filter.findMany({ where: { value: { lt: 0 } } }).data.length).toBe(0)
     expect(
       filter.findMany({ where: { value: { lt: null } } }).data.length
@@ -83,7 +77,6 @@ describe('LessThanFilter', () => {
     ).toBe(0)
   })
 })
-
 describe('LessThanFilter Unit Tests', () => {
   it('debe retornar true si el valor es menor al umbral', () => {
     const filter = new LessThanFilter(10)

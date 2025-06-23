@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { EveryFilter } from './every-filter'
-
 describe('EveryFilter', () => {
   it('arrays con todos los elementos que cumplen el filtro', () => {
     const filter = createFilterEngine<{ items: number[] }>([
@@ -10,26 +9,22 @@ describe('EveryFilter', () => {
       { items: [2] },
       { items: [1, 2, 2] },
     ])
-    // Solo los primeros tres cumplen que todos los elementos son 2
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
         .length
     ).toBe(3)
   })
-
   it('arrays con algún elemento que no cumple el filtro', () => {
     const filter = createFilterEngine<{ items: number[] }>([
       { items: [2, 2, 2] },
       { items: [2, 1, 2] },
       { items: [1, 1, 1] },
     ])
-    // Solo el primero cumple
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
         .length
     ).toBe(1)
   })
-
   it('arrays vacíos, null y undefined', () => {
     const filter = createFilterEngine<{ items: number[] }>([
       { items: [2, 2, 2] },
@@ -43,9 +38,8 @@ describe('EveryFilter', () => {
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
         .length
-    ).toBe(4) // [2,2,2], [], undefined, y [2,2,2] pasan (verdad vacua)
+    ).toBe(4)
   })
-
   it('findUnique', () => {
     const filter = createFilterEngine<{ items: number[] }>([
       { items: [2, 2, 2] },
@@ -60,26 +54,22 @@ describe('EveryFilter', () => {
     })
     expect(result2).toBe(null)
   })
-
   it('filtros complejos', () => {
     const filter = createFilterEngine<{ posts: boolean[] }>([
       { posts: [true, true] },
       { posts: [true, false] },
     ])
-    // Solo el primero cumple que todos los posts son true
     expect(
       filter.findMany({ where: { posts: { every: { equals: true } } } }).data
         .length
     ).toBe(1)
   })
 })
-
 describe('EveryFilter Unit', () => {
   it('should return true for empty array (vacuous truth)', () => {
     const filter = new EveryFilter({ equals: 1 })
     expect(filter.evaluate([])).toBe(true)
   })
-
   it('should return false for non-array input', () => {
     const filter = new EveryFilter({ equals: 1 })
     expect(filter.evaluate(null)).toBe(false)
@@ -88,19 +78,16 @@ describe('EveryFilter Unit', () => {
     expect(filter.evaluate('string')).toBe(false)
     expect(filter.evaluate({})).toBe(false)
   })
-
   it('should return true if every item matches the primitive filter', () => {
     const filter = new EveryFilter(5)
     expect(filter.evaluate([5, 5, 5])).toBe(true)
     expect(filter.evaluate([5, 5, 4])).toBe(false)
   })
-
   it('should return true if every item matches the operator filter', () => {
     const filter = new EveryFilter({ equals: 2 })
     expect(filter.evaluate([2, 2, 2])).toBe(true)
     expect(filter.evaluate([2, 2, 3])).toBe(false)
   })
-
   it('should return true if every item matches a complex object filter', () => {
     const filter = new EveryFilter({ a: 1, b: 2 })
     expect(
@@ -112,56 +99,47 @@ describe('EveryFilter Unit', () => {
     expect(
       filter.evaluate([
         { a: 1, b: 2 },
-        { a: 1, b: 3 }, // Different value for 'b'
+        { a: 1, b: 3 },
       ])
     ).toBe(false)
   })
-
   it('should return true for empty filter and array of objects', () => {
     const filter = new EveryFilter({})
     expect(filter.evaluate([{ a: 1 }, { b: 2 }])).toBe(true)
   })
-
   it('should return true for empty filter and array of primitives', () => {
     const filter = new EveryFilter({})
     expect(filter.evaluate([1, 2, 3])).toBe(true)
   })
-
   it('should return false if any item is null or undefined', () => {
     const filter = new EveryFilter({ equals: 1 })
     expect(filter.evaluate([1, 1, null])).toBe(false)
     expect(filter.evaluate([1, undefined, 1])).toBe(false)
   })
-
   it('should handle nested operator filters', () => {
     const filter = new EveryFilter({ gt: 0 })
     expect(filter.evaluate([1, 2, 3])).toBe(true)
     expect(filter.evaluate([1, 0, 3])).toBe(false)
   })
-
   it('should handle nested complex filters', () => {
     const filter = new EveryFilter({ a: { equals: 1 } })
     expect(filter.evaluate([{ a: 1 }, { a: 1 }])).toBe(true)
     expect(filter.evaluate([{ a: 1 }, { a: 2 }])).toBe(false)
   })
-
   it('should handle array of objects with empty filter', () => {
     const filter = new EveryFilter({})
     expect(filter.evaluate([{ x: 1 }, { y: 2 }])).toBe(true)
   })
-
   it('should handle array of primitives with empty filter', () => {
     const filter = new EveryFilter({})
     expect(filter.evaluate([1, 2, 3])).toBe(true)
   })
-
   it('should handle array of objects with null/undefined', () => {
     const filter = new EveryFilter({ a: 1 })
     expect(filter.evaluate([{ a: 1 }, null, { a: 1 }])).toBe(false)
     expect(filter.evaluate([{ a: 1 }, undefined, { a: 1 }])).toBe(false)
   })
 })
-
 describe('EveryFilter Integration', () => {
   it('should work with createFilterEngine for primitive arrays', () => {
     const filter = createFilterEngine<{ arr: number[] }>([
@@ -173,15 +151,15 @@ describe('EveryFilter Integration', () => {
     expect(
       filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any).data
         .length
-    ).toBe(2) // [1,1,1] y [] (verdad vacua)
+    ).toBe(2)
     expect(
       filter.findMany({ where: { arr: { every: { equals: 2 } } } } as any).data
         .length
-    ).toBe(2) // [2,2,2] y [] (verdad vacua)
+    ).toBe(2)
     expect(
       filter.findMany({ where: { arr: { every: { equals: 3 } } } } as any).data
         .length
-    ).toBe(1) // solo [] (verdad vacua)
+    ).toBe(1)
     expect(
       filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any)
         .data[0].arr
@@ -215,7 +193,6 @@ describe('EveryFilter Integration', () => {
         .data[0].arr
     ).toEqual([2, 2, 2])
   })
-
   it('should work with createFilterEngine for arrays of objects', () => {
     const filter = createFilterEngine<{ arr: { a: number }[] }>([
       { arr: [{ a: 1 }, { a: 1 }] },
@@ -227,19 +204,18 @@ describe('EveryFilter Integration', () => {
       filter.findMany({
         where: { arr: { every: { a: { equals: 1 } } } } as any,
       }).data.length
-    ).toBe(2) // [{a:1}, {a:1}] y [] (verdad vacua)
+    ).toBe(2)
     expect(
       filter.findMany({
         where: { arr: { every: { a: { equals: 2 } } } } as any,
       }).data.length
-    ).toBe(2) // [{a:2}, {a:2}] y [] (verdad vacua)
+    ).toBe(2)
     expect(
       filter.findMany({
         where: { arr: { every: { a: { equals: 3 } } } } as any,
       }).data.length
-    ).toBe(1) // solo [] (verdad vacua)
+    ).toBe(1)
   })
-
   it('should return true for empty array in integration', () => {
     const filter = createFilterEngine<{ arr: number[] }>([
       { arr: [] },
@@ -247,31 +223,27 @@ describe('EveryFilter Integration', () => {
     ])
     expect(
       filter.findMany({ where: { arr: { every: 1 } } } as any).data.length
-    ).toBe(2) // [] y [1] (ambos pasan)
+    ).toBe(2)
     expect(
       filter.findMany({ where: { arr: { every: 2 } } } as any).data.length
-    ).toBe(1) // solo [] (verdad vacua)
+    ).toBe(1)
   })
-
   it('should handle empty filter with array of objects', () => {
     const filter = createFilterEngine<{ arr: { x: number }[] }>([
       { arr: [{ x: 1 }, { x: 2 }] },
       { arr: [{ x: 3 }] },
       { arr: [] },
     ])
-    // Según Prisma/TypeORM: array vacío con filtro vacío retorna true (verdad vacua)
     expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
       3
     )
   })
-
   it('should handle empty filter with array of primitives', () => {
     const filter = createFilterEngine<{ arr: number[] }>([
       { arr: [1, 2, 3] },
       { arr: [4, 5, 6] },
       { arr: [] },
     ])
-    // Según Prisma/TypeORM: arrays de primitivos con filtro vacío retornan true (verdad vacua)
     expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
       3
     )

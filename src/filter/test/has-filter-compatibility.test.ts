@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { HasFilter } from '../evaluate-filter/has-filter/has-filter'
 import { createFilterEngine } from '../filter-from'
-
 describe('HasFilter Prisma/TypeORM Compatibility', () => {
   describe('Basic behavior', () => {
     it('should return true when array contains the element', () => {
@@ -9,18 +8,15 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       expect(filter.evaluate([1, 2, 3])).toBe(true)
       expect(filter.evaluate([2])).toBe(true)
     })
-
     it('should return false when array does not contain the element', () => {
       const filter = new HasFilter(10)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
       expect(filter.evaluate([4, 5, 6])).toBe(false)
     })
-
     it('should return false for empty arrays', () => {
       const filter = new HasFilter(2)
       expect(filter.evaluate([])).toBe(false)
     })
-
     it('should return false for non-array inputs', () => {
       const filter = new HasFilter(2)
       expect(filter.evaluate(null)).toBe(false)
@@ -30,48 +26,38 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       expect(filter.evaluate({})).toBe(false)
     })
   })
-
   describe('Primitive types', () => {
     it('should work with numbers', () => {
       const filter = new HasFilter(42)
       expect(filter.evaluate([1, 42, 3])).toBe(true)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
     })
-
     it('should work with strings', () => {
       const filter = new HasFilter('javascript')
       expect(filter.evaluate(['javascript', 'typescript'])).toBe(true)
       expect(filter.evaluate(['python', 'java'])).toBe(false)
     })
-
     it('should work with booleans', () => {
       const filter = new HasFilter(true)
       expect(filter.evaluate([true, false])).toBe(true)
       expect(filter.evaluate([false, false])).toBe(false)
     })
-
     it('should work with null values', () => {
       const filter = new HasFilter(null)
       expect(filter.evaluate([1, null, 3])).toBe(true)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
     })
-
     it('should work with undefined values', () => {
       const filter = new HasFilter(undefined)
       expect(filter.evaluate([1, undefined, 3])).toBe(true)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
     })
   })
-
   describe('Object references', () => {
     it('should work with object references (strict equality)', () => {
       const targetObject = { id: 1, name: 'Alice' }
       const filter = new HasFilter(targetObject)
-
-      // Same reference should work
       expect(filter.evaluate([targetObject, { id: 2, name: 'Bob' }])).toBe(true)
-
-      // Different object with same properties should not work
       expect(
         filter.evaluate([
           { id: 1, name: 'Alice' },
@@ -79,11 +65,9 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         ])
       ).toBe(false)
     })
-
     it('should work with nested objects', () => {
       const targetObject = { user: { id: 1, name: 'Alice' } }
       const filter = new HasFilter(targetObject)
-
       expect(
         filter.evaluate([targetObject, { user: { id: 2, name: 'Bob' } }])
       ).toBe(true)
@@ -95,40 +79,34 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(false)
     })
   })
-
   describe('Edge cases', () => {
     it('should handle arrays with mixed types', () => {
       const filter = new HasFilter(2)
-      expect(filter.evaluate([1, '2', 3])).toBe(false) // String '2' !== number 2
-      expect(filter.evaluate([1, 2, '3'])).toBe(true) // Number 2 matches
+      expect(filter.evaluate([1, '2', 3])).toBe(false)
+      expect(filter.evaluate([1, 2, '3'])).toBe(true)
     })
-
     it('should handle arrays with null/undefined elements', () => {
       const filter = new HasFilter(2)
       expect(filter.evaluate([1, null, 2, 3])).toBe(true)
       expect(filter.evaluate([1, undefined, 2, 3])).toBe(true)
       expect(filter.evaluate([1, null, 3])).toBe(false)
     })
-
     it('should handle NaN values', () => {
       const filter = new HasFilter(NaN)
       expect(filter.evaluate([1, NaN, 3])).toBe(true)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
     })
-
     it('should handle zero values', () => {
       const filter = new HasFilter(0)
       expect(filter.evaluate([1, 0, 3])).toBe(true)
       expect(filter.evaluate([1, 2, 3])).toBe(false)
     })
-
     it('should handle empty strings', () => {
       const filter = new HasFilter('')
       expect(filter.evaluate(['hello', '', 'world'])).toBe(true)
       expect(filter.evaluate(['hello', 'world'])).toBe(false)
     })
   })
-
   describe('Integration tests with createFilterEngine', () => {
     it('should work with number arrays', () => {
       const filter = createFilterEngine<{ items: number[] }>([
@@ -137,7 +115,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { items: [7, 8, 9] },
         { items: [] },
       ])
-
       expect(
         filter.findMany({ where: { items: { has: 2 } } }).data.length
       ).toBe(1)
@@ -148,7 +125,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { items: { has: 1 } } }).data.length
       ).toBe(1)
     })
-
     it('should work with string arrays', () => {
       const filter = createFilterEngine<{ tags: string[] }>([
         { tags: ['javascript', 'typescript'] },
@@ -156,7 +132,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { tags: ['javascript', 'react'] },
         { tags: [] },
       ])
-
       expect(
         filter.findMany({ where: { tags: { has: 'javascript' } } }).data.length
       ).toBe(2)
@@ -167,14 +142,12 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { tags: { has: 'c++' } } }).data.length
       ).toBe(0)
     })
-
     it('should work with boolean arrays', () => {
       const filter = createFilterEngine<{ flags: boolean[] }>([
         { flags: [true, false] },
         { flags: [false, false] },
         { flags: [] },
       ])
-
       expect(
         filter.findMany({ where: { flags: { has: true } } }).data.length
       ).toBe(1)
@@ -182,7 +155,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { flags: { has: false } } }).data.length
       ).toBe(2)
     })
-
     it('should work with object arrays', () => {
       const targetObject = { id: 1, name: 'Alice' }
       const filter = createFilterEngine<{
@@ -197,7 +169,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         },
         { users: [] },
       ])
-
       expect(
         filter.findMany({ where: { users: { has: targetObject } } }).data.length
       ).toBe(1)
@@ -205,9 +176,8 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.findMany({
           where: { users: { has: { id: 1, name: 'Alice' } } },
         }).data.length
-      ).toBe(0) // Different object reference
+      ).toBe(0)
     })
-
     it('should handle null and undefined arrays', () => {
       const filter = createFilterEngine<{ items: any }>([
         { items: [1, 2, 3] },
@@ -215,7 +185,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { items: undefined },
         { items: [] },
       ])
-
       expect(
         filter.findMany({ where: { items: { has: 1 } } }).data.length
       ).toBe(1)
@@ -224,7 +193,6 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(1)
     })
   })
-
   describe('Complex scenarios', () => {
     it('should handle nested arrays', () => {
       const targetArray = [1, 2]
@@ -232,19 +200,17 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       expect(filter.evaluate([targetArray, [3, 4]])).toBe(true)
       expect(
         filter.evaluate([
-          [1, 2], // Different array reference
+          [1, 2],
           [3, 4],
         ])
       ).toBe(false)
     })
-
     it('should handle functions', () => {
       const testFunc = () => {}
       const filter = new HasFilter(testFunc)
       expect(filter.evaluate([testFunc, () => {}])).toBe(true)
       expect(filter.evaluate([() => {}, () => {}])).toBe(false)
     })
-
     it('should handle symbols', () => {
       const testSymbol = Symbol('test')
       const filter = new HasFilter(testSymbol)

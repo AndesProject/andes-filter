@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
   describe('Basic NOT Behavior', () => {
     it('should handle primitive negation', () => {
@@ -28,7 +27,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { value: { not: 0 } } }).data
       ).toHaveLength(4)
     })
-
     it('should handle NOT with dates', () => {
       const date1 = new Date('2023-01-01')
       const date2 = new Date('2023-01-02')
@@ -50,7 +48,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { date: { not: null } } }).data
       ).toHaveLength(3)
     })
-
     it('should handle NOT with NaN', () => {
       const data = [
         { id: 1, value: NaN },
@@ -66,7 +63,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { value: { not: 1 } } }).data
       ).toHaveLength(3)
     })
-
     it('should handle NOT with strings and insensitive mode', () => {
       const data = [
         { id: 1, name: 'Alice' },
@@ -91,7 +87,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ).toHaveLength(1)
     })
   })
-
   describe('NOT with subfilters', () => {
     it('should handle NOT with in/notIn', () => {
       const data = [
@@ -108,7 +103,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         filter.findMany({ where: { value: { not: { notIn: [3, 4] } } } }).data
       ).toHaveLength(2)
     })
-
     it('should handle NOT with contains/startsWith/endsWith and insensitive', () => {
       const data = [
         { id: 1, name: 'Alice' },
@@ -143,7 +137,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ).toHaveLength(1)
     })
   })
-
   describe('NOT with arrays (some/none/every)', () => {
     it('should handle NOT with some/none/every', () => {
       const data = [
@@ -167,7 +160,6 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ).toHaveLength(2)
     })
   })
-
   describe('NOT with objects', () => {
     it('should handle NOT with object reference', () => {
       const obj1 = { key: 'value' }

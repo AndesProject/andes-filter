@@ -13,8 +13,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 6, name: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Exact string match - should work like Prisma/TypeORM
       expect(
         filter.findMany({ where: { name: { equals: 'Alice' } } }).data
       ).toHaveLength(2)
@@ -24,23 +22,16 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       expect(
         filter.findMany({ where: { name: { equals: 'Charlie' } } }).data
       ).toHaveLength(0)
-
-      // Empty string - should work like Prisma/TypeORM
       expect(
         filter.findMany({ where: { name: { equals: '' } } }).data
       ).toHaveLength(1)
-
-      // Null values - should work like Prisma/TypeORM
       expect(
         filter.findMany({ where: { name: { equals: null } } }).data
       ).toHaveLength(1)
-
-      // Undefined values - should work like Prisma/TypeORM
       expect(
         filter.findMany({ where: { name: { equals: undefined } } }).data
       ).toHaveLength(1)
     })
-
     it('should handle number equality like Prisma/TypeORM', () => {
       const data = [
         { id: 1, value: 10 },
@@ -52,8 +43,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 7, value: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Exact number match
       expect(
         filter.findMany({ where: { value: { equals: 10 } } }).data
       ).toHaveLength(2)
@@ -66,8 +55,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       expect(
         filter.findMany({ where: { value: { equals: -5 } } }).data
       ).toHaveLength(1)
-
-      // Null and undefined
       expect(
         filter.findMany({ where: { value: { equals: null } } }).data
       ).toHaveLength(1)
@@ -75,7 +62,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         filter.findMany({ where: { value: { equals: undefined } } }).data
       ).toHaveLength(1)
     })
-
     it('should handle boolean equality like Prisma/TypeORM', () => {
       const data = [
         { id: 1, active: true },
@@ -85,16 +71,12 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, active: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Boolean values
       expect(
         filter.findMany({ where: { active: { equals: true } } }).data
       ).toHaveLength(2)
       expect(
         filter.findMany({ where: { active: { equals: false } } }).data
       ).toHaveLength(1)
-
-      // Null and undefined
       expect(
         filter.findMany({ where: { active: { equals: null } } }).data
       ).toHaveLength(1)
@@ -102,22 +84,18 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         filter.findMany({ where: { active: { equals: undefined } } }).data
       ).toHaveLength(1)
     })
-
     it('should handle date equality like Prisma/TypeORM', () => {
       const date1 = new Date('2023-01-01')
       const date2 = new Date('2023-01-02')
       const date3 = new Date('2023-01-01')
-
       const data = [
         { id: 1, date: date1 },
         { id: 2, date: date2 },
-        { id: 3, date: date3 }, // Same as date1
+        { id: 3, date: date3 },
         { id: 4, date: null },
         { id: 5, date: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Date equality should compare by value, not reference
       expect(
         filter.findMany({ where: { date: { equals: date1 } } }).data
       ).toHaveLength(2)
@@ -128,8 +106,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         filter.findMany({ where: { date: { equals: new Date('2023-01-01') } } })
           .data
       ).toHaveLength(2)
-
-      // Null and undefined
       expect(
         filter.findMany({ where: { date: { equals: null } } }).data
       ).toHaveLength(1)
@@ -138,7 +114,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       ).toHaveLength(1)
     })
   })
-
   describe('Edge Cases and Special Values', () => {
     it('should handle falsy values correctly', () => {
       const data = [
@@ -150,8 +125,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 6, value: NaN },
       ]
       const filter = createFilterEngine(data)
-
-      // Falsy values should be treated as distinct
       expect(
         filter.findMany({ where: { value: { equals: 0 } } }).data
       ).toHaveLength(1)
@@ -167,17 +140,13 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       expect(
         filter.findMany({ where: { value: { equals: undefined } } }).data
       ).toHaveLength(1)
-
-      // NaN should be handled specially (NaN !== NaN in JavaScript)
       expect(
         filter.findMany({ where: { value: { equals: NaN } } }).data
       ).toHaveLength(0)
     })
-
     it('should handle object equality correctly', () => {
       const obj1 = { key: 'value' }
       const obj2 = { key: 'value' }
-
       const data = [
         { id: 1, obj: obj1 },
         { id: 2, obj: obj2 },
@@ -186,8 +155,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, obj: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Object equality should be by reference, not by value (like Prisma/TypeORM)
       expect(
         filter.findMany({ where: { obj: { equals: obj1 } } }).data
       ).toHaveLength(1)
@@ -197,8 +164,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       expect(
         filter.findMany({ where: { obj: { equals: { key: 'value' } } } }).data
       ).toHaveLength(0)
-
-      // Null and undefined
       expect(
         filter.findMany({ where: { obj: { equals: null } } }).data
       ).toHaveLength(1)
@@ -206,11 +171,9 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         filter.findMany({ where: { obj: { equals: undefined } } }).data
       ).toHaveLength(1)
     })
-
     it('should handle array equality correctly', () => {
       const arr1 = [1, 2, 3]
       const arr2 = [1, 2, 3]
-
       const data = [
         { id: 1, arr: arr1 },
         { id: 2, arr: arr2 },
@@ -219,8 +182,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, arr: undefined },
       ]
       const filter = createFilterEngine(data)
-
-      // Array equality should be by reference, not by value (like Prisma/TypeORM)
       expect(
         filter.findMany({ where: { arr: { equals: arr1 } } }).data
       ).toHaveLength(1)
@@ -230,8 +191,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       expect(
         filter.findMany({ where: { arr: { equals: [1, 2, 3] } } }).data
       ).toHaveLength(0)
-
-      // Null and undefined
       expect(
         filter.findMany({ where: { arr: { equals: null } } }).data
       ).toHaveLength(1)
@@ -240,7 +199,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       ).toHaveLength(1)
     })
   })
-
   describe('Type Coercion Behavior', () => {
     it('should not perform type coercion (strict equality)', () => {
       const data = [
@@ -251,24 +209,18 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 5, value: 'true' },
       ]
       const filter = createFilterEngine(data)
-
-      // String vs Number - should not coerce
       expect(
         filter.findMany({ where: { value: { equals: '123' } } }).data
       ).toHaveLength(1)
       expect(
         filter.findMany({ where: { value: { equals: 123 } } }).data
       ).toHaveLength(1)
-
-      // Boolean vs Number - should not coerce
       expect(
         filter.findMany({ where: { value: { equals: true } } }).data
       ).toHaveLength(1)
       expect(
         filter.findMany({ where: { value: { equals: 1 } } }).data
       ).toHaveLength(1)
-
-      // Boolean vs String - should not coerce
       expect(
         filter.findMany({ where: { value: { equals: true } } }).data
       ).toHaveLength(1)
@@ -277,7 +229,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       ).toHaveLength(1)
     })
   })
-
   describe('Case Sensitivity', () => {
     it('should be case sensitive by default', () => {
       const data = [
@@ -286,8 +237,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 3, name: 'ALICE' },
       ]
       const filter = createFilterEngine(data)
-
-      // Case sensitive comparison
       expect(
         filter.findMany({ where: { name: { equals: 'Alice' } } }).data
       ).toHaveLength(1)
@@ -298,7 +247,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         filter.findMany({ where: { name: { equals: 'ALICE' } } }).data
       ).toHaveLength(1)
     })
-
     it('should support case insensitive mode', () => {
       const data = [
         { id: 1, name: 'Alice' },
@@ -306,8 +254,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 3, name: 'ALICE' },
       ]
       const filter = createFilterEngine(data)
-
-      // Case insensitive comparison
       expect(
         filter.findMany({
           where: { name: { equals: 'Alice', mode: 'insensitive' } },
@@ -325,7 +271,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       ).toHaveLength(3)
     })
   })
-
   describe('Performance and Large Datasets', () => {
     it('should handle large datasets efficiently', () => {
       const largeData = Array.from({ length: 10000 }, (_, i) => ({
@@ -334,20 +279,16 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         value: i % 100,
       }))
       const filter = createFilterEngine(largeData)
-
-      // Should find exact matches quickly
       const start = performance.now()
       const result = filter.findMany({
         where: { name: { equals: 'User5000' } },
       })
       const end = performance.now()
-
       expect(result.data).toHaveLength(1)
       expect(result.data[0].id).toBe(5000)
-      expect(end - start).toBeLessThan(100) // Should complete in less than 100ms
+      expect(end - start).toBeLessThan(100)
     })
   })
-
   describe('Integration with Other Filters', () => {
     it('should work correctly with AND conditions', () => {
       const data = [
@@ -357,8 +298,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 4, name: 'Charlie', age: 35, active: true },
       ]
       const filter = createFilterEngine(data)
-
-      // Multiple equals conditions
       expect(
         filter.findMany({
           where: {
@@ -368,8 +307,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
           },
         }).data
       ).toHaveLength(1)
-
-      // AND with equals
       expect(
         filter.findMany({
           where: {
@@ -378,7 +315,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         }).data
       ).toHaveLength(1)
     })
-
     it('should work correctly with OR conditions', () => {
       const data = [
         { id: 1, name: 'Alice', age: 25 },
@@ -386,8 +322,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 3, name: 'Charlie', age: 35 },
       ]
       const filter = createFilterEngine(data)
-
-      // OR with equals
       expect(
         filter.findMany({
           where: {
@@ -396,7 +330,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         }).data
       ).toHaveLength(2)
     })
-
     it('should work correctly with NOT conditions', () => {
       const data = [
         { id: 1, name: 'Alice', age: 25 },
@@ -404,8 +337,6 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
         { id: 3, name: 'Charlie', age: 35 },
       ]
       const filter = createFilterEngine(data)
-
-      // NOT with equals
       expect(
         filter.findMany({
           where: {

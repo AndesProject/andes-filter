@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { InclusionFilter } from './inclusion-filter'
-
 describe('InclusionFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -17,7 +16,6 @@ describe('InclusionFilter', () => {
       { name: 'Isaac' },
       { name: 'Jasmine' },
     ])
-
     expect(filter.findMany({ where: { name: { in: [''] } } }).data.length).toBe(
       0
     )
@@ -30,7 +28,6 @@ describe('InclusionFilter', () => {
     expect(
       filter.findMany({ where: { name: { in: ['David'] } } }).data.length
     ).toBe(1)
-
     expect(filter.findUnique({ where: { name: { in: [''] } } })?.name).toBe(
       undefined
     )
@@ -44,7 +41,6 @@ describe('InclusionFilter', () => {
       filter.findUnique({ where: { name: { in: ['Alice', 'David'] } } })?.name
     ).toBe('Alice')
   })
-
   it('number', () => {
     const filter = createFilterEngine<{ size: number }>([
       { size: 0 },
@@ -53,7 +49,6 @@ describe('InclusionFilter', () => {
       { size: 3 },
       { size: 0.5 },
     ])
-
     expect(filter.findMany({ where: { size: { in: [0] } } }).data.length).toBe(
       1
     )
@@ -63,7 +58,6 @@ describe('InclusionFilter', () => {
     expect(
       filter.findMany({ where: { size: { in: [1, 2] } } }).data.length
     ).toBe(2)
-
     expect(filter.findUnique({ where: { size: { in: [1024] } } })?.size).toBe(
       undefined
     )
@@ -71,7 +65,6 @@ describe('InclusionFilter', () => {
     expect(filter.findUnique({ where: { size: { in: [0, 1] } } })?.size).toBe(0)
     expect(filter.findUnique({ where: { size: { in: [1, 0] } } })?.size).toBe(0)
   })
-
   it('boolean', () => {
     const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: false },
@@ -80,7 +73,6 @@ describe('InclusionFilter', () => {
       { isValid: false },
       { isValid: true },
     ])
-
     expect(
       filter.findMany({ where: { isValid: { in: [false] } } }).data.length
     ).toBe(3)
@@ -90,7 +82,6 @@ describe('InclusionFilter', () => {
     expect(
       filter.findMany({ where: { isValid: { in: [false, true] } } }).data.length
     ).toBe(5)
-
     expect(
       filter.findUnique({ where: { isValid: { in: [false] } } })?.isValid
     ).toBe(false)
@@ -98,7 +89,6 @@ describe('InclusionFilter', () => {
       filter.findUnique({ where: { isValid: { in: [true] } } })?.isValid
     ).toBe(true)
   })
-
   it('casos de borde', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -108,44 +98,30 @@ describe('InclusionFilter', () => {
       { value: false },
       { value: 'test' },
     ])
-
-    // Array vacío
     expect(filter.findMany({ where: { value: { in: [] } } }).data.length).toBe(
       0
     )
-
-    // null en el array
     expect(
       filter.findMany({ where: { value: { in: [null] } } }).data.length
     ).toBe(1)
-
-    // undefined en el array
     expect(
       filter.findMany({ where: { value: { in: [undefined] } } }).data.length
     ).toBe(1)
-
-    // string vacío
     expect(
       filter.findMany({ where: { value: { in: [''] } } }).data.length
     ).toBe(1)
-
-    // 0 y false
     expect(
       filter.findMany({ where: { value: { in: [0, false] } } }).data.length
     ).toBe(2)
-
-    // Mezcla de tipos
     expect(
       filter.findMany({ where: { value: { in: [null, 'test'] } } }).data.length
     ).toBe(2)
   })
-
   it('objetos y arrays', () => {
     const obj1 = { id: 1, name: 'test' }
     const obj2 = { id: 2, name: 'test2' }
     const arr1 = [1, 2, 3]
     const arr2 = [4, 5, 6]
-
     const filter = createFilterEngine<{ value: any }>([
       { value: obj1 },
       { value: obj2 },
@@ -153,31 +129,24 @@ describe('InclusionFilter', () => {
       { value: arr2 },
       { value: 'string' },
     ])
-
-    // Objetos
     expect(
       filter.findMany({ where: { value: { in: [obj1] } } }).data.length
     ).toBe(1)
     expect(
       filter.findMany({ where: { value: { in: [obj1, obj2] } } }).data.length
     ).toBe(2)
-
-    // Arrays
     expect(
       filter.findMany({ where: { value: { in: [arr1] } } }).data.length
     ).toBe(1)
     expect(
       filter.findMany({ where: { value: { in: [arr1, arr2] } } }).data.length
     ).toBe(2)
-
-    // Mezcla de tipos
     expect(
       filter.findMany({ where: { value: { in: [obj1, arr1, 'string'] } } }).data
         .length
     ).toBe(3)
   })
 })
-
 describe('InclusionFilter Unit Tests', () => {
   it('debe retornar true cuando el valor está en el array', () => {
     const filter = new InclusionFilter<string>(['a', 'b', 'c'])
@@ -185,19 +154,16 @@ describe('InclusionFilter Unit Tests', () => {
     expect(filter.evaluate('b')).toBe(true)
     expect(filter.evaluate('c')).toBe(true)
   })
-
   it('debe retornar false cuando el valor no está en el array', () => {
     const filter = new InclusionFilter<string>(['a', 'b', 'c'])
     expect(filter.evaluate('d')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-
   it('debe manejar arrays vacíos', () => {
     const filter = new InclusionFilter<string>([])
     expect(filter.evaluate('a')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-
   it('debe manejar arrays con valores mixtos', () => {
     const filter = new InclusionFilter<any>(['a', 1, true, null, undefined])
     expect(filter.evaluate('a')).toBe(true)
@@ -209,46 +175,36 @@ describe('InclusionFilter Unit Tests', () => {
     expect(filter.evaluate(2)).toBe(false)
     expect(filter.evaluate(false)).toBe(false)
   })
-
   it('debe manejar objetos y arrays', () => {
     const obj = { id: 1 }
     const arr = [1, 2, 3]
     const filter = new InclusionFilter<any>([obj, arr])
-
     expect(filter.evaluate(obj)).toBe(true)
     expect(filter.evaluate(arr)).toBe(true)
-    expect(filter.evaluate({ id: 1 })).toBe(false) // Diferente referencia
-    expect(filter.evaluate([1, 2, 3])).toBe(false) // Diferente referencia
+    expect(filter.evaluate({ id: 1 })).toBe(false)
+    expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
-
   it('debe verificar contratos de retorno de findMany y findUnique', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Bob' },
       { name: 'Charlie' },
     ])
-
-    // Verificar que findMany siempre retorna un objeto con data como array
     const findManyResult = filter.findMany({
       where: { name: { in: ['Alice', 'Bob'] } },
     })
     expect(findManyResult).toHaveProperty('data')
     expect(Array.isArray(findManyResult.data)).toBe(true)
     expect(findManyResult.data.length).toBe(2)
-
-    // Verificar que findUnique retorna un elemento o null
     const findUniqueResult1 = filter.findUnique({
       where: { name: { in: ['Alice'] } },
     })
     expect(findUniqueResult1).toBeDefined()
     expect(findUniqueResult1?.name).toBe('Alice')
-
     const findUniqueResult2 = filter.findUnique({
       where: { name: { in: ['NonExistent'] } },
     })
     expect(findUniqueResult2).toBe(null)
-
-    // Verificar con array vacío
     const findManyEmpty = filter.findMany({ where: { name: { in: [] } } })
     expect(findManyEmpty).toHaveProperty('data')
     expect(Array.isArray(findManyEmpty.data)).toBe(true)

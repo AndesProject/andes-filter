@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { IsNullFilter } from './is-null-filter'
-
 describe('IsNullFilter', () => {
   it('should match null and undefined when isNull is true', () => {
     const filter = createFilterEngine<{ value: any }>([
@@ -20,7 +19,6 @@ describe('IsNullFilter', () => {
       value: null,
     })
   })
-
   it('should match non-null and non-undefined when isNull is false', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -44,7 +42,6 @@ describe('IsNullFilter', () => {
       value: 0,
     })
   })
-
   it('should work with arrays and objects', () => {
     const filter = createFilterEngine<{ arr: any; obj: any }>([
       { arr: null, obj: null },
@@ -65,7 +62,6 @@ describe('IsNullFilter', () => {
       filter.findMany({ where: { obj: { isNull: false } } }).data.length
     ).toBe(2)
   })
-
   it('should work in combination with other filters', () => {
     const filter = createFilterEngine<{ value: any; name: string }>([
       { value: null, name: 'a' },
@@ -73,7 +69,6 @@ describe('IsNullFilter', () => {
       { value: undefined, name: 'c' },
       { value: 2, name: 'd' },
     ])
-    // Solo los que no son null/undefined y name contiene 'b' o 'd'
     expect(
       filter.findMany({
         where: { value: { isNull: false }, name: { contains: 'b' } },
@@ -90,7 +85,6 @@ describe('IsNullFilter', () => {
       }).data.length
     ).toBe(1)
   })
-
   it('should work with AND/OR conditions', () => {
     const filter = createFilterEngine<{ value: any; flag: boolean }>([
       { value: null, flag: true },
@@ -98,7 +92,6 @@ describe('IsNullFilter', () => {
       { value: undefined, flag: true },
       { value: 2, flag: false },
     ])
-    // AND
     expect(
       filter.findMany({
         where: {
@@ -106,7 +99,6 @@ describe('IsNullFilter', () => {
         } as any,
       }).data.length
     ).toBe(2)
-    // OR
     expect(
       filter.findMany({
         where: {
@@ -116,7 +108,6 @@ describe('IsNullFilter', () => {
     ).toBe(4)
   })
 })
-
 describe('IsNullFilter class', () => {
   it('should evaluate null and undefined as true when isNull is true', () => {
     const filter = new IsNullFilter(true)
@@ -127,7 +118,6 @@ describe('IsNullFilter class', () => {
     expect(filter.evaluate([])).toBe(false)
     expect(filter.evaluate({})).toBe(false)
   })
-
   it('should evaluate non-null and non-undefined as true when isNull is false', () => {
     const filter = new IsNullFilter(false)
     expect(filter.evaluate(null)).toBe(false)

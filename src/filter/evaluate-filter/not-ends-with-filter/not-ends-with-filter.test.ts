@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { NotEndsWithFilter } from './not-ends-with-filter'
-
 describe('NotEndsWithFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('NotEndsWithFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { notEndsWith: 'ice' } } }).data.length
     ).toBe(10)
@@ -35,7 +33,6 @@ describe('NotEndsWithFilter', () => {
     expect(
       filter.findMany({ where: { name: { notEndsWith: ' ' } } }).data.length
     ).toBe(12)
-
     expect(
       filter.findUnique({ where: { name: { notEndsWith: ' ' } } })?.name
     ).toBe('Alice')
@@ -52,7 +49,6 @@ describe('NotEndsWithFilter', () => {
       filter.findUnique({ where: { name: { notEndsWith: 'Alice' } } })?.name
     ).toBe('Bob')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -61,7 +57,6 @@ describe('NotEndsWithFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { notEndsWith: 'alice', mode: 'insensitive' } },
@@ -82,7 +77,6 @@ describe('NotEndsWithFilter', () => {
         where: { name: { notEndsWith: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(5)
-
     expect(
       filter.findUnique({
         where: { name: { notEndsWith: 'alice', mode: 'insensitive' } },
@@ -94,7 +88,6 @@ describe('NotEndsWithFilter', () => {
       })?.name
     ).toBe('Alice')
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -105,16 +98,15 @@ describe('NotEndsWithFilter', () => {
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'world'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'world' } } }).data
         .length
-    ).toBe(3) // null, undefined, 'hello'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'xyz' } } }).data.length
-    ).toBe(4) // todos
+    ).toBe(4)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -124,37 +116,34 @@ describe('NotEndsWithFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notEndsWith: '' } } }).data.length
-    ).toBe(0) // todos terminan con string vacío
+    ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello' } } }).data
         .length
-    ).toBe(3) // todos excepto 'hello'
+    ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'world' } } }).data
         .length
-    ).toBe(2) // solo '' y 'hello' no terminan con 'world'
+    ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello world' } } }).data
         .length
-    ).toBe(3) // todos excepto 'hello world'
+    ).toBe(3)
   })
 })
-
 describe('NotEndsWithFilter Unit Tests', () => {
   it('debe retornar true si el string NO termina con la subcadena', () => {
     const filter = new NotEndsWithFilter('hello')
     expect(filter.evaluate('world')).toBe(true)
     expect(filter.evaluate('bye')).toBe(true)
     expect(filter.evaluate('')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(true) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(true)
   })
-
   it('debe retornar false si el string termina con la subcadena', () => {
     const filter = new NotEndsWithFilter('hello')
     expect(filter.evaluate('say hello')).toBe(false)
     expect(filter.evaluate('hello')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new NotEndsWithFilter('hello', true)
     expect(filter.evaluate('say HELLO')).toBe(false)
@@ -162,25 +151,22 @@ describe('NotEndsWithFilter Unit Tests', () => {
     expect(filter.evaluate('say hello')).toBe(false)
     expect(filter.evaluate('WORLD')).toBe(true)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new NotEndsWithFilter('hello')
-    expect(filter.evaluate(null)).toBe(true) // null no termina con nada
-    expect(filter.evaluate(undefined)).toBe(true) // undefined no termina con nada
+    expect(filter.evaluate(null)).toBe(true)
+    expect(filter.evaluate(undefined)).toBe(true)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new NotEndsWithFilter('hello')
-    expect(filter.evaluate(123)).toBe(true) // números no terminan con strings
-    expect(filter.evaluate({})).toBe(true) // objetos no terminan con strings
-    expect(filter.evaluate([])).toBe(true) // arrays no terminan con strings
-    expect(filter.evaluate(true)).toBe(true) // booleanos no terminan con strings
+    expect(filter.evaluate(123)).toBe(true)
+    expect(filter.evaluate({})).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+    expect(filter.evaluate(true)).toBe(true)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new NotEndsWithFilter('')
-    expect(filter.evaluate('hello')).toBe(false) // todos los strings terminan con string vacío
-    expect(filter.evaluate('')).toBe(false) // string vacío termina con string vacío
-    expect(filter.evaluate('world')).toBe(false) // todos los strings terminan con string vacío
+    expect(filter.evaluate('hello')).toBe(false)
+    expect(filter.evaluate('')).toBe(false)
+    expect(filter.evaluate('world')).toBe(false)
   })
 })

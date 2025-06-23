@@ -4,7 +4,6 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export class LengthFilter implements EvaluateFilter {
   private targetLength: number | undefined
   private ops: any = {}
-
   constructor(
     target:
       | number
@@ -24,8 +23,7 @@ export class LengthFilter implements EvaluateFilter {
       if ('equals' in target) this.targetLength = target.equals
     }
   }
-
-  evaluate(value: any): boolean {
+  public evaluate(value: any): boolean {
     if (value === null || value === undefined) return false
     if (!Array.isArray(value) && typeof value !== 'string') return false
     const len = value.length

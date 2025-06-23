@@ -7,7 +7,6 @@ import { isObject } from '../utils/filter.helpers'
 import { matchesFilter } from './matches-filter'
 import { paginateArray } from './paginator'
 import { sortObjects } from './sort-objects'
-
 function removeDuplicateItems<T>(
   items: T[],
   distinctOption?: boolean | string | string[]
@@ -39,7 +38,6 @@ function removeDuplicateItems<T>(
     return true
   })
 }
-
 export function findMany<T>(
   filterQuery: FilterQuery<T>,
   dataSource: T[]
@@ -47,7 +45,6 @@ export function findMany<T>(
   const filteredItems = dataSource.filter((item) => {
     return matchesFilter(filterQuery.where as any, item)
   })
-
   const uniqueItems = removeDuplicateItems(
     filteredItems,
     (filterQuery as any).distinct
@@ -55,23 +52,19 @@ export function findMany<T>(
   const sortedItems = sortObjects(uniqueItems, filterQuery.orderBy || {})
   return paginateArray(sortedItems, extractPaginationOptions(filterQuery))
 }
-
 function extractPaginationOptions<T>(
   filterQuery: FilterQuery<T>
 ): PaginationOptions {
   if (filterQuery?.pagination) {
     return filterQuery.pagination
   }
-
   const takeLimit = (filterQuery as any)?.take
   const skipOffset = (filterQuery as any)?.skip
-
   if (takeLimit !== undefined || skipOffset !== undefined) {
     const pageSize = takeLimit || 24
     const currentPage =
       skipOffset !== undefined ? Math.floor(skipOffset / pageSize) + 1 : 1
     return { page: currentPage, size: pageSize }
   }
-
   return { page: 1, size: 24 }
 }

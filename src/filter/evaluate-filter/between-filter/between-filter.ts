@@ -4,13 +4,11 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export class BetweenFilter implements EvaluateFilter {
   private startDate: Date
   private endDate: Date
-
   constructor(dates: [DateOrNumber, DateOrNumber]) {
     this.startDate = new Date(dates[0])
     this.endDate = new Date(dates[1])
   }
-
-  evaluate(value: DateOrNumber): boolean {
+  public evaluate(value: DateOrNumber): boolean {
     if (value === null || value === undefined) return false
     if (
       this.startDate == null ||

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { GreaterThanFilter } from './greater-than-filter'
-
 describe('GreaterThanFilter', () => {
   it('number', () => {
     const filter = createFilterEngine<{ size: number }>([
@@ -13,7 +12,6 @@ describe('GreaterThanFilter', () => {
       { size: 2 },
       { size: 3 },
     ])
-
     expect(filter.findMany({ where: { size: { gt: -2 } } }).data.length).toBe(6)
     expect(filter.findMany({ where: { size: { gt: -1 } } }).data.length).toBe(5)
     expect(filter.findMany({ where: { size: { gt: 0 } } }).data.length).toBe(3)
@@ -21,13 +19,11 @@ describe('GreaterThanFilter', () => {
     expect(filter.findMany({ where: { size: { gt: 100 } } }).data.length).toBe(
       0
     )
-
     expect(filter.findUnique({ where: { size: { gt: -3 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { gt: -2 } } })?.size).toBe(-1)
     expect(filter.findUnique({ where: { size: { gt: -1 } } })?.size).toBe(0)
     expect(filter.findUnique({ where: { size: { gt: 100 } } })).toBe(null)
   })
-
   it('date', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
@@ -43,7 +39,6 @@ describe('GreaterThanFilter', () => {
     expect(filter.findUnique({ where: { date: { gt: d1 } } })?.date).toEqual(d2)
     expect(filter.findUnique({ where: { date: { gt: d3 } } })).toBe(null)
   })
-
   it('string', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: 'a' },
@@ -64,7 +59,6 @@ describe('GreaterThanFilter', () => {
     )
     expect(filter.findUnique({ where: { value: { gt: 'c' } } })).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -72,7 +66,7 @@ describe('GreaterThanFilter', () => {
       { value: 0 },
       { value: 1 },
     ])
-    expect(filter.findMany({ where: { value: { gt: 0 } } }).data.length).toBe(1) // solo 1 > 0
+    expect(filter.findMany({ where: { value: { gt: 0 } } }).data.length).toBe(1)
     expect(filter.findMany({ where: { value: { gt: 1 } } }).data.length).toBe(0)
     expect(
       filter.findMany({ where: { value: { gt: null } } }).data.length
@@ -82,7 +76,6 @@ describe('GreaterThanFilter', () => {
     ).toBe(0)
   })
 })
-
 describe('GreaterThanFilter Unit Tests', () => {
   it('debe retornar true si el valor es mayor al umbral', () => {
     const filter = new GreaterThanFilter(10)

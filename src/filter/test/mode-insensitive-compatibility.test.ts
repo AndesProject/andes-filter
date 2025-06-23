@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
   const testData = [
     { id: 1, name: 'Alice', email: 'alice@test.com' },
@@ -10,12 +9,9 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
     { id: 5, name: 'BOB', email: 'BOB@TEST.COM' },
     { id: 6, name: 'Charlie', email: 'charlie@test.com' },
   ]
-
   describe('Basic Mode Insensitive Behavior', () => {
     it('should apply insensitive mode to all string operators in the same object', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: mode: 'insensitive' applies to all string operators in the same object
       const result = filter.findMany({
         where: {
           name: {
@@ -26,8 +22,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Should match all variations of 'Alice' (Alice, alice, ALICE)
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -35,11 +29,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'ALICE',
       ])
     })
-
     it('should not apply insensitive mode to operators outside the object', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: mode only applies to the object where it's defined
       const result = filter.findMany({
         where: {
           name: {
@@ -47,21 +38,16 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
             mode: 'insensitive',
           },
           email: {
-            contains: 'ALICE', // This should be case sensitive
+            contains: 'ALICE',
           },
         },
       })
-
-      // Should only match where both name (insensitive) and email (sensitive) match
       expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('alice')
       expect(result.data[0].email).toBe('ALICE@TEST.COM')
     })
-
     it('should handle mode: insensitive with equals operator', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: equals with insensitive mode
       const result1 = filter.findMany({
         where: {
           name: {
@@ -70,15 +56,12 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result1.data).toHaveLength(3)
       expect(result1.data.map((item) => item.name)).toEqual([
         'Alice',
         'alice',
         'ALICE',
       ])
-
-      // Case sensitive equals (default)
       const result2 = filter.findMany({
         where: {
           name: {
@@ -86,15 +69,11 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result2.data).toHaveLength(1)
       expect(result2.data[0].name).toBe('alice')
     })
-
     it('should handle mode: insensitive with not operator', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: not with insensitive mode
       const result = filter.findMany({
         where: {
           name: {
@@ -103,8 +82,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Should exclude all variations of 'alice' (Alice, alice, ALICE)
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Bob',
@@ -112,11 +89,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'Charlie',
       ])
     })
-
     it('should handle mode: insensitive with in operator', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: in with insensitive mode
       const result = filter.findMany({
         where: {
           name: {
@@ -125,8 +99,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Should match all variations of 'alice' and 'bob'
       expect(result.data).toHaveLength(5)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -136,11 +108,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'BOB',
       ])
     })
-
     it('should handle mode: insensitive with notIn operator', () => {
       const filter = createFilterEngine(testData)
-
-      // Prisma/TypeORM: notIn with insensitive mode
       const result = filter.findMany({
         where: {
           name: {
@@ -149,17 +118,13 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Should exclude all variations of 'alice' and 'bob'
       expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('Charlie')
     })
   })
-
   describe('Mode Insensitive with String Search Operators', () => {
     it('should handle contains with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -168,7 +133,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -176,10 +140,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'ALICE',
       ])
     })
-
     it('should handle notContains with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -188,7 +150,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Bob',
@@ -196,10 +157,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'Charlie',
       ])
     })
-
     it('should handle startsWith with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -208,7 +167,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -216,10 +174,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'ALICE',
       ])
     })
-
     it('should handle notStartsWith with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -228,7 +184,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Bob',
@@ -236,10 +191,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'Charlie',
       ])
     })
-
     it('should handle endsWith with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -248,7 +201,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -256,10 +208,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'ALICE',
       ])
     })
-
     it('should handle notEndsWith with insensitive mode', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -268,7 +218,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Bob',
@@ -277,7 +226,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
       ])
     })
   })
-
   describe('Mode Insensitive with Nested Filters', () => {
     it('should handle mode: insensitive in nested some filters', () => {
       const nestedData = [
@@ -298,9 +246,7 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           ],
         },
       ]
-
       const filter = createFilterEngine(nestedData)
-
       const result = filter.findMany({
         where: {
           employees: {
@@ -313,14 +259,12 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         } as any,
       })
-
       expect(result.data).toHaveLength(2)
       expect(result.data.map((item) => item.name)).toEqual([
         'Company A',
         'Company B',
       ])
     })
-
     it('should handle mode: insensitive in nested every filters', () => {
       const nestedData = [
         {
@@ -340,9 +284,7 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           ],
         },
       ]
-
       const filter = createFilterEngine(nestedData)
-
       const result = filter.findMany({
         where: {
           members: {
@@ -355,12 +297,10 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         } as any,
       })
-
       expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('Team A')
     })
   })
-
   describe('Mode Insensitive Edge Cases', () => {
     it('should handle empty strings with insensitive mode', () => {
       const data = [
@@ -368,9 +308,7 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         { id: 2, name: '' },
         { id: 3, name: 'Bob' },
       ]
-
       const filter = createFilterEngine(data)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -379,11 +317,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Empty string should match all strings
       expect(result.data).toHaveLength(3)
     })
-
     it('should handle null and undefined values with insensitive mode', () => {
       const data = [
         { id: 1, name: 'Alice' },
@@ -391,9 +326,7 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         { id: 3, name: undefined },
         { id: 4, name: 'Bob' },
       ]
-
       const filter = createFilterEngine(data)
-
       const result = filter.findMany({
         where: {
           name: {
@@ -402,39 +335,30 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           },
         },
       })
-
-      // Should only match 'Alice', null/undefined should be excluded
       expect(result.data).toHaveLength(1)
       expect(result.data[0].name).toBe('Alice')
     })
-
     it('should handle mode: insensitive with non-string fields (should be ignored)', () => {
       const data = [
         { id: 1, name: 'Alice', age: 25 },
         { id: 2, name: 'Bob', age: 30 },
       ]
-
       const filter = createFilterEngine(data)
-
-      // TypeScript should prevent this, but runtime should handle gracefully
       const result = filter.findMany({
         where: {
           age: {
             equals: 25,
-            mode: 'insensitive', // This should be ignored for numeric fields
+            mode: 'insensitive',
           },
         } as any,
       })
-
       expect(result.data).toHaveLength(1)
       expect(result.data[0].age).toBe(25)
     })
   })
-
   describe('Mode Insensitive with Logical Groups', () => {
     it('should handle mode: insensitive with AND conditions', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           AND: [
@@ -453,7 +377,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           ],
         } as any,
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -461,10 +384,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'ALICE',
       ])
     })
-
     it('should handle mode: insensitive with OR conditions', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           OR: [
@@ -483,7 +404,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           ],
         } as any,
       })
-
       expect(result.data).toHaveLength(5)
       expect(result.data.map((item) => item.name)).toEqual([
         'Alice',
@@ -493,10 +413,8 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
         'BOB',
       ])
     })
-
     it('should handle mode: insensitive with NOT conditions', () => {
       const filter = createFilterEngine(testData)
-
       const result = filter.findMany({
         where: {
           NOT: [
@@ -509,7 +427,6 @@ describe('Mode Insensitive Filter - Prisma/TypeORM Compatibility', () => {
           ],
         } as any,
       })
-
       expect(result.data).toHaveLength(3)
       expect(result.data.map((item) => item.name)).toEqual([
         'Bob',

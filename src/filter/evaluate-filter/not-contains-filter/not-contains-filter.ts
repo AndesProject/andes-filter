@@ -6,8 +6,7 @@ export class NotContainsFilter implements EvaluateFilter {
     private excludedValue: string,
     private isCaseInsensitive: boolean = false
   ) {}
-
-  evaluate(targetString: any): boolean {
+  public evaluate(targetString: any): boolean {
     return performStringOperation(
       'includes',
       targetString,

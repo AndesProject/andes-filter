@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Every Filter', () => {
   const testData = [
     {
@@ -25,7 +24,7 @@ describe('Debug Every Filter', () => {
             rating: 4.5,
             reviews: [
               { reviewer: 'ceo', score: 4.8 },
-              { reviewer: 'team', score: 4.2 }, // Este score es < 4.5
+              { reviewer: 'team', score: 4.2 },
             ],
           },
         },
@@ -74,7 +73,6 @@ describe('Debug Every Filter', () => {
       ],
     },
   ]
-
   it('should debug every filter with rating only', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -88,14 +86,12 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with rating only:',
       result.data.map((item) => item.name)
     )
-    expect(result.data).toHaveLength(3) // All three should pass: TechCorp, StartupXYZ, GlobalTech
+    expect(result.data).toHaveLength(3)
   })
-
   it('should debug every filter with rating and reviews (every)', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -114,18 +110,16 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with rating and reviews (every):',
       result.data.map((item) => item.name)
     )
-    expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions should pass
+    expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',
       'GlobalTech Solutions',
     ])
   })
-
   it('should debug every filter with reviews only', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -143,14 +137,12 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with reviews only:',
       result.data.map((item) => item.name)
     )
-    expect(result.data).toHaveLength(3) // All three should pass: TechCorp, StartupXYZ, GlobalTech
+    expect(result.data).toHaveLength(3)
   })
-
   it('should debug every filter with rating and reviews (every) - complex data', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -169,12 +161,11 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with complex data:',
       result.data.map((item) => item.name)
     )
-    expect(result.data).toHaveLength(2) // StartupXYZ and GlobalTech Solutions should pass
+    expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',
       'GlobalTech Solutions',

@@ -1,6 +1,5 @@
 import { FilterQuery } from '../filter.interface'
 import { matchesFilter } from './matches-filter'
-
 export function findUnique<T>(
   filterQuery: FilterQuery<T>,
   dataSource: T[]

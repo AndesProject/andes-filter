@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Nested Filter', () => {
   const testData = [
     {
@@ -19,7 +18,6 @@ describe('Debug Nested Filter', () => {
       milestones: [{ id: 'mil-3', name: 'Milestone 3' }],
     },
   ]
-
   it('should debug nested filter with every and team length', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -29,7 +27,6 @@ describe('Debug Nested Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result:',
       result.data.map((item) => item.name)
@@ -37,7 +34,6 @@ describe('Debug Nested Filter', () => {
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })
-
   it('should debug nested filter with milestones length', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -47,7 +43,6 @@ describe('Debug Nested Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with milestones:',
       result.data.map((item) => item.name)

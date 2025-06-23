@@ -6,8 +6,7 @@ export class EndsWithFilter implements EvaluateFilter {
     private suffixValue: string,
     private isCaseInsensitive: boolean = false
   ) {}
-
-  evaluate(targetString: any): boolean {
+  public evaluate(targetString: any): boolean {
     return performStringOperation(
       'endsWith',
       targetString,

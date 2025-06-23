@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Team Filter', () => {
   const testData = [
     {
@@ -14,7 +13,6 @@ describe('Debug Team Filter', () => {
       team: ['emp-001'],
     },
   ]
-
   it('should debug team filter with length and every', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -24,7 +22,6 @@ describe('Debug Team Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result:',
       result.data.map((item) => item.name)
@@ -32,7 +29,6 @@ describe('Debug Team Filter', () => {
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })
-
   it('should debug team filter with just length', () => {
     const filter = createFilterEngine(testData)
     const result = filter.findMany({
@@ -42,7 +38,6 @@ describe('Debug Team Filter', () => {
         },
       } as any,
     })
-
     console.log(
       'Result with just length:',
       result.data.map((item) => item.name)

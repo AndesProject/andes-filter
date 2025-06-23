@@ -6,8 +6,7 @@ export class NotStartsWithFilter implements EvaluateFilter {
     private excludedPrefix: string,
     private isCaseInsensitive: boolean = false
   ) {}
-
-  evaluate(targetString: any): boolean {
+  public evaluate(targetString: any): boolean {
     return performStringOperation(
       'startsWith',
       targetString,

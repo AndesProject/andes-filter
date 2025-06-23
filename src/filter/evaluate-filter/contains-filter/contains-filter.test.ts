@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { ContainsFilter } from './contains-filter'
-
 describe('ContainsFilter', () => {
   it('string', () => {
     const filter = createFilterEngine<{ name: string }>([
@@ -18,7 +17,6 @@ describe('ContainsFilter', () => {
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
     ])
-
     expect(
       filter.findMany({ where: { name: { contains: 'Cerati' } } }).data.length
     ).toBe(1)
@@ -43,7 +41,6 @@ describe('ContainsFilter', () => {
     expect(
       filter.findMany({ where: { name: { contains: '' } } }).data.length
     ).toBe(12)
-
     expect(
       filter.findUnique({ where: { name: { contains: ' ' } } })?.name
     ).toBe('Gustavo Cerati')
@@ -60,7 +57,6 @@ describe('ContainsFilter', () => {
       filter.findUnique({ where: { name: { contains: 'Alice' } } })?.name
     ).toBe('Alice')
   })
-
   it('case insensitive', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
@@ -69,7 +65,6 @@ describe('ContainsFilter', () => {
       { name: 'david' },
       { name: 'EVA' },
     ])
-
     expect(
       filter.findMany({
         where: { name: { contains: 'alice', mode: 'insensitive' } },
@@ -95,7 +90,6 @@ describe('ContainsFilter', () => {
         where: { name: { contains: 'xyz', mode: 'insensitive' } },
       }).data.length
     ).toBe(0)
-
     expect(
       filter.findUnique({
         where: { name: { contains: 'alice', mode: 'insensitive' } },
@@ -107,7 +101,6 @@ describe('ContainsFilter', () => {
       })
     ).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -125,7 +118,6 @@ describe('ContainsFilter', () => {
       filter.findMany({ where: { value: { contains: 'xyz' } } }).data.length
     ).toBe(0)
   })
-
   it('strings vacíos y casos especiales', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
@@ -148,23 +140,20 @@ describe('ContainsFilter', () => {
     ).toBe(1)
   })
 })
-
 describe('ContainsFilter Unit Tests', () => {
   it('debe retornar true si el string contiene la subcadena', () => {
     const filter = new ContainsFilter('hello')
     expect(filter.evaluate('hello world')).toBe(true)
     expect(filter.evaluate('world hello')).toBe(true)
     expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(false) // case sensitive por defecto
+    expect(filter.evaluate('HELLO')).toBe(false)
   })
-
   it('debe retornar false si el string no contiene la subcadena', () => {
     const filter = new ContainsFilter('hello')
     expect(filter.evaluate('world')).toBe(false)
     expect(filter.evaluate('bye')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-
   it('debe manejar modo case-insensitive', () => {
     const filter = new ContainsFilter('hello', true)
     expect(filter.evaluate('HELLO WORLD')).toBe(true)
@@ -172,13 +161,11 @@ describe('ContainsFilter Unit Tests', () => {
     expect(filter.evaluate('hello world')).toBe(true)
     expect(filter.evaluate('WORLD')).toBe(false)
   })
-
   it('debe manejar null y undefined', () => {
     const filter = new ContainsFilter('hello')
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-
   it('debe manejar tipos no string', () => {
     const filter = new ContainsFilter('hello')
     expect(filter.evaluate(123)).toBe(false)
@@ -186,7 +173,6 @@ describe('ContainsFilter Unit Tests', () => {
     expect(filter.evaluate([])).toBe(false)
     expect(filter.evaluate(true)).toBe(false)
   })
-
   it('debe manejar strings vacíos', () => {
     const filter = new ContainsFilter('')
     expect(filter.evaluate('hello')).toBe(true)

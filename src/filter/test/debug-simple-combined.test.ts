@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Simple Combined Filters', () => {
   const simpleData = [
     {
@@ -29,13 +28,9 @@ describe('Debug Simple Combined Filters', () => {
       ],
     },
   ]
-
   it('should debug combined length and some filters', () => {
     const filter = createFilterEngine(simpleData)
-
     console.log('=== DEBUGGING COMBINED FILTERS ===')
-
-    // Test just length
     const lengthResult = filter.findMany({
       where: {
         projects: {
@@ -47,8 +42,6 @@ describe('Debug Simple Combined Filters', () => {
       'Length only result:',
       lengthResult.data.map((item) => item.name)
     )
-
-    // Test just some
     const someResult = filter.findMany({
       where: {
         projects: {
@@ -64,8 +57,6 @@ describe('Debug Simple Combined Filters', () => {
       'Some only result:',
       someResult.data.map((item) => item.name)
     )
-
-    // Test combined
     const combinedResult = filter.findMany({
       where: {
         projects: {
@@ -82,9 +73,6 @@ describe('Debug Simple Combined Filters', () => {
       'Combined result:',
       combinedResult.data.map((item) => item.name)
     )
-
-    // Expected: Company A should pass (has 1 project with 2 milestones)
-    // Company B should fail (has 1 project but only 1 milestone)
     expect(combinedResult.data).toHaveLength(1)
     expect(combinedResult.data[0].name).toBe('Company A')
   })

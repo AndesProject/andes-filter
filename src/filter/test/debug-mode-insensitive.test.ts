@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug Mode Insensitive', () => {
   const testData = [
     { id: 1, name: 'Alice', email: 'alice@test.com' },
@@ -10,13 +9,9 @@ describe('Debug Mode Insensitive', () => {
     { id: 5, name: 'BOB', email: 'BOB@TEST.COM' },
     { id: 6, name: 'Charlie', email: 'charlie@test.com' },
   ]
-
   it('should debug mode insensitive behavior', () => {
     const filter = createFilterEngine(testData)
-
     console.log('=== Debug Mode Insensitive ===')
-
-    // Test 1: name with insensitive mode
     console.log('1. Testing name with insensitive mode')
     const nameResult = filter.findMany({
       where: {
@@ -34,8 +29,6 @@ describe('Debug Mode Insensitive', () => {
         email: item.email,
       }))
     )
-
-    // Test 2: email with sensitive mode
     console.log('2. Testing email with sensitive mode')
     const emailResult = filter.findMany({
       where: {
@@ -52,8 +45,6 @@ describe('Debug Mode Insensitive', () => {
         email: item.email,
       }))
     )
-
-    // Test 3: combined filter
     console.log('3. Testing combined filter')
     const combinedResult = filter.findMany({
       where: {
@@ -74,11 +65,6 @@ describe('Debug Mode Insensitive', () => {
         email: item.email,
       }))
     )
-
-    // Expected: should match id: 2 (alice, ALICE@TEST.COM) only
-    // name with insensitive mode: matches Alice, alice, ALICE (ids 1, 2, 3)
-    // email with sensitive mode: matches only ALICE@TEST.COM (id 2)
-    // intersection: only id 2
     expect(combinedResult.data).toHaveLength(1)
     expect(combinedResult.data[0].id).toBe(2)
   })

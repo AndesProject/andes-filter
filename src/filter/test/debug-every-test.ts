@@ -1,6 +1,4 @@
 import { filterFrom } from '../filter-from'
-
-// Datos de prueba simplificados
 const testData = [
   {
     id: 1,
@@ -24,7 +22,7 @@ const testData = [
           rating: 4.5,
           reviews: [
             { reviewer: 'ceo', score: 4.8 },
-            { reviewer: 'team', score: 4.2 }, // Este score es < 4.5
+            { reviewer: 'team', score: 4.2 },
           ],
         },
       },
@@ -56,10 +54,7 @@ const testData = [
     ],
   },
 ]
-
 const filter = filterFrom(testData)
-
-// Test 1: Solo rating >= 4.5
 console.log('=== Test 1: Solo rating >= 4.5 ===')
 const result1 = filter.findMany({
   where: {
@@ -76,8 +71,6 @@ console.log(
   'Result 1:',
   result1.data.map((item) => item.name)
 )
-
-// Test 2: Rating >= 4.5 Y reviews con score >= 4.5
 console.log('=== Test 2: Rating >= 4.5 Y reviews con score >= 4.5 ===')
 const result2 = filter.findMany({
   where: {
@@ -99,8 +92,6 @@ console.log(
   'Result 2:',
   result2.data.map((item) => item.name)
 )
-
-// Test 3: Solo reviews con score >= 4.5
 console.log('=== Test 3: Solo reviews con score >= 4.5 ===')
 const result3 = filter.findMany({
   where: {

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-
 describe('Debug NOT Filter', () => {
   it('should debug NOT with contains', () => {
     const data = [
@@ -10,8 +9,6 @@ describe('Debug NOT Filter', () => {
       { id: 4, name: 'ALICE' },
     ]
     const filter = createFilterEngine(data)
-
-    // Debug individual results
     console.log('=== Debug NOT contains ===')
     data.forEach((item) => {
       const result = filter.findMany({
@@ -21,7 +18,6 @@ describe('Debug NOT Filter', () => {
         `${item.name}: ${result.some((r) => r.id === item.id) ? 'INCLUDED' : 'EXCLUDED'}`
       )
     })
-
     const result = filter.findMany({
       where: { name: { not: { contains: 'lic' } } },
     }).data
@@ -32,7 +28,6 @@ describe('Debug NOT Filter', () => {
     expect(result).toHaveLength(2)
     expect(result.map((r) => r.name)).toEqual(['Bob', 'ALICE'])
   })
-
   it('should debug NOT with every', () => {
     const data = [
       { id: 1, arr: [1, 1, 1] },
@@ -41,8 +36,6 @@ describe('Debug NOT Filter', () => {
       { id: 4, arr: [] },
     ]
     const filter = createFilterEngine(data)
-
-    // Debug individual results
     console.log('=== Debug NOT every ===')
     data.forEach((item) => {
       const result = filter.findMany({
@@ -52,7 +45,6 @@ describe('Debug NOT Filter', () => {
         `${JSON.stringify(item.arr)}: ${result.some((r) => r.id === item.id) ? 'INCLUDED' : 'EXCLUDED'}`
       )
     })
-
     const result = filter.findMany({
       where: { arr: { not: { every: { equals: 2 } } } },
     }).data

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
-
 describe('LessThanOrEqualFilter', () => {
   it('number', () => {
     const filter = createFilterEngine<{ size: number }>([
@@ -13,7 +12,6 @@ describe('LessThanOrEqualFilter', () => {
       { size: 2 },
       { size: 3 },
     ])
-
     expect(filter.findMany({ where: { size: { lte: -2 } } }).data.length).toBe(
       1
     )
@@ -25,13 +23,11 @@ describe('LessThanOrEqualFilter', () => {
     expect(filter.findMany({ where: { size: { lte: 100 } } }).data.length).toBe(
       7
     )
-
     expect(filter.findUnique({ where: { size: { lte: -3 } } })).toBe(null)
     expect(filter.findUnique({ where: { size: { lte: -2 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lte: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lte: 100 } } })?.size).toBe(-2)
   })
-
   it('date', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
@@ -57,7 +53,6 @@ describe('LessThanOrEqualFilter', () => {
       filter.findUnique({ where: { date: { lte: new Date('2019-01-01') } } })
     ).toBe(null)
   })
-
   it('string', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: 'a' },
@@ -78,7 +73,6 @@ describe('LessThanOrEqualFilter', () => {
     )
     expect(filter.findUnique({ where: { value: { lte: 'A' } } })).toBe(null)
   })
-
   it('null y undefined', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
@@ -88,7 +82,7 @@ describe('LessThanOrEqualFilter', () => {
     ])
     expect(filter.findMany({ where: { value: { lte: 1 } } }).data.length).toBe(
       2
-    ) // 0 <= 1, 1 <= 1
+    )
     expect(filter.findMany({ where: { value: { lte: 0 } } }).data.length).toBe(
       1
     )
@@ -100,7 +94,6 @@ describe('LessThanOrEqualFilter', () => {
     ).toBe(0)
   })
 })
-
 describe('LessThanOrEqualFilter Unit Tests', () => {
   it('debe retornar true si el valor es menor o igual al umbral', () => {
     const filter = new LessThanOrEqualFilter(10)
