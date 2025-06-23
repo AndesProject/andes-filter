@@ -1,93 +1,501 @@
 # Andes Filter
 
-### Description
+[![codecov](https://codecov.io/github/AndesProject/andes-filter/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/AndesProject/andes-filter)
+[![codecov](https://codecov.io/github/AndesProject/andes-filter/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/AndesProject/andes-filter)
 
-This project aims to develop a filtering library that allows developers to apply
-complex filters and conditions to data collections in an intuitive and
-programmatic way. By using objects to define conditions, users can combine
-logical and relational operators, making it easy to construct queries and manage
-data efficiently and at scale. The library is developed in TypeScript, ensuring
-type safety and modern JavaScript features for enhanced developer experience and
-performance.
+## ¿Qué es Andes Filter?
 
-### Features
+**Andes Filter** es una librería de filtrado avanzada desarrollada en TypeScript que permite aplicar filtros complejos y condiciones a colecciones de datos de manera intuitiva y programática. Utiliza objetos para definir condiciones, permitiendo combinar operadores lógicos y relacionales para construir consultas eficientes y escalables.
 
-Features
+### Características Principales
 
-- Intuitive Conditionals: Define complex filters using objects.
-- Logical and Relational Operators: Combine multiple conditions for advanced
-  queries.
-- Scalability: Designed to handle large data volumes with high performance.
-- Ease of Use: Clear and consistent syntax to improve developer productivity.
+- 🎯 **Filtrado Intuitivo**: Define filtros complejos usando objetos
+- 🔗 **Operadores Lógicos**: Combina múltiples condiciones con AND, OR, NOT
+- 📊 **Escalabilidad**: Diseñado para manejar grandes volúmenes de datos
+- 🚀 **Alto Rendimiento**: Optimizado para consultas eficientes
+- 🛡️ **Type Safety**: Desarrollado en TypeScript para máxima seguridad de tipos
+- 🔧 **Fácil de Usar**: Sintaxis clara y consistente
 
-### Coverage
+## Instalación
 
-<div align="center">
-  <a href="https://codecov.io/github/AndesProject/andes-filter">
-    <img src="https://codecov.io/github/AndesProject/andes-filter/branch/master/graph/badge.svg?token=KT8REBY8K1" alt="codecov">
-  </a>
-  <br>
-  <a href="https://codecov.io/github/AndesProject/andes-filter">
-    <img src="https://codecov.io/github/AndesProject/andes-filter/branch/master/graphs/sunburst.svg?token=KT8REBY8K1" alt="codecov">
-  </a>
-</div>
+```bash
+npm install @andes/filter
+```
 
-### Operadores
+## Uso Básico
 
-#### Operadores de Comparación
+```typescript
+import { createFilterEngine } from '@andes/filter'
 
-- equals: Igual a un valor específico.
-- not: No igual a un valor específico.
-- in: Dentro de un conjunto de valores.
-- notIn: No dentro de un conjunto de valores.
-- lt: Menor que.
-- lte: Menor o igual que.
-- gt: Mayor que.
-- gte: Mayor o igual que.
+// Datos de ejemplo
+const users = [
+  { id: 1, name: 'Alice', age: 25, email: 'alice@example.com', active: true },
+  { id: 2, name: 'Bob', age: 30, email: 'bob@example.com', active: false },
+  { id: 3, name: 'Charlie', age: 35, email: 'charlie@example.com', active: true },
+]
 
-#### Operadores de Fecha y Hora
+// Crear el motor de filtros
+const filter = createFilterEngine(users)
 
-- equals: Igual a una fecha específica.
-- not: No igual a una fecha específica.
-- in: Dentro de un conjunto de fechas.
-- notIn: No dentro de un conjunto de fechas.
-- lt: Menor que una fecha específica.
-- lte: Menor o igual que una fecha específica.
-- gt: Mayor que una fecha específica.
-- gte: Mayor o igual que una fecha específica.
+// Buscar usuarios activos mayores de 25 años
+const result = filter.findMany({
+  where: {
+    active: { equals: true },
+    age: { gt: 25 }
+  }
+})
 
-#### Operadores Numéricos
+console.log(result.data) // [Charlie]
+```
 
-- equals: Igual a un número.
-- not: No igual a un número.
-- in: Dentro de un conjunto de números.
-- notIn: No dentro de un conjunto de números.
-- lt: Menor que un número.
-- lte: Menor o igual que un número.
-- gt: Mayor que un número.
-- gte: Mayor o igual que un número.
+## API Principal
 
-#### Operadores de String
+### `createFilterEngine<T>(dataSource: T[])`
 
-- contains: Contiene una subcadena específica.
-- startsWith: Comienza con una subcadena específica.
-- endsWith: Termina con una subcadena específica.
-- mode: Define si la comparación debe ser sensible o insensible a
-  mayúsculas/minúsculas.
+Crea un motor de filtros para una colección de datos.
 
-#### Operadores de Relación
+**Parámetros:**
+- `dataSource`: Array de objetos a filtrar
 
-- some: Al menos un elemento en la relación cumple con la condición.
-- every: Todos los elementos en la relación cumplen con la condición.
-- none: Ningún elemento en la relación cumple con la condición.
+**Retorna:**
+- Objeto con métodos `findMany` y `findUnique`
 
-#### Operadores de Array
+### `findMany(query: FilterQuery<T>)`
 
-- has: Contiene un valor específico.
-- hasEvery: Contiene todos los valores especificados.
-- hasSome: Contiene al menos uno de los valores especificados.
-- isEmpty: El array está vacío.
+Busca múltiples elementos que coincidan con los criterios.
 
-#### Operadores Booleanos
+### `findUnique(query: FilterQuery<T>)`
 
-- equals: Igual a un valor booleano (true o false).
+Busca un único elemento que coincida con los criterios.
+
+## Operadores de Filtrado
+
+### Operadores de Comparación Básica
+
+#### `equals`
+Igual a un valor específico.
+
+```typescript
+// Buscar usuarios con nombre "Alice"
+filter.findMany({
+  where: { name: { equals: 'Alice' } }
+})
+```
+
+#### `not`
+No igual a un valor específico.
+
+```typescript
+// Buscar usuarios que NO se llamen "Alice"
+filter.findMany({
+  where: { name: { not: 'Alice' } }
+})
+```
+
+#### `in` / `notIn`
+Dentro o fuera de un conjunto de valores.
+
+```typescript
+// Buscar usuarios con nombres específicos
+filter.findMany({
+  where: { name: { in: ['Alice', 'Bob', 'Charlie'] } }
+})
+
+// Buscar usuarios que NO tengan estos nombres
+filter.findMany({
+  where: { name: { notIn: ['Alice', 'Bob'] } }
+})
+```
+
+### Operadores Numéricos
+
+#### `lt` / `lte` / `gt` / `gte`
+Comparaciones numéricas.
+
+```typescript
+// Usuarios menores de 30 años
+filter.findMany({
+  where: { age: { lt: 30 } }
+})
+
+// Usuarios de 25 años o más
+filter.findMany({
+  where: { age: { gte: 25 } }
+})
+```
+
+### Operadores de String
+
+#### `contains` / `notContains`
+Contiene o no contiene una subcadena.
+
+```typescript
+// Emails que contengan "example"
+filter.findMany({
+  where: { email: { contains: 'example' } }
+})
+
+// Emails que NO contengan "test"
+filter.findMany({
+  where: { email: { notContains: 'test' } }
+})
+```
+
+#### `startsWith` / `notStartsWith`
+Comienza o no comienza con una subcadena.
+
+```typescript
+// Nombres que empiecen con "A"
+filter.findMany({
+  where: { name: { startsWith: 'A' } }
+})
+```
+
+#### `endsWith` / `notEndsWith`
+Termina o no termina con una subcadena.
+
+```typescript
+// Emails que terminen en ".com"
+filter.findMany({
+  where: { email: { endsWith: '.com' } }
+})
+```
+
+#### `mode: 'insensitive'`
+Comparación insensible a mayúsculas/minúsculas.
+
+```typescript
+// Buscar "alice" sin importar mayúsculas
+filter.findMany({
+  where: { name: { equals: 'alice', mode: 'insensitive' } }
+})
+```
+
+#### `regex`
+Filtrado con expresiones regulares.
+
+```typescript
+// Emails que coincidan con un patrón
+filter.findMany({
+  where: { email: { regex: /^[a-z]+@example\.com$/ } }
+})
+
+// Con flags personalizados
+filter.findMany({
+  where: { email: { regex: { pattern: 'example', flags: 'i' } } }
+})
+```
+
+### Operadores de Fecha y Número
+
+#### `before` / `after`
+Para fechas y números.
+
+```typescript
+// Usuarios creados antes de una fecha
+filter.findMany({
+  where: { createdAt: { before: new Date('2023-01-01') } }
+})
+
+// Usuarios con edad mayor a 25
+filter.findMany({
+  where: { age: { after: 25 } }
+})
+```
+
+#### `between`
+Rango entre dos valores.
+
+```typescript
+// Usuarios entre 25 y 35 años
+filter.findMany({
+  where: { age: { between: [25, 35] } }
+})
+```
+
+### Operadores de Array
+
+#### `has` / `hasEvery` / `hasSome`
+Para arrays de valores.
+
+```typescript
+const users = [
+  { id: 1, tags: ['admin', 'user'] },
+  { id: 2, tags: ['user'] },
+  { id: 3, tags: ['admin', 'moderator'] }
+]
+
+// Usuarios con tag "admin"
+filter.findMany({
+  where: { tags: { has: 'admin' } }
+})
+
+// Usuarios con TODOS los tags especificados
+filter.findMany({
+  where: { tags: { hasEvery: ['admin', 'user'] } }
+})
+
+// Usuarios con AL MENOS UNO de los tags especificados
+filter.findMany({
+  where: { tags: { hasSome: ['admin', 'moderator'] } }
+})
+```
+
+#### `length`
+Filtrado por longitud del array.
+
+```typescript
+// Usuarios con más de 2 tags
+filter.findMany({
+  where: { tags: { length: { gt: 2 } } }
+})
+```
+
+### Operadores de Relación
+
+#### `some` / `every` / `none`
+Para relaciones y arrays de objetos.
+
+```typescript
+const users = [
+  {
+    id: 1,
+    posts: [
+      { title: 'Post 1', published: true },
+      { title: 'Post 2', published: false }
+    ]
+  },
+  {
+    id: 2,
+    posts: [
+      { title: 'Post 3', published: true }
+    ]
+  }
+]
+
+// Usuarios con AL MENOS UN post publicado
+filter.findMany({
+  where: {
+    posts: {
+      some: { published: { equals: true } }
+    }
+  } as any
+})
+
+// Usuarios con TODOS los posts publicados
+filter.findMany({
+  where: {
+    posts: {
+      every: { published: { equals: true } }
+    }
+  } as any
+})
+
+// Usuarios con NINGÚN post publicado
+filter.findMany({
+  where: {
+    posts: {
+      none: { published: { equals: true } }
+    }
+  } as any
+})
+```
+
+### Operadores Lógicos
+
+#### `AND` / `OR` / `NOT`
+Combinación de múltiples condiciones.
+
+```typescript
+// Usuarios activos Y mayores de 25 años
+filter.findMany({
+  where: {
+    AND: [
+      { active: { equals: true } },
+      { age: { gt: 25 } }
+    ]
+  }
+})
+
+// Usuarios activos O mayores de 30 años
+filter.findMany({
+  where: {
+    OR: [
+      { active: { equals: true } },
+      { age: { gt: 30 } }
+    ]
+  }
+})
+
+// Usuarios que NO sean "Alice"
+filter.findMany({
+  where: {
+    NOT: { name: { equals: 'Alice' } }
+  }
+})
+```
+
+### Operadores Especiales
+
+#### `isNull`
+Verificar si un campo es null.
+
+```typescript
+// Usuarios sin email
+filter.findMany({
+  where: { email: { isNull: true } }
+})
+```
+
+## Paginación y Ordenamiento
+
+### Paginación
+
+```typescript
+// Obtener primera página con 10 elementos
+const result = filter.findMany({
+  where: { active: { equals: true } },
+  pagination: {
+    page: 1,
+    size: 10
+  }
+})
+
+console.log(result.pagination)
+// {
+//   page: 1,
+//   size: 10,
+//   totalItems: 25,
+//   totalPages: 3,
+//   hasNext: true,
+//   hasPrev: false
+// }
+```
+
+### Ordenamiento
+
+```typescript
+// Ordenar por edad ascendente
+filter.findMany({
+  where: { active: { equals: true } },
+  orderBy: { age: 'asc' }
+})
+
+// Ordenar por nombre descendente
+filter.findMany({
+  where: { active: { equals: true } },
+  orderBy: { name: 'desc' }
+})
+```
+
+## Ejemplos Avanzados
+
+### Filtros Complejos
+
+```typescript
+const result = filter.findMany({
+  where: {
+    OR: [
+      {
+        AND: [
+          { age: { gte: 25 } },
+          { email: { contains: 'example' } }
+        ]
+      },
+      {
+        AND: [
+          { active: { equals: true } },
+          { name: { startsWith: 'A' } }
+        ]
+      }
+    ]
+  },
+  pagination: { page: 1, size: 20 },
+  orderBy: { name: 'asc' }
+})
+```
+
+### Filtros con Relaciones Anidadas
+
+```typescript
+const result = filter.findMany({
+  where: {
+    posts: {
+      some: {
+        AND: [
+          { published: { equals: true } },
+          { category: { in: ['tech', 'news'] } }
+        ]
+      }
+    },
+    profile: {
+      every: {
+        verified: { equals: true }
+      }
+    }
+  } as any
+})
+```
+
+## Casos de Uso Comunes
+
+### Búsqueda de Usuarios
+
+```typescript
+// Búsqueda avanzada de usuarios
+const searchUsers = (searchTerm: string, filters: any) => {
+  return filter.findMany({
+    where: {
+      OR: [
+        { name: { contains: searchTerm, mode: 'insensitive' } },
+        { email: { contains: searchTerm, mode: 'insensitive' } }
+      ],
+      ...filters
+    },
+    pagination: { page: 1, size: 50 },
+    orderBy: { name: 'asc' }
+  })
+}
+```
+
+### Filtrado de Productos
+
+```typescript
+// Filtrado de productos con múltiples criterios
+const filterProducts = (category: string, priceRange: [number, number], tags: string[]) => {
+  return filter.findMany({
+    where: {
+      category: { equals: category },
+      price: { between: priceRange },
+      tags: { hasSome: tags }
+    },
+    pagination: { page: 1, size: 20 },
+    orderBy: { price: 'asc' }
+  })
+}
+```
+
+## Rendimiento y Optimización
+
+- La librería está optimizada para manejar grandes volúmenes de datos
+- Utiliza algoritmos eficientes para evaluar filtros
+- Soporta paginación para evitar cargar datos innecesarios
+- TypeScript proporciona verificación de tipos en tiempo de compilación
+
+## Compatibilidad
+
+- **Node.js**: >= 22.0.0
+- **TypeScript**: >= 5.4.5
+- **Navegadores**: Compatible con ES6+
+
+## Contribuir
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia ISC. Ver el archivo `LICENSE` para más detalles.
