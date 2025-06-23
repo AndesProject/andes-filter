@@ -1,3 +1,4 @@
+import { isObject, isString } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class EqualityFilter implements EvaluateFilter {
@@ -15,10 +16,7 @@ export class EqualityFilter implements EvaluateFilter {
       return false
     if (actualValue === null || actualValue === undefined) return false
 
-    if (
-      typeof this.expectedValue === 'string' &&
-      typeof actualValue === 'string'
-    ) {
+    if (isString(this.expectedValue) && isString(actualValue)) {
       if (this.isCaseInsensitive) {
         return this.expectedValue.toLowerCase() === actualValue.toLowerCase()
       }
@@ -43,9 +41,9 @@ export class EqualityFilter implements EvaluateFilter {
       return false
 
     if (
-      typeof this.expectedValue === 'object' &&
+      isObject(this.expectedValue) &&
       this.expectedValue !== null &&
-      typeof actualValue === 'object' &&
+      isObject(actualValue) &&
       actualValue !== null
     ) {
       return this.expectedValue === actualValue

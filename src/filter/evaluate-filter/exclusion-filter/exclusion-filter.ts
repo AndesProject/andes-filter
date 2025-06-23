@@ -1,4 +1,10 @@
-import { compareDates, compareStrings } from '../../utils/filter.helpers'
+import {
+  compareDates,
+  compareStrings,
+  isNumber,
+  isObject,
+  isString,
+} from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class ExclusionFilter<T> implements EvaluateFilter {
@@ -17,8 +23,8 @@ export class ExclusionFilter<T> implements EvaluateFilter {
 
     for (const v of this.targetValues) {
       if (
-        typeof value === 'number' &&
-        typeof v === 'number' &&
+        isNumber(value) &&
+        isNumber(v) &&
         Number.isNaN(value) &&
         Number.isNaN(v)
       )
@@ -32,17 +38,12 @@ export class ExclusionFilter<T> implements EvaluateFilter {
         continue
       }
 
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        typeof v === 'object' &&
-        v !== null
-      ) {
+      if (isObject(value) && value !== null && isObject(v) && v !== null) {
         if (value === v) return false
         continue
       }
 
-      if (typeof value === 'string' && typeof v === 'string') {
+      if (isString(value) && isString(v)) {
         if (compareStrings(value, v, this.insensitive)) return false
         continue
       }

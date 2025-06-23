@@ -1,4 +1,4 @@
-import { anyMatch } from '../../utils/filter.helpers'
+import { anyMatch, isObject } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
 
@@ -10,11 +10,7 @@ export class HasSomeFilter<T> implements EvaluateFilter {
     if (value.length === 0) return this.targetValues.length === 0
     if (this.targetValues.length === 0) return true
 
-    if (
-      this.targetValues.some(
-        (target) => typeof target === 'object' && target !== null
-      )
-    ) {
+    if (this.targetValues.some((target) => isObject(target))) {
       return this.targetValues.some((targetValue) => {
         return anyMatch(value, (item) =>
           matchesFilter(targetValue as any, item)

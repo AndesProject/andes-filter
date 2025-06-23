@@ -1,3 +1,4 @@
+import { isString } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class RegexFilter implements EvaluateFilter {
@@ -5,7 +6,7 @@ export class RegexFilter implements EvaluateFilter {
   private flags: string | undefined
 
   constructor(pattern: string | { pattern: string; flags?: string }) {
-    if (typeof pattern === 'string') {
+    if (isString(pattern)) {
       this.pattern = pattern
       this.flags = undefined
     } else {
@@ -16,7 +17,7 @@ export class RegexFilter implements EvaluateFilter {
 
   evaluate(input: any): boolean {
     if (input === null || input === undefined) return false
-    if (typeof input !== 'string') return false
+    if (!isString(input)) return false
 
     try {
       const regex = new RegExp(this.pattern, this.flags)

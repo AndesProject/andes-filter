@@ -1,6 +1,9 @@
 import {
   compareDateValues,
   compareStringsWithCase,
+  isNumber,
+  isObject,
+  isString,
 } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
@@ -20,8 +23,8 @@ export class InclusionFilter<T> implements EvaluateFilter {
 
     for (const allowedValue of this.allowedValues) {
       if (
-        typeof actualValue === 'number' &&
-        typeof allowedValue === 'number' &&
+        isNumber(actualValue) &&
+        isNumber(allowedValue) &&
         Number.isNaN(actualValue) &&
         Number.isNaN(allowedValue)
       )
@@ -36,16 +39,16 @@ export class InclusionFilter<T> implements EvaluateFilter {
       }
 
       if (
-        typeof actualValue === 'object' &&
+        isObject(actualValue) &&
         actualValue !== null &&
-        typeof allowedValue === 'object' &&
+        isObject(allowedValue) &&
         allowedValue !== null
       ) {
         if (actualValue === allowedValue) return true
         continue
       }
 
-      if (typeof actualValue === 'string' && typeof allowedValue === 'string') {
+      if (isString(actualValue) && isString(allowedValue)) {
         if (
           compareStringsWithCase(
             actualValue,
@@ -55,6 +58,14 @@ export class InclusionFilter<T> implements EvaluateFilter {
         )
           return true
         continue
+      }
+
+      if (
+        isNumber(actualValue) &&
+        isNumber(allowedValue) &&
+        actualValue === allowedValue
+      ) {
+        return true
       }
 
       if (actualValue === allowedValue) return true

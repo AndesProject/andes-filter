@@ -3,6 +3,7 @@ import {
   FindManyResult,
   PaginationOptions,
 } from '../filter.interface'
+import { isObject } from '../utils/filter.helpers'
 import { matchesFilter } from './matches-filter'
 import { paginateArray } from './paginator'
 import { sortObjects } from './sort-objects'
@@ -29,7 +30,7 @@ function removeDuplicateItems<T>(
     const fieldKey = distinctFields
       .map((field) =>
         JSON.stringify(
-          item && typeof item === 'object' ? item[field as keyof T] : undefined
+          item && isObject(item) ? item[field as keyof T] : undefined
         )
       )
       .join('|')

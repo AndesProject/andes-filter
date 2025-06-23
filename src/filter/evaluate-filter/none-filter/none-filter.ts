@@ -1,3 +1,4 @@
+import { isObject } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
@@ -10,21 +11,13 @@ export class NoneFilter implements EvaluateFilter {
 
   constructor(private filter: any) {
     // Check if it's an empty filter
-    if (
-      typeof this.filter === 'object' &&
-      this.filter !== null &&
-      Object.keys(this.filter).length === 0
-    ) {
+    if (isObject(this.filter) && Object.keys(this.filter).length === 0) {
       this.isEmptyFilter = true
       return
     }
 
     // If filter is a primitive, create a simple evaluator
-    if (
-      typeof this.filter !== 'object' ||
-      this.filter === null ||
-      Array.isArray(this.filter)
-    ) {
+    if (!isObject(this.filter) || Array.isArray(this.filter)) {
       this.evaluator = {
         evaluate: (data: any) => data === this.filter,
       }

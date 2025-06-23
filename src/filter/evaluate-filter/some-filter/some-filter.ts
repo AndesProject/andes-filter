@@ -1,3 +1,4 @@
+import { isObject } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
@@ -10,7 +11,8 @@ export class SomeFilter implements EvaluateFilter {
   constructor(private filter: any) {
     // Check if it's an empty filter
     if (
-      typeof this.filter === 'object' &&
+      isObject(this.filter) &&
+      !Array.isArray(this.filter) &&
       this.filter !== null &&
       Object.keys(this.filter).length === 0
     ) {
@@ -38,11 +40,7 @@ export class SomeFilter implements EvaluateFilter {
       if (key === 'not') {
         this.isNegation = true
         // Create evaluator with the inner filter (without 'not')
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          !Array.isArray(value)
-        ) {
+        if (isObject(value) && !Array.isArray(value) && value !== null) {
           const innerKeys = Object.keys(value)
           if (innerKeys.length === 1) {
             const innerKey = innerKeys[0]
@@ -110,8 +108,7 @@ export class SomeFilter implements EvaluateFilter {
     // Prisma: filtro vacío sobre array de objetos retorna true si hay al menos un objeto
     if (this.isEmptyFilter) {
       return data.some(
-        (item) =>
-          item !== null && item !== undefined && typeof item === 'object'
+        (item) => item !== null && item !== undefined && isObject(item)
       )
     }
 

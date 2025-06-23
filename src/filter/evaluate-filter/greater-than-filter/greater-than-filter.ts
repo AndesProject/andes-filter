@@ -1,4 +1,9 @@
-import { isNil, isValidDate } from '../../utils/filter.helpers'
+import {
+  isNil,
+  isNumber,
+  isString,
+  isValidDate,
+} from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class GreaterThanFilter implements EvaluateFilter {
@@ -11,10 +16,7 @@ export class GreaterThanFilter implements EvaluateFilter {
   evaluate(actualValue: any): boolean {
     if (isNil(actualValue) || isNil(this.thresholdValue)) return false
 
-    if (
-      typeof actualValue === 'number' &&
-      typeof this.thresholdValue === 'number'
-    ) {
+    if (isNumber(actualValue) && isNumber(this.thresholdValue)) {
       if (Number.isNaN(actualValue) || Number.isNaN(this.thresholdValue))
         return false
       return actualValue > this.thresholdValue
@@ -27,10 +29,7 @@ export class GreaterThanFilter implements EvaluateFilter {
       )
     }
 
-    if (
-      typeof actualValue === 'string' &&
-      typeof this.thresholdValue === 'string'
-    ) {
+    if (isString(actualValue) && isString(this.thresholdValue)) {
       const firstDate = new Date(actualValue)
       const secondDate = new Date(this.thresholdValue)
       const isFirstDateValid = !isNaN(firstDate.getTime())
@@ -43,19 +42,13 @@ export class GreaterThanFilter implements EvaluateFilter {
       return actualValue > this.thresholdValue
     }
 
-    if (
-      typeof actualValue === 'string' &&
-      typeof this.thresholdValue === 'number'
-    ) {
+    if (isString(actualValue) && isNumber(this.thresholdValue)) {
       const numericValue = parseFloat(actualValue)
       if (!isNaN(numericValue)) return numericValue > this.thresholdValue
       return actualValue > this.thresholdValue.toString()
     }
 
-    if (
-      typeof actualValue === 'number' &&
-      typeof this.thresholdValue === 'string'
-    ) {
+    if (isNumber(actualValue) && isString(this.thresholdValue)) {
       const numericThreshold = parseFloat(this.thresholdValue)
       if (!isNaN(numericThreshold)) return actualValue > numericThreshold
       return actualValue.toString() > this.thresholdValue

@@ -12,6 +12,14 @@ export function isNumber(value: any): value is number {
   return typeof value === 'number'
 }
 
+export function isBoolean(value: any): value is boolean {
+  return typeof value === 'boolean'
+}
+
+export function isObject(value: any): value is object {
+  return typeof value === 'object' && value !== null
+}
+
 export function isValidDate(value: any): boolean {
   if (value instanceof Date) return true
   if (typeof value === 'number') return !isNaN(value) && value >= 0

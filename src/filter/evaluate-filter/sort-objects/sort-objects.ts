@@ -1,4 +1,5 @@
 import { SortDirection } from '../../filter.interface'
+import { isBoolean, isNumber, isString } from '../../utils/filter.helpers'
 
 export function sortObjects<T>(
   items: T[],
@@ -40,15 +41,15 @@ function compareValues<T>(
   if (firstValue === undefined) return 1
   if (secondValue === undefined) return -1
 
-  if (typeof firstValue === 'number' && typeof secondValue === 'number') {
+  if (isNumber(firstValue) && isNumber(secondValue)) {
     return firstValue - secondValue
   }
 
-  if (typeof firstValue === 'string' && typeof secondValue === 'string') {
+  if (isString(firstValue) && isString(secondValue)) {
     return firstValue.localeCompare(secondValue)
   }
 
-  if (typeof firstValue === 'boolean' && typeof secondValue === 'boolean') {
+  if (isBoolean(firstValue) && isBoolean(secondValue)) {
     return Number(firstValue) - Number(secondValue)
   }
 

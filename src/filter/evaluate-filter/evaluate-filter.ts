@@ -1,4 +1,5 @@
 import { FilterCriteria } from '../filter.interface'
+import { isObject } from '../utils/filter.helpers'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
 
@@ -73,7 +74,7 @@ export class FilterEvaluator<T> {
         if (filterInstance) {
           this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
         }
-      } else if (typeof criteriaValue === 'object' && criteriaValue !== null) {
+      } else if (isObject(criteriaValue)) {
         if ('mode' in criteriaValue && criteriaValue.mode === 'insensitive') {
           Object.keys(criteriaValue).forEach((subCriteriaKey) => {
             if (subCriteriaKey === 'mode') return
@@ -134,11 +135,7 @@ export class FilterEvaluator<T> {
     return this.activeFilters.every(({ fieldKey, filterInstance }) => {
       let dataToEvaluate = targetData
 
-      if (
-        targetData &&
-        typeof targetData === 'object' &&
-        !Array.isArray(targetData)
-      ) {
+      if (targetData && isObject(targetData) && !Array.isArray(targetData)) {
         const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
         if (isDirectOperatorField) {
           dataToEvaluate = targetData

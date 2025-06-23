@@ -1,3 +1,4 @@
+import { isNumber, isObject } from '../../utils/filter.helpers'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class LengthFilter implements EvaluateFilter {
@@ -15,10 +16,10 @@ export class LengthFilter implements EvaluateFilter {
           equals?: number
         }
   ) {
-    if (typeof target === 'number') {
+    if (isNumber(target)) {
       this.targetLength = target
       this.ops.equals = target
-    } else if (typeof target === 'object' && target !== null) {
+    } else if (isObject(target)) {
       this.ops = target
       if ('equals' in target) this.targetLength = target.equals
     }

@@ -1,4 +1,5 @@
 import { QueryOption } from '../../filter.interface'
+import { isObject, isString } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
@@ -22,7 +23,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     this.rawTarget = targetValue
     // Detectar si el filtro tiene mode: 'insensitive' en la raíz
     if (
-      typeof targetValue === 'object' &&
+      isObject(targetValue) &&
       targetValue !== null &&
       'mode' in targetValue &&
       (targetValue as any).mode === 'insensitive'
@@ -31,7 +32,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     }
     if (
       this.targetValue &&
-      typeof this.targetValue === 'object' &&
+      isObject(this.targetValue) &&
       !Array.isArray(this.targetValue) &&
       this.targetValue !== null
     ) {
@@ -68,7 +69,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
         }
         let subInsensitive = this.insensitive || this.modeInsensitive
         if (
-          typeof value === 'object' &&
+          isObject(value) &&
           value !== null &&
           'mode' in value &&
           value.mode === 'insensitive'
@@ -102,7 +103,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     // Si es un QueryOption, negar el resultado de evaluar ese filtro
     if (
       this.targetValue &&
-      typeof this.targetValue === 'object' &&
+      isObject(this.targetValue) &&
       !Array.isArray(this.targetValue) &&
       this.targetValue !== null &&
       Object.keys(this.targetValue).some((k) =>
@@ -167,7 +168,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     if (Number.isNaN(this.targetValue) || Number.isNaN(value))
       return !(Number.isNaN(this.targetValue) && Number.isNaN(value))
     // Comparación de strings con modo insensible
-    if (typeof this.targetValue === 'string' && typeof value === 'string') {
+    if (isString(this.targetValue) && isString(value)) {
       if (this.insensitive || this.modeInsensitive) {
         return this.targetValue.toLowerCase() !== value.toLowerCase()
       }
@@ -175,9 +176,9 @@ export class InequalityFilter<T> implements EvaluateFilter {
     }
     // Comparación de objetos por referencia (no deep equality)
     if (
-      typeof this.targetValue === 'object' &&
+      isObject(this.targetValue) &&
       this.targetValue !== null &&
-      typeof value === 'object' &&
+      isObject(value) &&
       value !== null
     ) {
       return this.targetValue !== value

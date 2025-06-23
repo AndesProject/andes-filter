@@ -1,3 +1,4 @@
+import { isObject } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
@@ -41,7 +42,8 @@ export class EveryFilter implements EvaluateFilter {
   constructor(private filter: any) {
     // Check if it's an empty filter
     if (
-      typeof this.filter === 'object' &&
+      isObject(this.filter) &&
+      !Array.isArray(this.filter) &&
       this.filter !== null &&
       Object.keys(this.filter).length === 0
     ) {
@@ -51,7 +53,8 @@ export class EveryFilter implements EvaluateFilter {
 
     // Si el filtro es un objeto con múltiples claves que no son operadores, usar comparación directa
     if (
-      typeof this.filter === 'object' &&
+      isObject(this.filter) &&
+      !Array.isArray(this.filter) &&
       this.filter !== null &&
       Object.keys(this.filter).length > 0
     ) {

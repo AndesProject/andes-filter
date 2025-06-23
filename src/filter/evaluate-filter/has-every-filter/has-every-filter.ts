@@ -1,4 +1,8 @@
-import { allItemsMatch, anyItemMatches } from '../../utils/filter.helpers'
+import {
+  allItemsMatch,
+  anyItemMatches,
+  isObject,
+} from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
@@ -10,7 +14,7 @@ export class HasEveryFilter<T> implements EvaluateFilter {
     // Si los valores objetivo son objetos complejos, crear FilterEvaluators
     if (
       this.requiredValues.length > 0 &&
-      typeof this.requiredValues[0] === 'object' &&
+      isObject(this.requiredValues[0]) &&
       this.requiredValues[0] !== null
     ) {
       this.filterEvaluators = this.requiredValues.map(
@@ -27,10 +31,7 @@ export class HasEveryFilter<T> implements EvaluateFilter {
     if (this.requiredValues.length === 0) return true
 
     // CASO CORRECTO: Si el filtro es un solo objeto, verificar que todos los elementos del array lo cumplan
-    if (
-      this.requiredValues.length === 1 &&
-      typeof this.requiredValues[0] === 'object'
-    ) {
+    if (this.requiredValues.length === 1 && isObject(this.requiredValues[0])) {
       const singleEvaluator = new FilterEvaluator(this.requiredValues[0] as any)
       return allItemsMatch(arrayValue, (item) => singleEvaluator.evaluate(item))
     }
@@ -45,8 +46,7 @@ export class HasEveryFilter<T> implements EvaluateFilter {
     // Si los valores objetivo son objetos simples, usar matchesFilter para comparación
     if (
       this.requiredValues.some(
-        (requiredValue) =>
-          typeof requiredValue === 'object' && requiredValue !== null
+        (requiredValue) => isObject(requiredValue) && requiredValue !== null
       )
     ) {
       return this.requiredValues.every((requiredValue) => {
