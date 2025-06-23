@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { StartsWithFilter } from './starts-with-filter'
 describe('StartsWithFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
@@ -64,7 +64,7 @@ describe('StartsWithFilter', () => {
       filter.findUnique({ where: { name: { startsWith: 'Alice' } } })?.name
     ).toBe('Alice')
   })
-  it('case insensitive', () => {
+  it('should handle case insensitive filtering correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'BOB' },
@@ -108,7 +108,7 @@ describe('StartsWithFilter', () => {
       })
     ).toBe(null)
   })
-  it('null y undefined', () => {
+  it('should handle null and undefined values correctly', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
@@ -125,7 +125,7 @@ describe('StartsWithFilter', () => {
       filter.findMany({ where: { value: { startsWith: 'xyz' } } }).data.length
     ).toBe(0)
   })
-  it('strings vacíos y casos especiales', () => {
+  it('should handle empty strings and special cases correctly', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: '' },
       { value: 'hello' },
@@ -160,26 +160,26 @@ describe('StartsWithFilter Unit Tests', () => {
     expect(filter.evaluate('world')).toBe(false)
     expect(filter.evaluate('')).toBe(false)
   })
-  it('debe manejar modo case-insensitive', () => {
+  it('should handle case-insensitive mode correctly', () => {
     const filter = new StartsWithFilter('hello', true)
     expect(filter.evaluate('HELLO WORLD')).toBe(true)
     expect(filter.evaluate('Hello World')).toBe(true)
     expect(filter.evaluate('hello world')).toBe(true)
     expect(filter.evaluate('WORLD')).toBe(false)
   })
-  it('debe manejar null y undefined', () => {
+  it('should handle null and undefined values', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-  it('debe manejar tipos no string', () => {
+  it('should handle non-string data types', () => {
     const filter = new StartsWithFilter('hello')
     expect(filter.evaluate(123)).toBe(false)
     expect(filter.evaluate({})).toBe(false)
     expect(filter.evaluate([])).toBe(false)
     expect(filter.evaluate(true)).toBe(false)
   })
-  it('debe manejar strings vacíos', () => {
+  it('should handle empty string filters', () => {
     const filter = new StartsWithFilter('')
     expect(filter.evaluate('hello')).toBe(true)
     expect(filter.evaluate('')).toBe(true)

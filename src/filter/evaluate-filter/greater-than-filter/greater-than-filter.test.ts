@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { GreaterThanFilter } from './greater-than-filter'
-describe('GreaterThanFilter', () => {
-  it('number', () => {
-    const filter = createFilterEngine<{ size: number }>([
+
+describe('GreaterThanFilter Integration Tests', () => {
+  describe('Numeric comparison filtering', () => {
+    const testData = [
       { size: -2 },
       { size: -1 },
       { size: 0 },
@@ -11,97 +12,174 @@ describe('GreaterThanFilter', () => {
       { size: 1 },
       { size: 2 },
       { size: 3 },
-    ])
-    expect(filter.findMany({ where: { size: { gt: -2 } } }).data.length).toBe(6)
-    expect(filter.findMany({ where: { size: { gt: -1 } } }).data.length).toBe(5)
-    expect(filter.findMany({ where: { size: { gt: 0 } } }).data.length).toBe(3)
-    expect(filter.findMany({ where: { size: { gt: 3 } } }).data.length).toBe(0)
-    expect(filter.findMany({ where: { size: { gt: 100 } } }).data.length).toBe(
-      0
-    )
-    expect(filter.findUnique({ where: { size: { gt: -3 } } })?.size).toBe(-2)
-    expect(filter.findUnique({ where: { size: { gt: -2 } } })?.size).toBe(-1)
-    expect(filter.findUnique({ where: { size: { gt: -1 } } })?.size).toBe(0)
-    expect(filter.findUnique({ where: { size: { gt: 100 } } })).toBe(null)
+    ]
+
+    it('should find items greater than negative thresholds', () => {
+      const filter = createFilterEngine<{ size: number }>(testData)
+      const minusTwoResult = filter.findMany({ where: { size: { gt: -2 } } })
+      const minusOneResult = filter.findMany({ where: { size: { gt: -1 } } })
+
+      expect(minusTwoResult.data.length).toBe(6)
+      expect(minusOneResult.data.length).toBe(5)
+    })
+
+    it('should find items greater than zero', () => {
+      const filter = createFilterEngine<{ size: number }>(testData)
+      const result = filter.findMany({ where: { size: { gt: 0 } } })
+      expect(result.data.length).toBe(3)
+    })
+
+    it('should return empty results for values greater than maximum', () => {
+      const filter = createFilterEngine<{ size: number }>(testData)
+      const maxResult = filter.findMany({ where: { size: { gt: 3 } } })
+      const largeResult = filter.findMany({ where: { size: { gt: 100 } } })
+
+      expect(maxResult.data.length).toBe(0)
+      expect(largeResult.data.length).toBe(0)
+    })
+
+    it('should return correct item for findUnique with various thresholds', () => {
+      const filter = createFilterEngine<{ size: number }>(testData)
+      const minusThreeResult = filter.findUnique({
+        where: { size: { gt: -3 } },
+      })
+      const minusTwoResult = filter.findUnique({ where: { size: { gt: -2 } } })
+      const minusOneResult = filter.findUnique({ where: { size: { gt: -1 } } })
+      const largeResult = filter.findUnique({ where: { size: { gt: 100 } } })
+
+      expect(minusThreeResult?.size).toBe(-2)
+      expect(minusTwoResult?.size).toBe(-1)
+      expect(minusOneResult?.size).toBe(0)
+      expect(largeResult).toBe(null)
+    })
   })
-  it('date', () => {
+
+  describe('Date comparison filtering', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
     const d3 = new Date('2022-01-01')
-    const filter = createFilterEngine<{ date: Date }>([
-      { date: d1 },
-      { date: d2 },
-      { date: d3 },
-    ])
-    expect(filter.findMany({ where: { date: { gt: d1 } } }).data.length).toBe(2)
-    expect(filter.findMany({ where: { date: { gt: d2 } } }).data.length).toBe(1)
-    expect(filter.findMany({ where: { date: { gt: d3 } } }).data.length).toBe(0)
-    expect(filter.findUnique({ where: { date: { gt: d1 } } })?.date).toEqual(d2)
-    expect(filter.findUnique({ where: { date: { gt: d3 } } })).toBe(null)
+    const testData = [{ date: d1 }, { date: d2 }, { date: d3 }]
+
+    it('should find items with dates greater than specified date', () => {
+      const filter = createFilterEngine<{ date: Date }>(testData)
+      const afterD1Result = filter.findMany({ where: { date: { gt: d1 } } })
+      const afterD2Result = filter.findMany({ where: { date: { gt: d2 } } })
+      const afterD3Result = filter.findMany({ where: { date: { gt: d3 } } })
+
+      expect(afterD1Result.data.length).toBe(2)
+      expect(afterD2Result.data.length).toBe(1)
+      expect(afterD3Result.data.length).toBe(0)
+    })
+
+    it('should return correct item for findUnique with date comparisons', () => {
+      const filter = createFilterEngine<{ date: Date }>(testData)
+      const afterD1Result = filter.findUnique({ where: { date: { gt: d1 } } })
+      const afterD3Result = filter.findUnique({ where: { date: { gt: d3 } } })
+
+      expect(afterD1Result?.date).toEqual(d2)
+      expect(afterD3Result).toBe(null)
+    })
   })
-  it('string', () => {
-    const filter = createFilterEngine<{ value: string }>([
-      { value: 'a' },
-      { value: 'b' },
-      { value: 'c' },
-    ])
-    expect(filter.findMany({ where: { value: { gt: 'a' } } }).data.length).toBe(
-      2
-    )
-    expect(filter.findMany({ where: { value: { gt: 'b' } } }).data.length).toBe(
-      1
-    )
-    expect(filter.findMany({ where: { value: { gt: 'c' } } }).data.length).toBe(
-      0
-    )
-    expect(filter.findUnique({ where: { value: { gt: 'a' } } })?.value).toBe(
-      'b'
-    )
-    expect(filter.findUnique({ where: { value: { gt: 'c' } } })).toBe(null)
+
+  describe('String comparison filtering', () => {
+    const testData = [{ value: 'a' }, { value: 'b' }, { value: 'c' }]
+
+    it('should find items with string values greater than specified string', () => {
+      const filter = createFilterEngine<{ value: string }>(testData)
+      const afterAResult = filter.findMany({ where: { value: { gt: 'a' } } })
+      const afterBResult = filter.findMany({ where: { value: { gt: 'b' } } })
+      const afterCResult = filter.findMany({ where: { value: { gt: 'c' } } })
+
+      expect(afterAResult.data.length).toBe(2)
+      expect(afterBResult.data.length).toBe(1)
+      expect(afterCResult.data.length).toBe(0)
+    })
+
+    it('should return correct item for findUnique with string comparisons', () => {
+      const filter = createFilterEngine<{ value: string }>(testData)
+      const afterAResult = filter.findUnique({ where: { value: { gt: 'a' } } })
+      const afterCResult = filter.findUnique({ where: { value: { gt: 'c' } } })
+
+      expect(afterAResult?.value).toBe('b')
+      expect(afterCResult).toBe(null)
+    })
   })
-  it('null y undefined', () => {
-    const filter = createFilterEngine<{ value: any }>([
+
+  describe('Null and undefined value handling', () => {
+    const testData = [
       { value: null },
       { value: undefined },
       { value: 0 },
       { value: 1 },
-    ])
-    expect(filter.findMany({ where: { value: { gt: 0 } } }).data.length).toBe(1)
-    expect(filter.findMany({ where: { value: { gt: 1 } } }).data.length).toBe(0)
-    expect(
-      filter.findMany({ where: { value: { gt: null } } }).data.length
-    ).toBe(0)
-    expect(
-      filter.findMany({ where: { value: { gt: undefined } } }).data.length
-    ).toBe(0)
+    ]
+
+    it('should find numeric values greater than specified threshold', () => {
+      const filter = createFilterEngine<{ value: any }>(testData)
+      const greaterThanZeroResult = filter.findMany({
+        where: { value: { gt: 0 } },
+      })
+      const greaterThanOneResult = filter.findMany({
+        where: { value: { gt: 1 } },
+      })
+
+      expect(greaterThanZeroResult.data.length).toBe(1)
+      expect(greaterThanOneResult.data.length).toBe(0)
+    })
+
+    it('should return empty results for null and undefined comparisons', () => {
+      const filter = createFilterEngine<{ value: any }>(testData)
+      const nullResult = filter.findMany({ where: { value: { gt: null } } })
+      const undefinedResult = filter.findMany({
+        where: { value: { gt: undefined } },
+      })
+
+      expect(nullResult.data.length).toBe(0)
+      expect(undefinedResult.data.length).toBe(0)
+    })
   })
 })
+
 describe('GreaterThanFilter Unit Tests', () => {
-  it('debe retornar true si el valor es mayor al umbral', () => {
-    const filter = new GreaterThanFilter(10)
-    expect(filter.evaluate(11)).toBe(true)
-    expect(filter.evaluate(100)).toBe(true)
-    expect(filter.evaluate(10.01)).toBe(true)
+  describe('Numeric value comparison', () => {
+    it('should return true when value is greater than threshold', () => {
+      const filter = new GreaterThanFilter(10)
+      expect(filter.evaluate(11)).toBe(true)
+      expect(filter.evaluate(100)).toBe(true)
+      expect(filter.evaluate(10.01)).toBe(true)
+    })
+
+    it('should return false when value is equal or less than threshold', () => {
+      const filter = new GreaterThanFilter(10)
+      expect(filter.evaluate(10)).toBe(false)
+      expect(filter.evaluate(9)).toBe(false)
+      expect(filter.evaluate(-1)).toBe(false)
+    })
   })
-  it('debe retornar false si el valor es igual o menor al umbral', () => {
-    const filter = new GreaterThanFilter(10)
-    expect(filter.evaluate(10)).toBe(false)
-    expect(filter.evaluate(9)).toBe(false)
-    expect(filter.evaluate(-1)).toBe(false)
+
+  describe('String value comparison', () => {
+    it('should handle string comparisons correctly', () => {
+      const filter = new GreaterThanFilter('m')
+      expect(filter.evaluate('z')).toBe(true)
+      expect(filter.evaluate('a')).toBe(false)
+      expect(filter.evaluate('m')).toBe(false)
+    })
   })
-  it('debe manejar strings y fechas', () => {
-    const filter = new GreaterThanFilter('m')
-    expect(filter.evaluate('z')).toBe(true)
-    expect(filter.evaluate('a')).toBe(false)
-    expect(filter.evaluate('m')).toBe(false)
-    const d = new Date('2022-01-01')
-    const filterDate = new GreaterThanFilter(new Date('2021-01-01'))
-    expect(filterDate.evaluate(d)).toBe(true)
-    expect(filterDate.evaluate(new Date('2020-01-01'))).toBe(false)
+
+  describe('Date value comparison', () => {
+    it('should handle date comparisons correctly', () => {
+      const thresholdDate = new Date('2021-01-01')
+      const filter = new GreaterThanFilter(thresholdDate)
+
+      expect(filter.evaluate(new Date('2022-01-01'))).toBe(true)
+      expect(filter.evaluate(new Date('2020-01-01'))).toBe(false)
+    })
   })
-  it('debe manejar null y undefined', () => {
-    const filter = new GreaterThanFilter(1)
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
+
+  describe('Null and undefined handling', () => {
+    it('should handle null and undefined values', () => {
+      const filter = new GreaterThanFilter(1)
+      expect(filter.evaluate(null)).toBe(false)
+      expect(filter.evaluate(undefined)).toBe(false)
+    })
   })
 })

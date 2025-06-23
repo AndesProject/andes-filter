@@ -310,13 +310,13 @@ describe('InsensitiveModeFilter Unit Tests', () => {
     expect(modeFilter.evaluate('world')).toBe(true)
     expect(modeFilter.evaluate('')).toBe(true)
   })
-  it('debe manejar null y undefined', () => {
+  it('should handle null and undefined values', () => {
     const containsFilter = new ContainsFilter('hello', true)
     const modeFilter = new InsensitiveModeFilter([containsFilter])
     expect(modeFilter.evaluate(null)).toBe(false)
     expect(modeFilter.evaluate(undefined)).toBe(false)
   })
-  it('debe manejar tipos no string', () => {
+  it('should handle non-string data types', () => {
     const containsFilter = new ContainsFilter('hello', true)
     const modeFilter = new InsensitiveModeFilter([containsFilter])
     expect(modeFilter.evaluate(123)).toBe(false)

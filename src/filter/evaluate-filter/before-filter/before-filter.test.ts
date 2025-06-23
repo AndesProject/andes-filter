@@ -19,7 +19,7 @@ describe('BeforeFilter', () => {
         .data.length
     ).toBe(0)
   })
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const now: number = Date.parse('2024-01-01T00:00:00.000Z')
     const filter = createFilterEngine<{ date: number }>([
       { date: now },
@@ -35,7 +35,7 @@ describe('BeforeFilter', () => {
       filter.findMany({ where: { date: { before: now + 1000 } } }).data.length
     ).toBe(4)
   })
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const now: number = new Date().getTime()
     const filter = createFilterEngine<{ date: string }>([
       { date: '2023-08-31' },

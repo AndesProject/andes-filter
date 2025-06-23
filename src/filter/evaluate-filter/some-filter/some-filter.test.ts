@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { SomeFilter } from './some-filter'
 describe('SomeFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     interface Post {
       title: string
     }

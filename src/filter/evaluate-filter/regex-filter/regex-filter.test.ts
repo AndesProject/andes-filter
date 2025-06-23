@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { RegexFilter } from './regex-filter'
 describe('RegexFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
@@ -33,7 +33,7 @@ describe('RegexFilter', () => {
       filter.findMany({ where: { name: { regex: '^[0-9]' } } }).data.length
     ).toBe(0)
   })
-  it('null y undefined', () => {
+  it('should handle null and undefined values correctly', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
@@ -161,12 +161,12 @@ describe('RegexFilter Unit Tests', () => {
     expect(filter.evaluate('hello-world')).toBe(false)
     expect(filter.evaluate('hello world')).toBe(false)
   })
-  it('debe manejar null y undefined', () => {
+  it('should handle null and undefined values', () => {
     const filter = new RegexFilter('hello')
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
   })
-  it('debe manejar tipos no string', () => {
+  it('should handle non-string data types', () => {
     const filter = new RegexFilter('hello')
     expect(filter.evaluate(123)).toBe(false)
     expect(filter.evaluate({})).toBe(false)
@@ -181,7 +181,7 @@ describe('RegexFilter Unit Tests', () => {
     const filter3 = new RegexFilter('\\')
     expect(filter3.evaluate('hello')).toBe(false)
   })
-  it('debe manejar strings vacíos', () => {
+  it('should handle empty string filters', () => {
     const filter = new RegexFilter('^$')
     expect(filter.evaluate('')).toBe(true)
     expect(filter.evaluate('hello')).toBe(false)

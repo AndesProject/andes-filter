@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { InequalityFilter } from './inequality-filter'
 describe('InequalityFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
@@ -47,7 +47,7 @@ describe('InequalityFilter', () => {
       'Alice'
     )
   })
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
       { size: 1 },
       { size: 2 },
@@ -71,7 +71,7 @@ describe('InequalityFilter', () => {
     expect(filter.findUnique({ where: { size: { not: 2 } } })?.size).toBe(1)
     expect(filter.findUnique({ where: { size: { not: 3 } } })?.size).toBe(1)
   })
-  it('boolean', () => {
+  it('should filter boolean values correctly', () => {
     const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: true },
       { isValid: true },

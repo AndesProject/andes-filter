@@ -32,7 +32,7 @@ describe('BetweenFilter', () => {
       }).data.length
     ).toBe(4)
   })
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ value: number }>([
       { value: 1 },
       { value: 5 },

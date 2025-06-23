@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { EndsWithFilter } from './ends-with-filter'
-describe('EndsWithFilter', () => {
-  it('string', () => {
-    const filter = createFilterEngine<{ name: string }>([
+
+describe('EndsWithFilter Integration Tests', () => {
+  describe('String suffix filtering', () => {
+    const testData = [
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -16,155 +17,253 @@ describe('EndsWithFilter', () => {
       { name: 'Isaac' },
       { name: 'Jasmine' },
       { name: 'Gustavo Cerati' },
-    ])
-    expect(
-      filter.findMany({ where: { name: { endsWith: 'ice' } } }).data.length
-    ).toBe(2)
-    expect(
-      filter.findMany({ where: { name: { endsWith: 'Cerati' } } }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({ where: { name: { endsWith: 'David' } } }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({ where: { name: { endsWith: 'smi' } } }).data.length
-    ).toBe(0)
-    expect(
-      filter.findMany({ where: { name: { endsWith: ' ' } } }).data.length
-    ).toBe(0)
-    expect(filter.findUnique({ where: { name: { endsWith: ' ' } } })).toBe(null)
-    expect(filter.findUnique({ where: { name: { endsWith: '' } } })?.name).toBe(
-      'Alice'
-    )
-    expect(
-      filter.findUnique({ where: { name: { endsWith: 'Mariana' } } })
-    ).toBe(null)
-    expect(
-      filter.findUnique({ where: { name: { endsWith: 'Bob' } } })?.name
-    ).toBe('Bob')
-    expect(
-      filter.findUnique({ where: { name: { endsWith: 'Alice' } } })?.name
-    ).toBe('Alice')
+    ]
+
+    it('should find items ending with the specified suffix', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const iceResult = filter.findMany({
+        where: { name: { endsWith: 'ice' } },
+      })
+      const ceratiResult = filter.findMany({
+        where: { name: { endsWith: 'Cerati' } },
+      })
+      const davidResult = filter.findMany({
+        where: { name: { endsWith: 'David' } },
+      })
+
+      expect(iceResult.data.length).toBe(2)
+      expect(ceratiResult.data.length).toBe(1)
+      expect(davidResult.data.length).toBe(1)
+    })
+
+    it('should return empty results for non-existent suffixes', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findMany({ where: { name: { endsWith: 'smi' } } })
+      expect(result.data.length).toBe(0)
+    })
+
+    it('should not match space-only suffixes', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findMany({ where: { name: { endsWith: ' ' } } })
+      expect(result.data.length).toBe(0)
+    })
+
+    it('should return null for findUnique with non-existent suffixes', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const spaceResult = filter.findUnique({
+        where: { name: { endsWith: ' ' } },
+      })
+      const marianaResult = filter.findUnique({
+        where: { name: { endsWith: 'Mariana' } },
+      })
+
+      expect(spaceResult).toBe(null)
+      expect(marianaResult).toBe(null)
+    })
+
+    it('should return first item for findUnique with empty string suffix', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findUnique({ where: { name: { endsWith: '' } } })
+      expect(result?.name).toBe('Alice')
+    })
+
+    it('should return correct item for findUnique with exact suffix matches', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const bobResult = filter.findUnique({
+        where: { name: { endsWith: 'Bob' } },
+      })
+      const aliceResult = filter.findUnique({
+        where: { name: { endsWith: 'Alice' } },
+      })
+
+      expect(bobResult?.name).toBe('Bob')
+      expect(aliceResult?.name).toBe('Alice')
+    })
   })
-  it('case insensitive', () => {
-    const filter = createFilterEngine<{ name: string }>([
+
+  describe('Case insensitive suffix filtering', () => {
+    const testData = [
       { name: 'Alice' },
       { name: 'BOB' },
       { name: 'Charlie' },
       { name: 'david' },
       { name: 'EVA' },
-    ])
-    expect(
-      filter.findMany({
+    ]
+
+    it('should find items regardless of case when using insensitive mode', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const aliceResult = filter.findMany({
         where: { name: { endsWith: 'alice', mode: 'insensitive' } },
-      }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({
+      })
+      const bobResult = filter.findMany({
         where: { name: { endsWith: 'bob', mode: 'insensitive' } },
-      }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({
+      })
+      const evaResult = filter.findMany({
         where: { name: { endsWith: 'eva', mode: 'insensitive' } },
-      }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({
+      })
+
+      expect(aliceResult.data.length).toBe(1)
+      expect(bobResult.data.length).toBe(1)
+      expect(evaResult.data.length).toBe(1)
+    })
+
+    it('should find items with partial case-insensitive suffixes', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findMany({
         where: { name: { endsWith: 'lie', mode: 'insensitive' } },
-      }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({
-        where: { name: { endsWith: 'xyz', mode: 'insensitive' } },
-      }).data.length
-    ).toBe(0)
-    expect(
-      filter.findUnique({
-        where: { name: { endsWith: 'alice', mode: 'insensitive' } },
-      })?.name
-    ).toBe('Alice')
-    expect(
-      filter.findUnique({
+      })
+      expect(result.data.length).toBe(1)
+    })
+
+    it('should return empty results for non-existent case-insensitive suffixes', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findMany({
         where: { name: { endsWith: 'xyz', mode: 'insensitive' } },
       })
-    ).toBe(null)
+      expect(result.data.length).toBe(0)
+    })
+
+    it('should return correct item for findUnique with case-insensitive suffix', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findUnique({
+        where: { name: { endsWith: 'alice', mode: 'insensitive' } },
+      })
+      expect(result?.name).toBe('Alice')
+    })
+
+    it('should return null for findUnique with non-existent case-insensitive suffix', () => {
+      const filter = createFilterEngine<{ name: string }>(testData)
+      const result = filter.findUnique({
+        where: { name: { endsWith: 'xyz', mode: 'insensitive' } },
+      })
+      expect(result).toBe(null)
+    })
   })
-  it('null y undefined', () => {
-    const filter = createFilterEngine<{ value: any }>([
+
+  describe('Null and undefined value handling', () => {
+    const testData = [
       { value: null },
       { value: undefined },
       { value: 'hello' },
       { value: 'world' },
-    ])
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'hello' } } }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'world' } } }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'xyz' } } }).data.length
-    ).toBe(0)
+    ]
+
+    it('should find string values ending with specified suffixes', () => {
+      const filter = createFilterEngine<{ value: any }>(testData)
+      const helloResult = filter.findMany({
+        where: { value: { endsWith: 'hello' } },
+      })
+      const worldResult = filter.findMany({
+        where: { value: { endsWith: 'world' } },
+      })
+
+      expect(helloResult.data.length).toBe(1)
+      expect(worldResult.data.length).toBe(1)
+    })
+
+    it('should return empty results for non-existent suffixes in mixed data', () => {
+      const filter = createFilterEngine<{ value: any }>(testData)
+      const result = filter.findMany({ where: { value: { endsWith: 'xyz' } } })
+      expect(result.data.length).toBe(0)
+    })
   })
-  it('strings vacíos y casos especiales', () => {
-    const filter = createFilterEngine<{ value: string }>([
+
+  describe('Empty strings and special cases', () => {
+    const testData = [
       { value: '' },
       { value: 'hello' },
       { value: 'world' },
       { value: 'hello world' },
-    ])
-    expect(
-      filter.findMany({ where: { value: { endsWith: '' } } }).data.length
-    ).toBe(4)
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'hello' } } }).data.length
-    ).toBe(1)
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'world' } } }).data.length
-    ).toBe(2)
-    expect(
-      filter.findMany({ where: { value: { endsWith: 'hello world' } } }).data
-        .length
-    ).toBe(1)
+    ]
+
+    it('should return all items when searching for empty string suffix', () => {
+      const filter = createFilterEngine<{ value: string }>(testData)
+      const result = filter.findMany({ where: { value: { endsWith: '' } } })
+      expect(result.data.length).toBe(4)
+    })
+
+    it('should find items ending with the specified suffix', () => {
+      const filter = createFilterEngine<{ value: string }>(testData)
+      const helloResult = filter.findMany({
+        where: { value: { endsWith: 'hello' } },
+      })
+      const worldResult = filter.findMany({
+        where: { value: { endsWith: 'world' } },
+      })
+
+      expect(helloResult.data.length).toBe(1)
+      expect(worldResult.data.length).toBe(2)
+    })
+
+    it('should find items ending with complete phrases', () => {
+      const filter = createFilterEngine<{ value: string }>(testData)
+      const result = filter.findMany({
+        where: { value: { endsWith: 'hello world' } },
+      })
+      expect(result.data.length).toBe(1)
+    })
   })
 })
+
 describe('EndsWithFilter Unit Tests', () => {
-  it('debe retornar true si el string termina con la subcadena', () => {
-    const filter = new EndsWithFilter('hello')
-    expect(filter.evaluate('say hello')).toBe(true)
-    expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('HELLO')).toBe(false)
+  describe('String suffix matching', () => {
+    it('should return true when string ends with the suffix', () => {
+      const filter = new EndsWithFilter('hello')
+      expect(filter.evaluate('say hello')).toBe(true)
+      expect(filter.evaluate('hello')).toBe(true)
+    })
+
+    it('should return false when string does not end with the suffix', () => {
+      const filter = new EndsWithFilter('hello')
+      expect(filter.evaluate('hello world')).toBe(false)
+      expect(filter.evaluate('world')).toBe(false)
+      expect(filter.evaluate('')).toBe(false)
+    })
+
+    it('should be case sensitive by default', () => {
+      const filter = new EndsWithFilter('hello')
+      expect(filter.evaluate('HELLO')).toBe(false)
+    })
   })
-  it('debe retornar false si el string no termina con la subcadena', () => {
-    const filter = new EndsWithFilter('hello')
-    expect(filter.evaluate('hello world')).toBe(false)
-    expect(filter.evaluate('world')).toBe(false)
-    expect(filter.evaluate('')).toBe(false)
+
+  describe('Case insensitive matching', () => {
+    it('should handle case-insensitive mode correctly', () => {
+      const filter = new EndsWithFilter('hello', true)
+      expect(filter.evaluate('say HELLO')).toBe(true)
+      expect(filter.evaluate('say Hello')).toBe(true)
+      expect(filter.evaluate('say hello')).toBe(true)
+    })
+
+    it('should return false for non-matching strings in case-insensitive mode', () => {
+      const filter = new EndsWithFilter('hello', true)
+      expect(filter.evaluate('WORLD')).toBe(false)
+    })
   })
-  it('debe manejar modo case-insensitive', () => {
-    const filter = new EndsWithFilter('hello', true)
-    expect(filter.evaluate('say HELLO')).toBe(true)
-    expect(filter.evaluate('say Hello')).toBe(true)
-    expect(filter.evaluate('say hello')).toBe(true)
-    expect(filter.evaluate('WORLD')).toBe(false)
+
+  describe('Null and undefined handling', () => {
+    it('should handle null and undefined values', () => {
+      const filter = new EndsWithFilter('hello')
+      expect(filter.evaluate(null)).toBe(false)
+      expect(filter.evaluate(undefined)).toBe(false)
+    })
   })
-  it('debe manejar null y undefined', () => {
-    const filter = new EndsWithFilter('hello')
-    expect(filter.evaluate(null)).toBe(false)
-    expect(filter.evaluate(undefined)).toBe(false)
+
+  describe('Non-string type handling', () => {
+    it('should handle non-string data types', () => {
+      const filter = new EndsWithFilter('hello')
+      expect(filter.evaluate(123)).toBe(false)
+      expect(filter.evaluate({})).toBe(false)
+      expect(filter.evaluate([])).toBe(false)
+      expect(filter.evaluate(true)).toBe(false)
+    })
   })
-  it('debe manejar tipos no string', () => {
-    const filter = new EndsWithFilter('hello')
-    expect(filter.evaluate(123)).toBe(false)
-    expect(filter.evaluate({})).toBe(false)
-    expect(filter.evaluate([])).toBe(false)
-    expect(filter.evaluate(true)).toBe(false)
-  })
-  it('debe manejar strings vacíos', () => {
-    const filter = new EndsWithFilter('')
-    expect(filter.evaluate('hello')).toBe(true)
-    expect(filter.evaluate('')).toBe(true)
-    expect(filter.evaluate('world')).toBe(true)
+
+  describe('Empty string handling', () => {
+    it('should handle empty string filters', () => {
+      const filter = new EndsWithFilter('')
+      expect(filter.evaluate('hello')).toBe(true)
+      expect(filter.evaluate('')).toBe(true)
+      expect(filter.evaluate('world')).toBe(true)
+    })
   })
 })

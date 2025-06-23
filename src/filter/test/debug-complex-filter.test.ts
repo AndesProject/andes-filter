@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../filter-from'
-describe('Debug Complex Filter', () => {
+
+describe('Complex Filter Integration Tests', () => {
   const complexData = [
     {
       id: 1,
@@ -95,125 +96,135 @@ describe('Debug Complex Filter', () => {
       ],
     },
   ]
-  it('should debug the failing complex filter step by step', () => {
-    const filter = createFilterEngine(complexData)
-    console.log('=== DEBUGGING COMPLEX FILTER ===')
-    const step1Result = filter.findMany({
-      where: {
-        employees: {
-          some: {
-            projects: {
-              length: { gte: 1 },
-            },
-          },
-        },
-      } as any,
-    })
-    console.log(
-      'Step 1 - projects length >= 1:',
-      step1Result.data.map((item) => item.name)
-    )
-    const step2Result = filter.findMany({
-      where: {
-        employees: {
-          some: {
-            projects: {
-              some: {
-                milestones: {
-                  length: { gte: 2 },
-                },
+
+  describe('Complex nested filtering scenarios', () => {
+    it('should filter companies with employees having projects with length >= 1', () => {
+      const filter = createFilterEngine(complexData)
+      const result = filter.findMany({
+        where: {
+          employees: {
+            some: {
+              projects: {
+                length: { gte: 1 },
               },
             },
           },
-        },
-      } as any,
-    })
-    console.log(
-      'Step 2 - milestones length >= 2:',
-      step2Result.data.map((item) => item.name)
-    )
-    const step3Result = filter.findMany({
-      where: {
-        employees: {
-          some: {
-            projects: {
-              every: {
-                team: {
-                  length: { gte: 2 },
-                },
-              },
-            },
-          },
-        },
-      } as any,
-    })
-    console.log(
-      'Step 3 - team length >= 2:',
-      step3Result.data.map((item) => item.name)
-    )
-    const step4Result = filter.findMany({
-      where: {
-        employees: {
-          some: {
-            projects: {
-              length: { gte: 1 },
-              some: {
-                milestones: {
-                  length: { gte: 2 },
-                },
-              },
-            },
-          },
-        },
-      } as any,
-    })
-    console.log(
-      'Step 4 - projects length >= 1 AND milestones length >= 2:',
-      step4Result.data.map((item) => item.name)
-    )
-    const fullResult = filter.findMany({
-      where: {
-        employees: {
-          some: {
-            projects: {
-              length: { gte: 1 },
-              some: {
-                milestones: {
-                  length: { gte: 2 },
-                },
-              },
-              every: {
-                team: {
-                  length: { gte: 2 },
-                },
-              },
-            },
-          },
-        },
-      } as any,
-    })
-    console.log(
-      'Step 5 - Full complex filter:',
-      fullResult.data.map((item) => item.name)
-    )
-    console.log('\n=== DATA ANALYSIS ===')
-    complexData.forEach((company, index) => {
-      console.log(`\nCompany ${index + 1}: ${company.name}`)
-      company.employees.forEach((emp, empIndex) => {
-        console.log(`  Employee ${empIndex + 1}: ${emp.name}`)
-        emp.projects.forEach((proj, projIndex) => {
-          console.log(`    Project ${projIndex + 1}: ${proj.name}`)
-          console.log(
-            `      Team length: ${proj.team.length} (${proj.team.join(', ')})`
-          )
-          console.log(`      Milestones length: ${proj.milestones.length}`)
-        })
+        } as any,
       })
+
+      expect(result.data).toHaveLength(3)
+      expect(result.data.map((item) => item.name)).toEqual([
+        'TechCorp Inc',
+        'StartupXYZ',
+        'GlobalTech Solutions',
+      ])
     })
-    expect(fullResult.data).toHaveLength(2)
-    expect(fullResult.data.map((item) => item.name)).toEqual([
-      'TechCorp Inc',
-      'StartupXYZ',
-    ])
+
+    it('should filter companies with employees having projects with milestones >= 2', () => {
+      const filter = createFilterEngine(complexData)
+      const result = filter.findMany({
+        where: {
+          employees: {
+            some: {
+              projects: {
+                some: {
+                  milestones: {
+                    length: { gte: 2 },
+                  },
+                },
+              },
+            },
+          },
+        } as any,
+      })
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data.map((item) => item.name)).toEqual([
+        'TechCorp Inc',
+        'StartupXYZ',
+      ])
+    })
+
+    it('should filter companies with employees having projects with team size >= 2', () => {
+      const filter = createFilterEngine(complexData)
+      const result = filter.findMany({
+        where: {
+          employees: {
+            some: {
+              projects: {
+                every: {
+                  team: {
+                    length: { gte: 2 },
+                  },
+                },
+              },
+            },
+          },
+        } as any,
+      })
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data.map((item) => item.name)).toEqual([
+        'TechCorp Inc',
+        'StartupXYZ',
+      ])
+    })
+
+    it('should filter companies with employees having projects >= 1 AND milestones >= 2', () => {
+      const filter = createFilterEngine(complexData)
+      const result = filter.findMany({
+        where: {
+          employees: {
+            some: {
+              projects: {
+                length: { gte: 1 },
+                some: {
+                  milestones: {
+                    length: { gte: 2 },
+                  },
+                },
+              },
+            },
+          },
+        } as any,
+      })
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data.map((item) => item.name)).toEqual([
+        'TechCorp Inc',
+        'StartupXYZ',
+      ])
+    })
+
+    it('should apply complex filter with multiple conditions', () => {
+      const filter = createFilterEngine(complexData)
+      const result = filter.findMany({
+        where: {
+          employees: {
+            some: {
+              projects: {
+                length: { gte: 1 },
+                some: {
+                  milestones: {
+                    length: { gte: 2 },
+                  },
+                },
+                every: {
+                  team: {
+                    length: { gte: 2 },
+                  },
+                },
+              },
+            },
+          },
+        } as any,
+      })
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data.map((item) => item.name)).toEqual([
+        'TechCorp Inc',
+        'StartupXYZ',
+      ])
+    })
   })
 })

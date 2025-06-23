@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { InclusionFilter } from './inclusion-filter'
 describe('InclusionFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
@@ -41,7 +41,7 @@ describe('InclusionFilter', () => {
       filter.findUnique({ where: { name: { in: ['Alice', 'David'] } } })?.name
     ).toBe('Alice')
   })
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
       { size: 0 },
       { size: 1 },
@@ -65,7 +65,7 @@ describe('InclusionFilter', () => {
     expect(filter.findUnique({ where: { size: { in: [0, 1] } } })?.size).toBe(0)
     expect(filter.findUnique({ where: { size: { in: [1, 0] } } })?.size).toBe(0)
   })
-  it('boolean', () => {
+  it('should filter boolean values correctly', () => {
     const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: false },
       { isValid: false },

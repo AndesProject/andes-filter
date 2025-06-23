@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
 describe('LessThanOrEqualFilter', () => {
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
       { size: -2 },
       { size: -1 },
@@ -28,7 +28,7 @@ describe('LessThanOrEqualFilter', () => {
     expect(filter.findUnique({ where: { size: { lte: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lte: 100 } } })?.size).toBe(-2)
   })
-  it('date', () => {
+  it('should filter date values correctly', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
     const d3 = new Date('2022-01-01')
@@ -53,7 +53,7 @@ describe('LessThanOrEqualFilter', () => {
       filter.findUnique({ where: { date: { lte: new Date('2019-01-01') } } })
     ).toBe(null)
   })
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ value: string }>([
       { value: 'a' },
       { value: 'b' },
@@ -73,7 +73,7 @@ describe('LessThanOrEqualFilter', () => {
     )
     expect(filter.findUnique({ where: { value: { lte: 'A' } } })).toBe(null)
   })
-  it('null y undefined', () => {
+  it('should handle null and undefined values correctly', () => {
     const filter = createFilterEngine<{ value: any }>([
       { value: null },
       { value: undefined },
@@ -107,7 +107,7 @@ describe('LessThanOrEqualFilter Unit Tests', () => {
     expect(filter.evaluate(11)).toBe(false)
     expect(filter.evaluate(100)).toBe(false)
   })
-  it('debe manejar strings y fechas', () => {
+  it('should handle strings and dates correctly', () => {
     const filter = new LessThanOrEqualFilter('m')
     expect(filter.evaluate('a')).toBe(true)
     expect(filter.evaluate('m')).toBe(true)
@@ -118,7 +118,7 @@ describe('LessThanOrEqualFilter Unit Tests', () => {
     expect(filterDate.evaluate(new Date('2023-01-01'))).toBe(true)
     expect(filterDate.evaluate(new Date('2024-01-01'))).toBe(false)
   })
-  it('debe manejar null y undefined', () => {
+  it('should handle null and undefined values', () => {
     const filter = new LessThanOrEqualFilter(1)
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { ExclusionFilter } from './exclusion-filter'
 describe('ExclusionFilter', () => {
-  it('string', () => {
+  it('should filter string values correctly', () => {
     const filter = createFilterEngine<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
@@ -44,7 +44,7 @@ describe('ExclusionFilter', () => {
         ?.name
     ).toBe('Bob')
   })
-  it('number', () => {
+  it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
       { size: 0 },
       { size: 0 },
@@ -70,7 +70,7 @@ describe('ExclusionFilter', () => {
       filter.findUnique({ where: { size: { notIn: [0, 1] } } })?.size
     ).toBe(2)
   })
-  it('boolean', () => {
+  it('should filter boolean values correctly', () => {
     const filter = createFilterEngine<{ isValid: boolean }>([
       { isValid: true },
       { isValid: true },
