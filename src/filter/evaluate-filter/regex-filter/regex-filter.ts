@@ -1,11 +1,13 @@
-import { isString } from '../../utils/filter.helpers'
+import { SafeEvaluator } from '../../utils/error-handling'
+import { ValidationUtils } from '../../utils/validators'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
 export class RegexFilter implements EvaluateFilter {
   private pattern: string
   private flags: string | undefined
+
   constructor(pattern: string | { pattern: string; flags?: string }) {
-    if (isString(pattern)) {
+    if (ValidationUtils.validateString(pattern)) {
       this.pattern = pattern
       this.flags = undefined
     } else {
@@ -13,14 +15,9 @@ export class RegexFilter implements EvaluateFilter {
       this.flags = pattern.flags
     }
   }
+
   public evaluate(input: any): boolean {
-    if (input === null || input === undefined) return false
-    if (!isString(input)) return false
-    try {
-      const regex = new RegExp(this.pattern, this.flags)
-      return regex.test(input)
-    } catch (error) {
-      return false
-    }
+    if (!ValidationUtils.validateString(input)) return false
+    return SafeEvaluator.testRegex(this.pattern, this.flags, input)
   }
 }

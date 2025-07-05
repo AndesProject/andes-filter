@@ -296,5 +296,57 @@ describe('EqualityFilter Unit Tests', () => {
       expect(filter.evaluate(testObject)).toBe(true)
       expect(filter.evaluate({ key: 'value' })).toBe(false)
     })
+
+    it('should handle NaN values correctly', () => {
+      const filter = new EqualityFilter(NaN)
+      expect(filter.evaluate(NaN)).toBe(false)
+      expect(filter.evaluate(123)).toBe(false)
+      expect(filter.evaluate('hello')).toBe(false)
+    })
+
+    it('should handle data being NaN when filter is not NaN', () => {
+      const filter = new EqualityFilter(123)
+      expect(filter.evaluate(NaN)).toBe(false)
+    })
+
+    it('should handle filter being NaN when data is not NaN', () => {
+      const filter = new EqualityFilter(NaN)
+      expect(filter.evaluate(123)).toBe(false)
+      expect(filter.evaluate('hello')).toBe(false)
+    })
+
+    it('should handle case insensitive string comparison', () => {
+      const filter = new EqualityFilter('Hello', true)
+      expect(filter.evaluate('hello')).toBe(true)
+      expect(filter.evaluate('HELLO')).toBe(true)
+      expect(filter.evaluate('Hello')).toBe(true)
+      expect(filter.evaluate('world')).toBe(false)
+    })
+
+    it('should handle date comparison with Date objects', () => {
+      const date1 = new Date('2023-01-01')
+      const date2 = new Date('2023-01-01')
+      const date3 = new Date('2023-01-02')
+
+      const filter = new EqualityFilter(date1)
+      expect(filter.evaluate(date2)).toBe(true)
+      expect(filter.evaluate(date3)).toBe(false)
+    })
+
+    it('should handle date comparison with string dates', () => {
+      const date1 = new Date('2023-01-01')
+      const dateString = '2023-01-01'
+
+      const filter = new EqualityFilter(date1)
+      expect(filter.evaluate(dateString)).toBe(true)
+    })
+
+    it('should handle date comparison with filter as string and data as Date', () => {
+      const dateString = '2023-01-01'
+      const date1 = new Date('2023-01-01')
+
+      const filter = new EqualityFilter(dateString)
+      expect(filter.evaluate(date1)).toBe(true)
+    })
   })
 })

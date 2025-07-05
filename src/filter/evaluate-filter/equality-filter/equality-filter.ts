@@ -1,46 +1,42 @@
-import { isObject, isString } from '../../utils/filter.helpers'
-import { EvaluateFilter } from '../evaluate-filter.interface'
+import { isString } from '../../utils/filter.helpers'
+import { BaseComparisonFilter } from '../base-filters'
+import { ComparisonFilter } from '../evaluate-filter.interface'
 
-export class EqualityFilter implements EvaluateFilter {
-  constructor(
-    private expectedValue: any,
-    private isCaseInsensitive: boolean = false
-  ) {}
+export class EqualityFilter
+  extends BaseComparisonFilter
+  implements ComparisonFilter
+{
   public evaluate(actualValue: any): boolean {
-    if (this.expectedValue === null && actualValue === null) return true
-    if (this.expectedValue === undefined && actualValue === undefined)
-      return true
-    if (this.expectedValue === null || this.expectedValue === undefined)
+    // Validación inicial usando la clase base
+    if (!this.validateInputs(actualValue)) {
       return false
-    if (actualValue === null || actualValue === undefined) return false
+    }
+
+    // Manejo de NaN usando la clase base
+    if (Number.isNaN(this.expectedValue) && Number.isNaN(actualValue)) {
+      return false
+    }
+    if (Number.isNaN(this.expectedValue) || Number.isNaN(actualValue)) {
+      return false
+    }
+
+    // Comparación de strings usando la clase base
     if (isString(this.expectedValue) && isString(actualValue)) {
-      if (this.isCaseInsensitive) {
-        return this.expectedValue.toLowerCase() === actualValue.toLowerCase()
-      }
-      return this.expectedValue === actualValue
+      return this.compareStrings(this.expectedValue, actualValue)
     }
-    if (this.expectedValue instanceof Date && actualValue instanceof Date) {
-      return this.expectedValue.getTime() === actualValue.getTime()
+
+    // Comparación de fechas usando la clase base
+    const dateResult = this.handleDateComparison(actualValue)
+    if (dateResult !== null) {
+      return dateResult
     }
-    if (this.expectedValue instanceof Date || actualValue instanceof Date) {
-      const firstDate =
-        this.expectedValue instanceof Date
-          ? this.expectedValue
-          : new Date(this.expectedValue)
-      const secondDate =
-        actualValue instanceof Date ? actualValue : new Date(actualValue)
-      return firstDate.getTime() === secondDate.getTime()
+
+    // Comparación de objetos usando la clase base
+    if (this.compareObjects(this.expectedValue, actualValue)) {
+      return true
     }
-    if (Number.isNaN(this.expectedValue) || Number.isNaN(actualValue))
-      return false
-    if (
-      isObject(this.expectedValue) &&
-      this.expectedValue !== null &&
-      isObject(actualValue) &&
-      actualValue !== null
-    ) {
-      return this.expectedValue === actualValue
-    }
+
+    // Comparación directa
     return actualValue === this.expectedValue
   }
 }

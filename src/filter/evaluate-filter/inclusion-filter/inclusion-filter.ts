@@ -20,6 +20,12 @@ export class InclusionFilter<T> implements EvaluateFilter {
       return false
     for (const allowedValue of this.allowedValues) {
       if (
+        (isString(actualValue) && isNumber(allowedValue)) ||
+        (isNumber(actualValue) && isString(allowedValue))
+      ) {
+        continue
+      }
+      if (
         isNumber(actualValue) &&
         isNumber(allowedValue) &&
         Number.isNaN(actualValue) &&

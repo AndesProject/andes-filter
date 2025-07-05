@@ -62,7 +62,7 @@ describe('NotFilterGroup', () => {
     expect(filter.evaluate({ value: 42 })).toBe(false)
     expect(filter.evaluate({ value: 50 })).toBe(false)
     expect(filter.evaluate({ value: 5 })).toBe(true)
-    expect(filter.evaluate({ value: '42' })).toBe(false)
+    expect(filter.evaluate({ value: '42' })).toBe(true)
   })
   it('should handle array filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([

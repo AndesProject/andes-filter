@@ -1,19 +1,13 @@
 import { DateOrNumber } from '../../filter.interface'
-import { isValidDate } from '../../utils/filter.helpers'
-import { EvaluateFilter } from '../evaluate-filter.interface'
+import { BaseDateFilter } from '../base-filters'
 
-export class BeforeFilter implements EvaluateFilter {
-  private thresholdDate: Date
-  constructor(thresholdDate: DateOrNumber) {
-    this.thresholdDate = new Date(thresholdDate)
-  }
+export class BeforeFilter extends BaseDateFilter {
   public evaluate(actualValue: DateOrNumber): boolean {
-    if (actualValue === null || actualValue === undefined) return false
-    if (this.thresholdDate == null || isNaN(this.thresholdDate.getTime()))
+    if (!this.validateDateInput(actualValue)) {
       return false
-    if (!isValidDate(actualValue)) return false
-    const parsedDate = new Date(actualValue)
-    if (isNaN(parsedDate.getTime())) return false
-    return parsedDate < this.thresholdDate
+    }
+
+    const parsedDate = this.getParsedDate(actualValue)
+    return this.isDateBefore(parsedDate, this.thresholdDate)
   }
 }

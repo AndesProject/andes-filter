@@ -4,15 +4,24 @@ import {
   isString,
   isValidDate,
 } from '../../utils/filter.helpers'
-import { EvaluateFilter } from '../evaluate-filter.interface'
+import { EvaluateFilter, NumericFilter } from '../evaluate-filter.interface'
 
-export class GreaterThanFilter implements EvaluateFilter {
+export class GreaterThanFilter implements EvaluateFilter, NumericFilter {
   private thresholdValue: any
   constructor(thresholdValue: any) {
     this.thresholdValue = thresholdValue
   }
   public evaluate(actualValue: any): boolean {
     if (isNil(actualValue) || isNil(this.thresholdValue)) return false
+
+    // Check for mixed types (string vs number) - return false
+    if (
+      (isString(actualValue) && isNumber(this.thresholdValue)) ||
+      (isNumber(actualValue) && isString(this.thresholdValue))
+    ) {
+      return false
+    }
+
     if (isNumber(actualValue) && isNumber(this.thresholdValue)) {
       if (Number.isNaN(actualValue) || Number.isNaN(this.thresholdValue))
         return false
@@ -34,16 +43,6 @@ export class GreaterThanFilter implements EvaluateFilter {
       }
       if (isFirstDateValid !== isSecondDateValid) return false
       return actualValue > this.thresholdValue
-    }
-    if (isString(actualValue) && isNumber(this.thresholdValue)) {
-      const numericValue = parseFloat(actualValue)
-      if (!isNaN(numericValue)) return numericValue > this.thresholdValue
-      return actualValue > this.thresholdValue.toString()
-    }
-    if (isNumber(actualValue) && isString(this.thresholdValue)) {
-      const numericThreshold = parseFloat(this.thresholdValue)
-      if (!isNaN(numericThreshold)) return actualValue > numericThreshold
-      return actualValue.toString() > this.thresholdValue
     }
     try {
       return actualValue > this.thresholdValue

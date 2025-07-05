@@ -1,68 +1,128 @@
 export const CASE_INSENSITIVE_MODE = 'insensitive' as const
 export type DateOrNumber = Date | number | string
-export interface FilterCriteria<T, K extends keyof T = keyof T> {
-  equals?: T[K] | null
-  not?: T[K] | FilterCriteria<T, K> | null
-  in?: T[K][]
-  notIn?: T[K][]
-  lt?: T[K]
-  lte?: T[K]
-  gt?: T[K]
-  gte?: T[K]
-  contains?: T[K] extends string ? string : never
-  notContains?: T[K] extends string ? string : never
-  startsWith?: T[K] extends string ? string : never
-  notStartsWith?: T[K] extends string ? string : never
-  endsWith?: T[K] extends string ? string : never
-  notEndsWith?: T[K] extends string ? string : never
-  mode?: T[K] extends string ? typeof CASE_INSENSITIVE_MODE : never
-  regex?: T[K] extends string
+
+// Interfaces específicas para diferentes tipos de operaciones
+export interface ComparisonOperators<T> {
+  equals?: T | null
+  not?: T | FilterCriteria<T> | null
+  in?: T[]
+  notIn?: T[]
+}
+
+export interface NumericOperators<T> {
+  lt?: T
+  lte?: T
+  gt?: T
+  gte?: T
+}
+
+export interface StringOperators<T> {
+  contains?: T extends string ? string : never
+  notContains?: T extends string ? string : never
+  startsWith?: T extends string ? string : never
+  notStartsWith?: T extends string ? string : never
+  endsWith?: T extends string ? string : never
+  notEndsWith?: T extends string ? string : never
+  mode?: T extends string ? typeof CASE_INSENSITIVE_MODE : never
+  regex?: T extends string
     ? string | { pattern: string; flags?: string }
     : never
-  before?: T[K] extends DateOrNumber ? DateOrNumber : never
-  after?: T[K] extends DateOrNumber ? DateOrNumber : never
-  between?: T[K] extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
-  some?: T[K] extends object ? FilterCriteria<T[K], keyof T[K]> : never
-  none?: T[K] extends object ? FilterCriteria<T[K], keyof T[K]> : never
-  every?: T[K] extends object ? FilterCriteria<T[K], keyof T[K]> : never
-  has?: T[K] extends Array<infer U> ? U : never
-  hasEvery?: T[K] extends Array<infer U> ? U[] : never
-  hasSome?: T[K] extends Array<infer U> ? U[] : never
-  length?: T[K] extends Array<any> ? number : never
-  AND?: FilterCriteria<T, K>[]
-  OR?: FilterCriteria<T, K>[]
-  NOT?: FilterCriteria<T, K>[]
+}
+
+export interface DateOperators<T> {
+  before?: T extends DateOrNumber ? DateOrNumber : never
+  after?: T extends DateOrNumber ? DateOrNumber : never
+  between?: T extends DateOrNumber ? [DateOrNumber, DateOrNumber] : never
+}
+
+export interface ArrayOperators<T> {
+  some?: T extends object ? FilterCriteria<T> : never
+  none?: T extends object ? FilterCriteria<T> : never
+  every?: T extends object ? FilterCriteria<T> : never
+  has?: T extends Array<infer U> ? U : never
+  hasEvery?: T extends Array<infer U> ? U[] : never
+  hasSome?: T extends Array<infer U> ? U[] : never
+  length?: T extends Array<any> ? number : never
+}
+
+export interface LogicalOperators<T> {
+  AND?: FilterCriteria<T>[]
+  OR?: FilterCriteria<T>[]
+  NOT?: FilterCriteria<T>[]
+}
+
+export interface UtilityOperators {
   isNull?: boolean
   distinct?: boolean
 }
+
+// Interfaz principal que combina todas las operaciones específicas
+export interface FilterCriteria<T>
+  extends ComparisonOperators<T>,
+    NumericOperators<T>,
+    StringOperators<T>,
+    DateOperators<T>,
+    ArrayOperators<T>,
+    LogicalOperators<T>,
+    UtilityOperators {}
+
+// Interfaces específicas para diferentes tipos de filtros
+export interface ComparisonFilterCriteria<T> extends ComparisonOperators<T> {}
+
+export interface NumericFilterCriteria<T> extends NumericOperators<T> {}
+
+export interface StringFilterCriteria<T> extends StringOperators<T> {}
+
+export interface DateFilterCriteria<T> extends DateOperators<T> {}
+
+export interface ArrayFilterCriteria<T> extends ArrayOperators<T> {}
+
+export interface LogicalFilterCriteria<T> extends LogicalOperators<T> {}
+
+// Interfaces para operaciones específicas
 export interface PaginationOptions {
   page: number
   size: number
 }
+
 export interface PaginationResult extends PaginationOptions {
   totalItems: number
   totalPages: number
   hasNext: boolean
   hasPrev: boolean
 }
+
 export interface FindManyResult<T> {
   data: T[]
   pagination?: PaginationResult
 }
+
 export type FindUniqueResult<T> = T | null
+
 export enum SortDirection {
   ASC = 'asc',
   DESC = 'desc',
 }
+
 export type FilterQuery<T> = {
   where: {
-    [K in keyof T]?: FilterCriteria<T, K>
+    [P in keyof T]?: FilterCriteria<T>
   }
   pagination?: PaginationOptions
-  orderBy?: { [K in keyof T]?: SortDirection }
+  orderBy?: { [P in keyof T]?: SortDirection }
   distinct?: boolean | string | string[]
 }
-export interface FilterOperations<T> {
+
+// Interfaces separadas para diferentes tipos de operaciones
+export interface FindManyOperations<T> {
   findMany: (query: FilterQuery<T>) => FindManyResult<T>
+}
+
+export interface FindUniqueOperations<T> {
   findUnique: (query: FilterQuery<T>) => FindUniqueResult<T>
 }
+
+// Interfaz principal que combina ambas operaciones
+export interface FilterOperations<T>
+  extends FindManyOperations<T>,
+    FindUniqueOperations<T> {}

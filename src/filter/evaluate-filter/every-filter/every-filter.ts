@@ -1,71 +1,34 @@
-import { isObject } from '../../utils/filter.helpers'
+import { ArrayEvaluator } from '../../utils/array-evaluator'
+import { isKnownOperator } from '../../utils/constants'
+import { ValidationUtils } from '../../utils/validators'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
-const OPERATORS = [
-  'equals',
-  'not',
-  'in',
-  'notIn',
-  'lt',
-  'lte',
-  'gt',
-  'gte',
-  'contains',
-  'notContains',
-  'startsWith',
-  'notStartsWith',
-  'endsWith',
-  'notEndsWith',
-  'mode',
-  'regex',
-  'before',
-  'after',
-  'between',
-  'has',
-  'hasEvery',
-  'hasSome',
-  'length',
-  'AND',
-  'OR',
-  'NOT',
-  'isNull',
-  'distinct',
-]
 export class EveryFilter implements EvaluateFilter {
   private evaluator: EvaluateFilter | FilterEvaluator<any> | null = null
   private isPrimitive: boolean = false
   private isSimpleObject: boolean = false
   private isEmptyFilter: boolean = false
+
   constructor(private filter: any) {
-    if (
-      isObject(this.filter) &&
-      !Array.isArray(this.filter) &&
-      this.filter !== null &&
-      Object.keys(this.filter).length === 0
-    ) {
+    if (ValidationUtils.isEmptyFilter(this.filter)) {
       this.isEmptyFilter = true
       return
     }
+
     if (
-      isObject(this.filter) &&
-      !Array.isArray(this.filter) &&
-      this.filter !== null &&
+      ValidationUtils.validateObject(this.filter) &&
       Object.keys(this.filter).length > 0
     ) {
       const keys = Object.keys(this.filter)
-      if (keys.length === 1 && OPERATORS.includes(keys[0])) {
+      if (keys.length === 1 && isKnownOperator(keys[0])) {
         this.evaluator = new FilterEvaluator(this.filter)
       } else {
-        const allKeysAreOperators = keys.every((key) => OPERATORS.includes(key))
+        const allKeysAreOperators = keys.every((key) => isKnownOperator(key))
         if (allKeysAreOperators) {
           this.evaluator = new FilterEvaluator(this.filter)
         } else {
-          const hasOnlyPrimitiveValues = keys.every(
-            (key) =>
-              typeof this.filter[key] !== 'object' || this.filter[key] === null
-          )
-          if (hasOnlyPrimitiveValues) {
+          if (ValidationUtils.hasOnlyPrimitiveValues(this.filter)) {
             this.isSimpleObject = true
           } else {
             this.evaluator = new FilterEvaluator(this.filter)
@@ -76,29 +39,28 @@ export class EveryFilter implements EvaluateFilter {
       this.isPrimitive = true
     }
   }
+
   public evaluate(data: any): boolean {
-    if (!Array.isArray(data)) return false
-    if (data.length === 0) {
-      return true
+    if (!ValidationUtils.validateArray(data)) return false
+    if (data.length === 0) return true
+    if (this.isEmptyFilter) return true
+
+    if (this.isPrimitive) {
+      return ArrayEvaluator.evaluatePrimitiveFilter(data, this.filter, 'every')
     }
-    if (this.isEmptyFilter) {
-      return true
+
+    if (this.isSimpleObject) {
+      return ArrayEvaluator.evaluateSimpleObjectFilter(
+        data,
+        this.filter,
+        'every'
+      )
     }
-    return data.every((item) => {
-      if (item == null) return false
-      if (this.isSimpleObject) {
-        if (typeof item !== 'object' || item === null) return false
-        return Object.keys(this.filter).every(
-          (key) => item[key] === this.filter[key]
-        )
-      }
-      if (this.evaluator) {
-        return this.evaluator.evaluate(item)
-      }
-      if (this.isPrimitive) {
-        return item === this.filter
-      }
-      return false
-    })
+
+    if (this.evaluator) {
+      return ArrayEvaluator.evaluateComplexFilter(data, this.evaluator, 'every')
+    }
+
+    return false
   }
 }

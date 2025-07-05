@@ -1,18 +1,16 @@
-import { performStringOperation } from '../../utils/filter.helpers'
-import { EvaluateFilter } from '../evaluate-filter.interface'
+import { BaseStringFilter } from '../base-filters'
+import { StringFilter } from '../evaluate-filter.interface'
 
-export class ContainsFilter implements EvaluateFilter {
-  constructor(
-    private searchValue: string,
-    private isCaseInsensitive: boolean = false
-  ) {}
+export class ContainsFilter extends BaseStringFilter implements StringFilter {
   public evaluate(targetString: any): boolean {
-    return performStringOperation(
+    if (!this.validateStringInput(targetString)) {
+      return false
+    }
+
+    return this.performStringOperation(
       'includes',
       targetString,
-      this.searchValue,
-      this.isCaseInsensitive,
-      false
+      this.searchValue
     )
   }
 }

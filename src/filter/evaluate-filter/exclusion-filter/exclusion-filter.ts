@@ -20,6 +20,12 @@ export class ExclusionFilter<T> implements EvaluateFilter {
       return true
     for (const v of this.targetValues) {
       if (
+        (isString(value) && isNumber(v)) ||
+        (isNumber(value) && isString(v))
+      ) {
+        continue
+      }
+      if (
         isNumber(value) &&
         isNumber(v) &&
         Number.isNaN(value) &&

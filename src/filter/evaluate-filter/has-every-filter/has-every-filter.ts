@@ -1,7 +1,9 @@
 import {
   allItemsMatch,
   anyItemMatches,
+  isNumber,
   isObject,
+  isString,
 } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
@@ -44,8 +46,27 @@ export class HasEveryFilter<T> implements EvaluateFilter {
         )
       })
     }
-    return this.requiredValues.every((requiredValue) =>
-      arrayValue.includes(requiredValue)
-    )
+    for (const required of this.requiredValues) {
+      let found = false
+      for (const item of arrayValue) {
+        if (
+          (isString(item) && isNumber(required)) ||
+          (isNumber(item) && isString(required))
+        ) {
+          continue
+        }
+        if (isObject(item) && isObject(required)) {
+          if (item === required) {
+            found = true
+            break
+          }
+        } else if (item === required) {
+          found = true
+          break
+        }
+      }
+      if (!found) return false
+    }
+    return true
   }
 }

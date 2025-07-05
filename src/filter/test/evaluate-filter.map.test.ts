@@ -48,7 +48,9 @@ describe('createFilterClassMap', () => {
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const filter = createFilterClassMap('unknown' as any, {})
     expect(filter).toBeNull()
-    expect(spy).toHaveBeenCalledWith('Unknown filter type: unknown')
+    expect(spy).toHaveBeenCalledWith(
+      '[FilterRegistry] Unknown filter type: unknown'
+    )
     spy.mockRestore()
   })
 })

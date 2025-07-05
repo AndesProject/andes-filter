@@ -181,5 +181,64 @@ describe('GreaterThanFilter Unit Tests', () => {
       expect(filter.evaluate(null)).toBe(false)
       expect(filter.evaluate(undefined)).toBe(false)
     })
+
+    it('should handle filter threshold being null or undefined', () => {
+      const filter1 = new GreaterThanFilter(null)
+      const filter2 = new GreaterThanFilter(undefined)
+
+      expect(filter1.evaluate(1)).toBe(false)
+      expect(filter2.evaluate(1)).toBe(false)
+    })
+  })
+
+  describe('NaN handling', () => {
+    it('should handle NaN values in filter and data', () => {
+      const filter = new GreaterThanFilter(NaN)
+      expect(filter.evaluate(1)).toBe(false)
+      expect(filter.evaluate(NaN)).toBe(false)
+    })
+
+    it('should handle data being NaN when filter is not NaN', () => {
+      const filter = new GreaterThanFilter(10)
+      expect(filter.evaluate(NaN)).toBe(false)
+    })
+  })
+
+  describe('Mixed type comparisons', () => {
+    it('should handle string vs number comparisons', () => {
+      const filter = new GreaterThanFilter(10)
+      expect(filter.evaluate('15')).toBe(false)
+      expect(filter.evaluate('5')).toBe(false)
+      expect(filter.evaluate('abc')).toBe(false)
+    })
+
+    it('should handle number vs string comparisons', () => {
+      const filter = new GreaterThanFilter('10')
+      expect(filter.evaluate(15)).toBe(false)
+      expect(filter.evaluate(5)).toBe(false)
+    })
+
+    it('should handle string vs string date comparisons', () => {
+      const filter = new GreaterThanFilter('2021-01-01')
+      expect(filter.evaluate('2022-01-01')).toBe(true)
+      expect(filter.evaluate('2020-01-01')).toBe(false)
+    })
+
+    it('should handle invalid date strings', () => {
+      const filter = new GreaterThanFilter('2021-01-01')
+      expect(filter.evaluate('invalid-date')).toBe(false)
+    })
+
+    it('should handle one valid and one invalid date', () => {
+      const filter = new GreaterThanFilter('invalid-date')
+      expect(filter.evaluate('2021-01-01')).toBe(false)
+    })
+  })
+
+  describe('Exception handling', () => {
+    it('should handle comparison exceptions gracefully', () => {
+      const filter = new GreaterThanFilter({})
+      expect(filter.evaluate({})).toBe(false)
+    })
   })
 })

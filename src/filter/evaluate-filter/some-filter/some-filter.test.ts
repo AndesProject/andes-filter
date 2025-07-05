@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { SomeFilter } from './some-filter'
+
 describe('SomeFilter', () => {
   it('should filter string values correctly', () => {
     interface Post {
@@ -358,5 +359,211 @@ describe('SomeFilter Unit', () => {
     const filter = new SomeFilter(true)
     expect(filter.evaluate([false, true, false])).toBe(true)
     expect(filter.evaluate([false, false, false])).toBe(false)
+  })
+  it('debe manejar filtros NOT con valores primitivos', () => {
+    const filter = new SomeFilter({ not: 'test' } as any)
+    expect(filter.evaluate(['hello', 'world'])).toBe(true)
+    expect(filter.evaluate(['test', 'hello'])).toBe(true)
+    expect(filter.evaluate(['test'])).toBe(false)
+  })
+  it('debe manejar filtros NOT con objetos múltiples', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: { gte: 25 },
+      },
+    } as any)
+    expect(
+      filter.evaluate([
+        { name: 'Jane', age: 20 },
+        { name: 'Bob', age: 30 },
+      ])
+    ).toBe(true)
+    expect(
+      filter.evaluate([
+        { name: 'John', age: 30 },
+        { name: 'Jane', age: 20 },
+      ])
+    ).toBe(true)
+  })
+  it('debe manejar comparación directa cuando no hay evaluador y el filtro es un objeto no reconocido', () => {
+    // Crear un filtro que no tenga evaluador (caso específico para línea 111)
+    const filter = new SomeFilter({ unknownOperator: 'value' } as any)
+    // Como no hay evaluador, debería hacer comparación directa
+    expect(filter.evaluate([{ unknownOperator: 'value' }])).toBe(true)
+    expect(filter.evaluate([{ otherProp: 'value' }])).toBe(false)
+  })
+  it('debe manejar comparación directa con filtros que tienen múltiples claves no reconocidas', () => {
+    const filter = new SomeFilter({
+      unknown1: 'value1',
+      unknown2: 'value2',
+    } as any)
+    expect(
+      filter.evaluate([
+        {
+          unknown1: 'value1',
+          unknown2: 'value2',
+        },
+      ])
+    ).toBe(true)
+    expect(
+      filter.evaluate([
+        {
+          unknown1: 'value1',
+          unknown2: 'different',
+        },
+      ])
+    ).toBe(false)
+  })
+  it('debe manejar filtros NOT con objetos anidados que tienen múltiples claves', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: { gte: 25 },
+        city: { contains: 'New York' },
+      },
+    } as any)
+    expect(
+      filter.evaluate([
+        { name: 'Jane', age: 20, city: 'Boston' },
+        { name: 'Bob', age: 30, city: 'Chicago' },
+      ])
+    ).toBe(true)
+    expect(
+      filter.evaluate([
+        { name: 'John', age: 30, city: 'New York' },
+        { name: 'Jane', age: 20, city: 'Boston' },
+      ])
+    ).toBe(true)
+  })
+  it('debe manejar filtros NOT con valores primitivos (no objetos)', () => {
+    const filter = new SomeFilter({ not: 42 } as any)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([42, 1, 2])).toBe(true)
+    expect(filter.evaluate([42])).toBe(false)
+  })
+  it('debe manejar filtros NOT con arrays', () => {
+    const filter = new SomeFilter({ not: [1, 2, 3] } as any)
+    expect(filter.evaluate([4, 5, 6])).toBe(true)
+    expect(filter.evaluate([1, 2, 3])).toBe(true) // El array [1,2,3] no es igual al filtro [1,2,3] por referencia
+  })
+  it('debe manejar filtros NOT con null', () => {
+    const filter = new SomeFilter({ not: null } as any)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([null, 1, 2])).toBe(true)
+    expect(filter.evaluate([null])).toBe(false)
+  })
+  it('debe manejar filtros NOT con undefined', () => {
+    const filter = new SomeFilter({ not: undefined } as any)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([undefined, 1, 2])).toBe(true)
+    expect(filter.evaluate([undefined])).toBe(false)
+  })
+  it('debe manejar filtros NOT con strings', () => {
+    const filter = new SomeFilter({ not: 'test' } as any)
+    expect(filter.evaluate(['hello', 'world'])).toBe(true)
+    expect(filter.evaluate(['test', 'hello'])).toBe(true)
+    expect(filter.evaluate(['test'])).toBe(false)
+  })
+  it('debe manejar filtros NOT con booleanos', () => {
+    const filter = new SomeFilter({ not: true } as any)
+    expect(filter.evaluate([false, false, false])).toBe(true)
+    expect(filter.evaluate([true, false, false])).toBe(true)
+    expect(filter.evaluate([true])).toBe(false)
+  })
+  it('debe manejar filtros NOT con números', () => {
+    const filter = new SomeFilter({ not: 42 } as any)
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([42, 1, 2])).toBe(true)
+    expect(filter.evaluate([42])).toBe(false)
+  })
+  it('debe manejar filtros NOT con objetos que tienen múltiples claves internas', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: { gte: 25 },
+      },
+    } as any)
+    expect(
+      filter.evaluate([
+        { name: 'Jane', age: 20 },
+        { name: 'Bob', age: 30 },
+      ])
+    ).toBe(true)
+  })
+  it('debe manejar filtros NOT con objetos que tienen una sola clave interna', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+      },
+    } as any)
+    expect(filter.evaluate([{ name: 'Jane' }, { name: 'Bob' }])).toBe(true)
+  })
+  it('debe manejar filtros NOT con objetos que tienen múltiples claves pero solo una interna', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: 25,
+      },
+    } as any)
+    expect(
+      filter.evaluate([
+        { name: 'Jane', age: 20 },
+        { name: 'Bob', age: 30 },
+      ])
+    ).toBe(true)
+  })
+  it('debe manejar filtros NOT con objetos que tienen múltiples claves internas anidadas', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        address: { city: { contains: 'New York' } },
+      },
+    } as any)
+    expect(
+      filter.evaluate([
+        { name: 'Jane', address: { city: 'Boston' } },
+        { name: 'Bob', address: { city: 'Chicago' } },
+      ])
+    ).toBe(true)
+  })
+  it('debe manejar filtros NOT con objetos que tienen claves no reconocidas', () => {
+    const filter = new SomeFilter({
+      not: {
+        unknownKey: 'value',
+      },
+    } as any)
+    expect(
+      filter.evaluate([{ otherKey: 'value' }, { differentKey: 'value' }])
+    ).toBe(true)
+  })
+  it('debe manejar filtros con una sola clave no reconocida (sin operadores)', () => {
+    const filter = new SomeFilter({
+      unknownKey: 'value',
+    } as any)
+    expect(
+      filter.evaluate([{ unknownKey: 'value' }, { otherKey: 'value' }])
+    ).toBe(true)
+    expect(
+      filter.evaluate([{ differentKey: 'value' }, { anotherKey: 'value' }])
+    ).toBe(false)
+  })
+  it('debe manejar filtros con múltiples claves no reconocidas (sin operadores)', () => {
+    const filter = new SomeFilter({
+      key1: 'value1',
+      key2: 'value2',
+    } as any)
+    expect(
+      filter.evaluate([
+        { key1: 'value1', key2: 'value2' },
+        { otherKey: 'value' },
+      ])
+    ).toBe(true)
+    expect(
+      filter.evaluate([
+        { key1: 'value1', key2: 'different' },
+        { otherKey: 'value' },
+      ])
+    ).toBe(false)
   })
 })

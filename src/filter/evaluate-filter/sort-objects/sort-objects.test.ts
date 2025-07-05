@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SortDirection } from '../../filter.interface'
 import { sortObjects } from './sort-objects'
+
 describe('sortObjects', () => {
   it('should return items unchanged when items is null', () => {
     const result = sortObjects(null as any, { id: SortDirection.ASC })
@@ -267,12 +268,126 @@ describe('sortObjects', () => {
     ])
   })
   it('should handle equal string values in mixed type comparison', () => {
-    const items = [{ value: 'test' }, { value: 'TEST' }, { value: 'test' }]
-    const result = sortObjects(items, { value: SortDirection.ASC })
-    expect(result).toEqual([
-      { value: 'test' },
-      { value: 'test' },
-      { value: 'TEST' },
+    const arr = [{ v: 'abc' }, { v: 'ABC' }, { v: 123 }]
+    const result = sortObjects([...arr], { v: SortDirection.ASC })
+    expect(result[0].v).toBe(123)
+    expect(result[1].v).toBe('abc')
+    expect(result[2].v).toBe('ABC')
+  })
+  it('should handle string comparison when firstStringValue > secondStringValue', () => {
+    const arr = [{ v: 'zebra' }, { v: 'apple' }, { v: 'banana' }]
+    const result = sortObjects([...arr], { v: SortDirection.ASC })
+    expect(result).toEqual([{ v: 'apple' }, { v: 'banana' }, { v: 'zebra' }])
+  })
+  it('should handle string comparison when firstStringValue === secondStringValue', () => {
+    const arr = [{ v: 'same' }, { v: 'SAME' }, { v: 'same' }]
+    const result = sortObjects([...arr], { v: SortDirection.ASC })
+    expect(result).toEqual([{ v: 'same' }, { v: 'same' }, { v: 'SAME' }])
+  })
+  it('should handle mixed types with equal string conversion', () => {
+    const arr = [{ v: 123 }, { v: '123' }, { v: true }]
+    const result = sortObjects([...arr], { v: SortDirection.ASC })
+    expect(result).toEqual([{ v: 123 }, { v: '123' }, { v: true }])
+  })
+  it('debe retornar el mismo array si está vacío o sin criterios', () => {
+    expect(sortObjects([], { a: SortDirection.ASC })).toEqual([])
+    expect(sortObjects([{ a: 1 }], undefined)).toEqual([{ a: 1 }])
+    expect(sortObjects([{ a: 1 }], {})).toEqual([{ a: 1 }])
+  })
+  it('ordena por número ascendente y descendente', () => {
+    const arr = [{ n: 2 }, { n: 1 }, { n: 3 }]
+    expect(sortObjects([...arr], { n: SortDirection.ASC })).toEqual([
+      { n: 1 },
+      { n: 2 },
+      { n: 3 },
+    ])
+    expect(sortObjects([...arr], { n: SortDirection.DESC })).toEqual([
+      { n: 3 },
+      { n: 2 },
+      { n: 1 },
+    ])
+  })
+  it('ordena por string ascendente y descendente', () => {
+    const arr = [{ s: 'b' }, { s: 'a' }, { s: 'c' }]
+    expect(sortObjects([...arr], { s: SortDirection.ASC })).toEqual([
+      { s: 'a' },
+      { s: 'b' },
+      { s: 'c' },
+    ])
+    expect(sortObjects([...arr], { s: SortDirection.DESC })).toEqual([
+      { s: 'c' },
+      { s: 'b' },
+      { s: 'a' },
+    ])
+  })
+  it('ordena por boolean', () => {
+    const arr = [{ b: false }, { b: true }, { b: false }]
+    expect(sortObjects([...arr], { b: SortDirection.ASC })).toEqual([
+      { b: false },
+      { b: false },
+      { b: true },
+    ])
+    expect(sortObjects([...arr], { b: SortDirection.DESC })).toEqual([
+      { b: true },
+      { b: false },
+      { b: false },
+    ])
+  })
+  it('ordena por Date', () => {
+    const arr = [
+      { d: new Date('2023-01-02') },
+      { d: new Date('2023-01-01') },
+      { d: new Date('2023-01-03') },
+    ]
+    expect(sortObjects([...arr], { d: SortDirection.ASC })).toEqual([
+      { d: new Date('2023-01-01') },
+      { d: new Date('2023-01-02') },
+      { d: new Date('2023-01-03') },
+    ])
+    expect(sortObjects([...arr], { d: SortDirection.DESC })).toEqual([
+      { d: new Date('2023-01-03') },
+      { d: new Date('2023-01-02') },
+      { d: new Date('2023-01-01') },
+    ])
+  })
+  it('ordena con null y undefined', () => {
+    const arr = [{ x: 2 }, { x: null }, { x: 1 }, { x: undefined }]
+    // Según la función, null > cualquier valor, undefined > null
+    expect(sortObjects([...arr], { x: SortDirection.ASC })).toEqual([
+      { x: 1 },
+      { x: 2 },
+      { x: undefined },
+      { x: null },
+    ])
+    expect(sortObjects([...arr], { x: SortDirection.DESC })).toEqual([
+      { x: null },
+      { x: undefined },
+      { x: 2 },
+      { x: 1 },
+    ])
+  })
+  it('ordena con tipos mixtos (string y number)', () => {
+    const arr = [{ v: '10' }, { v: 2 }, { v: 'abc' }, { v: 1 }]
+    // Según la función, se convierte a string y compara lexicográficamente
+    expect(sortObjects([...arr], { v: SortDirection.ASC })).toEqual([
+      { v: 1 },
+      { v: '10' },
+      { v: 2 },
+      { v: 'abc' },
+    ])
+  })
+  it('ordena por múltiples campos', () => {
+    const arr = [
+      { a: 1, b: 2 },
+      { a: 1, b: 1 },
+      { a: 2, b: 1 },
+    ]
+    expect(
+      sortObjects([...arr], { a: SortDirection.ASC, b: SortDirection.DESC })
+    ).toEqual([
+      { a: 1, b: 2 },
+      { a: 1, b: 1 },
+      { a: 2, b: 1 },
     ])
   })
 })

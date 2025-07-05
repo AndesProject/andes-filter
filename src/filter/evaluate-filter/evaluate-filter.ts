@@ -2,6 +2,7 @@ import { FilterCriteria } from '../filter.interface'
 import { isObject } from '../utils/filter.helpers'
 import { EvaluateFilter } from './evaluate-filter.interface'
 import { createFilterClassMap } from './evaluate-filter.map'
+import { InsensitiveModeFilter } from './insensitive-mode-filter'
 
 const SUPPORTED_OPERATORS = [
   'equals',
@@ -34,107 +35,185 @@ const SUPPORTED_OPERATORS = [
   'distinct',
 ]
 const ARRAY_OPERATION_KEYS = ['some', 'none', 'every']
+
+// Clase responsable solo de inicializar filtros
+class FilterInitializer {
+  public static initializeFilters<T>(
+    filterCriteria: FilterCriteria<T, keyof T>
+  ): {
+    fieldKey: string
+    filterInstance: EvaluateFilter | FilterEvaluator<any>
+  }[] {
+    const activeFilters: {
+      fieldKey: string
+      filterInstance: EvaluateFilter | FilterEvaluator<any>
+    }[] = []
+
+    const isCaseInsensitiveMode = filterCriteria.mode === 'insensitive'
+
+    Object.keys(filterCriteria).forEach((criteriaKey) => {
+      if (criteriaKey === 'mode') return
+
+      const criteriaValue =
+        filterCriteria[criteriaKey as keyof FilterCriteria<T, keyof T>]
+
+      const filterInstance = FilterInitializer.createFilterInstance(
+        criteriaKey,
+        criteriaValue,
+        isCaseInsensitiveMode
+      )
+
+      if (filterInstance) {
+        activeFilters.push({ fieldKey: criteriaKey, filterInstance })
+      }
+    })
+
+    return activeFilters
+  }
+
+  private static createFilterInstance(
+    criteriaKey: string,
+    criteriaValue: any,
+    isCaseInsensitiveMode: boolean
+  ): EvaluateFilter | FilterEvaluator<any> | null {
+    if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
+      return createFilterClassMap(
+        criteriaKey as any,
+        criteriaValue,
+        isCaseInsensitiveMode
+      )
+    }
+
+    if (ARRAY_OPERATION_KEYS.includes(criteriaKey)) {
+      return createFilterClassMap(
+        criteriaKey as any,
+        criteriaValue,
+        isCaseInsensitiveMode
+      )
+    }
+
+    if (isObject(criteriaValue)) {
+      return FilterInitializer.handleObjectCriteria(
+        criteriaKey,
+        criteriaValue,
+        isCaseInsensitiveMode
+      )
+    }
+
+    return new FilterEvaluator(criteriaValue as any)
+  }
+
+  private static handleObjectCriteria(
+    criteriaKey: string,
+    criteriaValue: any,
+    isCaseInsensitiveMode: boolean
+  ): EvaluateFilter | FilterEvaluator<any> | null {
+    if ('mode' in criteriaValue && criteriaValue.mode === 'insensitive') {
+      return FilterInitializer.handleInsensitiveModeCriteria(
+        criteriaKey,
+        criteriaValue
+      )
+    }
+
+    const keys = Object.keys(criteriaValue)
+
+    if (keys.length === 1) {
+      const singleKey = keys[0]
+      if (SUPPORTED_OPERATORS.includes(singleKey)) {
+        return createFilterClassMap(
+          singleKey as any,
+          criteriaValue[singleKey],
+          isCaseInsensitiveMode
+        )
+      }
+
+      if (ARRAY_OPERATION_KEYS.includes(singleKey)) {
+        return createFilterClassMap(
+          singleKey as any,
+          criteriaValue[singleKey],
+          isCaseInsensitiveMode
+        )
+      }
+    }
+
+    return new FilterEvaluator(criteriaValue as any)
+  }
+
+  private static handleInsensitiveModeCriteria(
+    criteriaKey: string,
+    criteriaValue: any
+  ): EvaluateFilter | FilterEvaluator<any> | null {
+    const filterInstances: EvaluateFilter[] = []
+
+    Object.keys(criteriaValue).forEach((subCriteriaKey) => {
+      if (subCriteriaKey === 'mode') return
+
+      const subCriteriaValue = criteriaValue[subCriteriaKey]
+      const filterInstance = createFilterClassMap(
+        subCriteriaKey as any,
+        subCriteriaValue,
+        true
+      )
+
+      if (filterInstance) {
+        filterInstances.push(filterInstance)
+      }
+    })
+
+    // Crear un InsensitiveModeFilter que combine todos los filtros
+    return filterInstances.length > 0
+      ? new InsensitiveModeFilter(filterInstances)
+      : null
+  }
+}
+
+// Clase responsable solo de evaluar datos
+class DataEvaluator {
+  public static evaluateData(
+    targetData: any,
+    activeFilters: {
+      fieldKey: string
+      filterInstance: EvaluateFilter | FilterEvaluator<any>
+    }[]
+  ): boolean {
+    if (activeFilters.length === 0) return true
+
+    return activeFilters.every(({ fieldKey, filterInstance }) => {
+      const dataToEvaluate = DataEvaluator.extractDataToEvaluate(
+        targetData,
+        fieldKey
+      )
+      return filterInstance.evaluate(dataToEvaluate)
+    })
+  }
+
+  private static extractDataToEvaluate(targetData: any, fieldKey: string): any {
+    if (!targetData || !isObject(targetData) || Array.isArray(targetData)) {
+      return targetData
+    }
+
+    const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
+    if (isDirectOperatorField) {
+      return targetData
+    }
+
+    return (targetData as Record<string, any>)[fieldKey]
+  }
+}
+
 export class FilterEvaluator<T> {
   private activeFilters: {
     fieldKey: string
     filterInstance: EvaluateFilter | FilterEvaluator<any>
   }[] = []
   private filterCriteria: FilterCriteria<T, keyof T>
+
   constructor(filterCriteria: FilterCriteria<T, keyof T>) {
     this.filterCriteria = filterCriteria
-    this.initializeFilterInstances()
+    this.activeFilters = FilterInitializer.initializeFilters(filterCriteria)
   }
-  private initializeFilterInstances(): void {
-    const isCaseInsensitiveMode = this.filterCriteria.mode === 'insensitive'
-    Object.keys(this.filterCriteria).forEach((criteriaKey) => {
-      if (criteriaKey === 'mode') return
-      const criteriaValue =
-        this.filterCriteria[criteriaKey as keyof FilterCriteria<T, keyof T>]
-      if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
-        const filterInstance = createFilterClassMap<T>(
-          criteriaKey as keyof FilterCriteria<T, keyof T>,
-          criteriaValue,
-          isCaseInsensitiveMode
-        )
-        if (filterInstance) {
-          this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
-        }
-      } else if (ARRAY_OPERATION_KEYS.includes(criteriaKey)) {
-        const filterInstance = createFilterClassMap<T>(
-          criteriaKey as keyof FilterCriteria<T, keyof T>,
-          criteriaValue,
-          isCaseInsensitiveMode
-        )
-        if (filterInstance) {
-          this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
-        }
-      } else if (isObject(criteriaValue)) {
-        if ('mode' in criteriaValue && criteriaValue.mode === 'insensitive') {
-          Object.keys(criteriaValue).forEach((subCriteriaKey) => {
-            if (subCriteriaKey === 'mode') return
-            const subCriteriaValue = (criteriaValue as any)[subCriteriaKey]
-            const filterInstance = createFilterClassMap(
-              subCriteriaKey as keyof FilterCriteria<T, keyof T>,
-              subCriteriaValue,
-              true
-            )
-            if (filterInstance) {
-              this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
-            }
-          })
-        } else if (
-          Object.keys(criteriaValue).length === 1 &&
-          SUPPORTED_OPERATORS.includes(Object.keys(criteriaValue)[0])
-        ) {
-          const singleOperatorKey = Object.keys(criteriaValue)[0]
-          const filterInstance = createFilterClassMap(
-            singleOperatorKey as keyof FilterCriteria<T, keyof T>,
-            (criteriaValue as any)[singleOperatorKey],
-            isCaseInsensitiveMode
-          )
-          if (filterInstance) {
-            this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
-          }
-        } else if (
-          Object.keys(criteriaValue).length === 1 &&
-          ARRAY_OPERATION_KEYS.includes(Object.keys(criteriaValue)[0])
-        ) {
-          const singleArrayOperationKey = Object.keys(criteriaValue)[0]
-          const filterInstance = createFilterClassMap(
-            singleArrayOperationKey as keyof FilterCriteria<T, keyof T>,
-            (criteriaValue as any)[singleArrayOperationKey],
-            isCaseInsensitiveMode
-          )
-          if (filterInstance) {
-            this.activeFilters.push({ fieldKey: criteriaKey, filterInstance })
-          }
-        } else {
-          this.activeFilters.push({
-            fieldKey: criteriaKey,
-            filterInstance: new FilterEvaluator(criteriaValue as any),
-          })
-        }
-      } else {
-        this.activeFilters.push({
-          fieldKey: criteriaKey,
-          filterInstance: new FilterEvaluator(criteriaValue as any),
-        })
-      }
-    })
-  }
+
   public evaluate(targetData: any): boolean {
-    if (this.activeFilters.length === 0) return true
-    return this.activeFilters.every(({ fieldKey, filterInstance }) => {
-      let dataToEvaluate = targetData
-      if (targetData && isObject(targetData) && !Array.isArray(targetData)) {
-        const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
-        if (isDirectOperatorField) {
-          dataToEvaluate = targetData
-        } else {
-          dataToEvaluate = (targetData as Record<string, any>)[fieldKey]
-        }
-      }
-      return filterInstance.evaluate(dataToEvaluate)
-    })
+    return DataEvaluator.evaluateData(targetData, this.activeFilters)
   }
 }

@@ -1,15 +1,28 @@
 import { FilterCriteria } from '../../filter.interface'
 import { allItemsMatch } from '../../utils/filter.helpers'
+import { BaseCompositeFilter } from '../base-filters/base-composite-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
 
-export class AndFilterGroup<T> implements EvaluateFilter {
+export class AndFilterGroup<T> extends BaseCompositeFilter {
   private filterCriteria: FilterCriteria<T, keyof T>[]
-  constructor(filterCriteria: FilterCriteria<T, keyof T>[]) {
-    this.filterCriteria = filterCriteria
+
+  constructor(
+    filterCriteria: FilterCriteria<T, keyof T>[] | FilterCriteria<T, keyof T>
+  ) {
+    // Permitir tanto array como objeto único
+    const criteriaArray = Array.isArray(filterCriteria)
+      ? filterCriteria
+      : [filterCriteria]
+    const filters: EvaluateFilter[] = criteriaArray.map((criteria) => ({
+      evaluate: (data: any) => matchesFilter(criteria, data),
+    }))
+    super(filters)
+    this.filterCriteria = criteriaArray
   }
+
   public evaluate(targetData: any): boolean {
-    if (!this.filterCriteria || this.filterCriteria.length === 0) return true
+    if (!this.validateFilters()) return true
     return allItemsMatch(this.filterCriteria, (criteria) =>
       matchesFilter(criteria, targetData)
     )

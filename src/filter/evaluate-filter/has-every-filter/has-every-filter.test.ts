@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { HasEveryFilter } from './has-every-filter'
+
 describe('HasEveryFilter', () => {
   it('arrays que contienen todos los elementos requeridos', () => {
     const filter = createFilterEngine<{ items: number[] }>([
@@ -133,5 +134,29 @@ describe('HasEveryFilter Unit', () => {
     const filter = new HasEveryFilter<number>([])
     expect(filter.evaluate([1, 2, 3])).toBe(true)
     expect(filter.evaluate([])).toBe(true)
+  })
+
+  it('debe manejar arrays con un solo elemento requerido', () => {
+    const filter = new HasEveryFilter([1])
+    const data = [1, 2, 3]
+    expect(filter.evaluate(data)).toBe(true)
+  })
+
+  it('debe manejar arrays con múltiples elementos requeridos', () => {
+    const filter = new HasEveryFilter([1, 2])
+    const data = [1, 2, 3, 4]
+    expect(filter.evaluate(data)).toBe(true)
+  })
+
+  it('debe manejar arrays con elementos mixtos', () => {
+    const filter = new HasEveryFilter([1, 'admin'])
+    const data = [1, 'admin', 'user']
+    expect(filter.evaluate(data)).toBe(true)
+  })
+
+  it('debe retornar false cuando faltan elementos requeridos', () => {
+    const filter = new HasEveryFilter([1, 2, 3])
+    const data = [1, 2]
+    expect(filter.evaluate(data)).toBe(false)
   })
 })
