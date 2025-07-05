@@ -1,4 +1,4 @@
-import { isNumber, isObject, isString } from '../../utils/filter.helpers'
+import { isNumber, isString } from '../../utils/filter.helpers'
 import { StringNormalizer } from '../../utils/normalization'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 
@@ -38,17 +38,8 @@ export abstract class BaseComparisonFilter implements EvaluateFilter {
   }
 
   protected compareObjects(a: any, b: any): boolean {
-    if (isObject(a) && isObject(b)) {
-      const aKeys = Object.keys(a)
-      const bKeys = Object.keys(b)
-      if (aKeys.length !== bKeys.length) return false
-      for (const key of aKeys) {
-        if (!bKeys.includes(key)) return false
-        if (!this.compareObjects((a as any)[key], (b as any)[key])) return false
-      }
-      return true
-    }
-    return false
+    // Compatibilidad con Prisma/TypeORM: solo referencia estricta
+    return a === b
   }
 
   protected handleDateComparison(actualValue: any): boolean | null {
