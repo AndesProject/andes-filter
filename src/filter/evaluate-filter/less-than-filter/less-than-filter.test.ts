@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { LessThanFilter } from './less-than-filter'
+
 describe('LessThanFilter', () => {
   it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
@@ -103,5 +104,37 @@ describe('LessThanFilter Unit Tests', () => {
     const filter = new LessThanFilter(1)
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
+  })
+})
+describe('LessThanFilter Edge Cases', () => {
+  it('should return false if actualValue is NaN', () => {
+    const filter = new LessThanFilter(5)
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+  it('should return false if thresholdValue is NaN', () => {
+    const filter = new LessThanFilter(NaN)
+    expect(filter.evaluate(5)).toBe(false)
+  })
+  it('should compare string that looks like date with string that is not a date', () => {
+    const filter = new LessThanFilter('not-a-date')
+    expect(filter.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should return false if one string is a valid date and the other is not', () => {
+    const filter = new LessThanFilter('2022-01-01')
+    expect(filter.evaluate('not-a-date')).toBe(false)
+    const filter2 = new LessThanFilter('not-a-date')
+    expect(filter2.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should return false if actualValue is object and thresholdValue is number', () => {
+    const filter = new LessThanFilter(5)
+    expect(filter.evaluate({})).toBe(false)
+  })
+  it('should return false if actualValue is string and thresholdValue is number', () => {
+    const filter = new LessThanFilter(5)
+    expect(filter.evaluate('5')).toBe(false)
+  })
+  it('should return false if actualValue is number and thresholdValue is string', () => {
+    const filter = new LessThanFilter('5')
+    expect(filter.evaluate(5)).toBe(false)
   })
 })

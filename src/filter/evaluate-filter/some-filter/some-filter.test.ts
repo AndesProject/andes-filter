@@ -51,7 +51,7 @@ describe('SomeFilter', () => {
   })
   it('no array, array vacío, null y undefined', () => {
     const filter = createFilterEngine<{ items: any }>([
-      { items: [1, 2, 3] },
+      { items: [1, 2, 3] as any },
       { items: [] },
       { items: null },
       { items: undefined },
@@ -67,13 +67,13 @@ describe('SomeFilter', () => {
   })
   it('findUnique', () => {
     const filter = createFilterEngine<{ items: number[] }>([
-      { items: [1, 2, 3] },
-      { items: [4, 5, 6] },
+      { items: [1, 2, 3] as number[] },
+      { items: [4, 5, 6] as number[] },
     ])
     const result = filter.findUnique({
       where: { items: { some: { equals: 2 } } },
     })
-    expect(result).toEqual({ items: [1, 2, 3] })
+    expect(result).toEqual({ items: [1, 2, 3] as number[] })
     const result2 = filter.findUnique({
       where: { items: { some: { equals: 999 } } },
     })
@@ -565,5 +565,379 @@ describe('SomeFilter Unit', () => {
         { otherKey: 'value' },
       ])
     ).toBe(false)
+  })
+})
+
+describe('DeepComparator Coverage', () => {
+  it('should handle deep comparison with nested objects', () => {
+    const filter = new SomeFilter({
+      user: {
+        profile: {
+          name: 'John',
+          age: 30,
+        },
+      },
+    })
+
+    const data = [
+      {
+        user: {
+          profile: {
+            name: 'John',
+            age: 30,
+          },
+        },
+      },
+      {
+        user: {
+          profile: {
+            name: 'Jane',
+            age: 25,
+          },
+        },
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(true)
+  })
+
+  it('should handle deep comparison with different types', () => {
+    const filter = new SomeFilter({ name: 'John', age: 30 })
+
+    // Test with different types
+    expect(filter.evaluate([{ name: 'John', age: '30' }])).toBe(false) // Different types
+    expect(filter.evaluate([{ name: 'John', age: 30 }])).toBe(true) // Same types
+  })
+
+  it('should handle deep comparison with missing keys', () => {
+    const filter = new SomeFilter({ name: 'John', age: 30, city: 'NYC' })
+
+    expect(filter.evaluate([{ name: 'John', age: 30 }])).toBe(false) // Missing city
+    expect(filter.evaluate([{ name: 'John', age: 30, city: 'NYC' }])).toBe(true) // All keys present
+  })
+
+  it('should handle deep comparison with different key counts', () => {
+    const filter = new SomeFilter({ name: 'John' })
+
+    expect(filter.evaluate([{ name: 'John', age: 30 }])).toBe(false) // Extra key
+    expect(filter.evaluate([{ name: 'John' }])).toBe(true) // Exact match
+  })
+
+  it('should handle deep comparison with nested arrays', () => {
+    const filter = new SomeFilter({
+      tags: ['javascript', 'typescript'],
+      config: { enabled: true },
+    })
+
+    const data = [
+      {
+        tags: ['javascript', 'typescript'],
+        config: { enabled: true },
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(false) // Arrays compare by reference, not value
+  })
+})
+
+describe('FilterConfigurationAnalyzer Coverage', () => {
+  it('should handle hasKnownOperator with nested objects', () => {
+    const filter = new SomeFilter({
+      user: {
+        name: { equals: 'John' },
+        age: { gt: 25 },
+      },
+    })
+
+    expect(
+      filter.evaluate([
+        { user: { name: 'John', age: 30 } },
+        { user: { name: 'Jane', age: 20 } },
+      ])
+    ).toBe(true)
+  })
+
+  it('should handle hasKnownOperator with invalid objects', () => {
+    const filter = new SomeFilter(null)
+
+    expect(filter.evaluate([1, 2, 3])).toBe(false)
+  })
+
+  it('should handle hasKnownOperator with primitive values', () => {
+    const filter = new SomeFilter(42)
+
+    expect(filter.evaluate([42])).toBe(true)
+    expect(filter.evaluate([43])).toBe(false)
+  })
+})
+
+describe('SomeFilter Edge Cases', () => {
+  it('should handle empty filter with null items', () => {
+    const filter = new SomeFilter({})
+
+    expect(filter.evaluate([null, { name: 'John' }])).toBe(true) // Has valid object
+    expect(filter.evaluate([null, undefined])).toBe(false) // No valid objects
+  })
+
+  it('should handle empty filter with undefined items', () => {
+    const filter = new SomeFilter({})
+
+    expect(filter.evaluate([undefined, { name: 'John' }])).toBe(true) // Has valid object
+    expect(filter.evaluate([undefined, null])).toBe(false) // No valid objects
+  })
+
+  it('should handle negation with null items', () => {
+    const filter = new SomeFilter({ not: { equals: 'test' } })
+
+    expect(filter.evaluate([null, 'other'])).toBe(true) // null doesn't match 'test'
+    expect(filter.evaluate(['test', 'other'])).toBe(true) // 'other' doesn't match 'test'
+    expect(filter.evaluate(['test'])).toBe(false) // Only 'test' matches
+  })
+
+  it('should handle negation with undefined items', () => {
+    const filter = new SomeFilter({ not: { equals: 'test' } })
+
+    expect(filter.evaluate([undefined, 'other'])).toBe(true) // undefined doesn't match 'test'
+    expect(filter.evaluate(['test', 'other'])).toBe(true) // 'other' doesn't match 'test'
+    expect(filter.evaluate(['test'])).toBe(false) // Only 'test' matches
+  })
+
+  it('should handle complex negation with FilterEvaluator', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: { gt: 25 },
+      },
+    })
+
+    expect(
+      filter.evaluate([
+        { name: 'Jane', age: 20 },
+        { name: 'Bob', age: 30 },
+      ])
+    ).toBe(true)
+  })
+
+  it('should handle negation with single key inner object', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+      },
+    })
+
+    expect(filter.evaluate([{ name: 'Jane' }, { name: 'Bob' }])).toBe(true)
+  })
+
+  it('should handle negation with primitive values', () => {
+    const filter = new SomeFilter({ not: 42 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([42, 1, 2])).toBe(true)
+    expect(filter.evaluate([42])).toBe(false)
+  })
+
+  it('should handle negation with non-object values', () => {
+    const filter = new SomeFilter({ not: 'test' })
+
+    expect(filter.evaluate(['hello', 'world'])).toBe(true)
+    expect(filter.evaluate(['test', 'hello'])).toBe(true)
+    expect(filter.evaluate(['test'])).toBe(false)
+  })
+
+  it('should handle deep comparison with same reference', () => {
+    const obj = { name: 'John', age: 30 }
+    const filter = new SomeFilter(obj)
+
+    expect(filter.evaluate([obj])).toBe(true) // Same reference
+    expect(filter.evaluate([{ name: 'John', age: 30 }])).toBe(true) // Deep comparison
+  })
+
+  it('should handle deep comparison with different types', () => {
+    const filter = new SomeFilter({ name: 'John', age: 30 })
+
+    // Test with string vs number - DeepComparator checks typeof first
+    expect(filter.evaluate([{ name: 'John', age: '30' }])).toBe(false)
+
+    // Test with object vs primitive - DeepComparator validates objects first
+    expect(filter.evaluate(['not an object'])).toBe(false)
+  })
+
+  it('should handle deep comparison with null/undefined values', () => {
+    const filter = new SomeFilter({ name: 'John', age: null })
+
+    expect(filter.evaluate([{ name: 'John', age: null }])).toBe(true)
+    expect(filter.evaluate([{ name: 'John', age: undefined }])).toBe(false)
+  })
+
+  it('should handle deep comparison with nested objects recursively', () => {
+    const filter = new SomeFilter({
+      user: {
+        profile: {
+          name: 'John',
+          settings: {
+            theme: 'dark',
+            notifications: true,
+          },
+        },
+      },
+    })
+
+    const data = [
+      {
+        user: {
+          profile: {
+            name: 'John',
+            settings: {
+              theme: 'dark',
+              notifications: true,
+            },
+          },
+        },
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(true)
+  })
+
+  it('should handle deep comparison with missing nested keys', () => {
+    const filter = new SomeFilter({
+      user: {
+        profile: {
+          name: 'John',
+          settings: {
+            theme: 'dark',
+          },
+        },
+      },
+    })
+
+    const data = [
+      {
+        user: {
+          profile: {
+            name: 'John',
+            // Missing settings - DeepComparator checks all keys exist
+          },
+        },
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(false)
+  })
+
+  it('should handle deep comparison with extra nested keys', () => {
+    const filter = new SomeFilter({
+      user: {
+        profile: {
+          name: 'John',
+        },
+      },
+    })
+
+    const data = [
+      {
+        user: {
+          profile: {
+            name: 'John',
+            age: 30, // Extra key - DeepComparator checks exact key match
+          },
+        },
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(false)
+  })
+
+  it('should handle deep comparison with different key order', () => {
+    const filter = new SomeFilter({
+      name: 'John',
+      age: 30,
+    })
+
+    const data = [
+      {
+        age: 30,
+        name: 'John', // Different order
+      },
+    ]
+
+    expect(filter.evaluate(data)).toBe(true) // Order doesn't matter
+  })
+
+  it('should handle empty filter (isEmptyFilter: true)', () => {
+    const filter = new SomeFilter({})
+
+    // When isEmptyFilter is true, it looks for items that are not null and are objects
+    expect(filter.evaluate([{}])).toBe(true)
+    expect(filter.evaluate([{ key: 'value' }])).toBe(true)
+    expect(filter.evaluate([null])).toBe(false)
+    expect(filter.evaluate([undefined])).toBe(false)
+  })
+
+  it('should handle direct comparison with null values', () => {
+    const filter = new SomeFilter(null)
+
+    // When filter is null, evaluator uses data === filter, but evaluateComplexFilter
+    // validates that item is not null before evaluating, so null items are filtered out
+    expect(filter.evaluate([null])).toBe(false)
+    expect(filter.evaluate([{ key: 'value' }])).toBe(false)
+    expect(filter.evaluate([undefined])).toBe(false)
+    expect(filter.evaluate([{}])).toBe(false)
+  })
+
+  it('should handle direct comparison with undefined values', () => {
+    const filter = new SomeFilter(undefined)
+
+    // When filter is undefined, evaluator uses data === filter, but evaluateComplexFilter
+    // validates that item is not null before evaluating, so undefined items are filtered out
+    expect(filter.evaluate([undefined])).toBe(false)
+    expect(filter.evaluate([{ key: 'value' }])).toBe(false)
+    expect(filter.evaluate([null])).toBe(false)
+    expect(filter.evaluate([{}])).toBe(false)
+  })
+
+  // describe('FilterConfigurationAnalyzer edge cases', () => {
+  //   it('should handle hasKnownOperator with nested objects containing known operators', () => {
+  //     const filter = new SomeFilter({
+  //       equals: 'test',
+  //       contains: 'value',
+  //     })
+  //
+  //     // This should use FilterEvaluator since it has known operators
+  //     expect(filter.evaluate(['test', 'other'])).toBe(true)
+  //     expect(filter.evaluate(['other', 'another'])).toBe(false)
+  //   })
+  //
+  //   it('should handle hasKnownOperator with objects containing mixed known and unknown operators', () => {
+  //     const filter = new SomeFilter({
+  //       unknownKey: 'value',
+  //       equals: 'test',
+  //     })
+  //
+  //     // This should use FilterEvaluator since it has known operators
+  //     expect(filter.evaluate(['test'])).toBe(true)
+  //     expect(filter.evaluate(['other'])).toBe(false)
+  //   })
+  // })
+
+  describe('SomeFilter evaluate edge cases', () => {
+    it('should handle negation with null evaluator', () => {
+      const filter = new SomeFilter({ not: 'test' })
+      // Force evaluator to be null for testing
+      ;(filter as any).evaluator = null
+      ;(filter as any).isNegation = true
+
+      expect(filter.evaluate(['hello', 'world'])).toBe(false)
+    })
+
+    it('should handle case where evaluator is null and not negation', () => {
+      const filter = new SomeFilter({ unknownKey: 'value' })
+      // Force evaluator to be null for testing
+      ;(filter as any).evaluator = null
+      ;(filter as any).isNegation = false
+
+      expect(filter.evaluate([{ unknownKey: 'value' }])).toBe(true)
+      expect(filter.evaluate([{ otherKey: 'value' }])).toBe(false)
+    })
   })
 })

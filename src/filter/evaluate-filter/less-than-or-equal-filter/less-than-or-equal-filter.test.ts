@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { LessThanOrEqualFilter } from './less-than-or-equal-filter'
+
 describe('LessThanOrEqualFilter', () => {
   it('should filter numeric values correctly', () => {
     const filter = createFilterEngine<{ size: number }>([
@@ -122,5 +123,37 @@ describe('LessThanOrEqualFilter Unit Tests', () => {
     const filter = new LessThanOrEqualFilter(1)
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
+  })
+})
+describe('LessThanOrEqualFilter Edge Cases', () => {
+  it('should return false if actualValue is NaN', () => {
+    const filter = new LessThanOrEqualFilter(5)
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+  it('should return false if thresholdValue is NaN', () => {
+    const filter = new LessThanOrEqualFilter(NaN)
+    expect(filter.evaluate(5)).toBe(false)
+  })
+  it('should compare string that looks like date with string that is not a date', () => {
+    const filter = new LessThanOrEqualFilter('not-a-date')
+    expect(filter.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should return false if one string is a valid date and the other is not', () => {
+    const filter = new LessThanOrEqualFilter('2022-01-01')
+    expect(filter.evaluate('not-a-date')).toBe(false)
+    const filter2 = new LessThanOrEqualFilter('not-a-date')
+    expect(filter2.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should return false if actualValue is object and thresholdValue is number', () => {
+    const filter = new LessThanOrEqualFilter(5)
+    expect(filter.evaluate({})).toBe(false)
+  })
+  it('should return false if actualValue is string and thresholdValue is number', () => {
+    const filter = new LessThanOrEqualFilter(5)
+    expect(filter.evaluate('5')).toBe(false)
+  })
+  it('should return false if actualValue is number and thresholdValue is string', () => {
+    const filter = new LessThanOrEqualFilter('5')
+    expect(filter.evaluate(5)).toBe(false)
   })
 })

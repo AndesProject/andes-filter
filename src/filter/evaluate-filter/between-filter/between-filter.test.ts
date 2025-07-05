@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { BetweenFilter } from './between-filter'
+
 describe('BetweenFilter', () => {
   it('string (fechas)', () => {
     const filter = createFilterEngine<{ date: string }>([
@@ -191,5 +192,19 @@ describe('BetweenFilter Unit', () => {
     const between = new BetweenFilter(['invalid-date', 'invalid-date'])
     expect(between.evaluate(5)).toBe(false)
     expect(between.evaluate(0)).toBe(false)
+  })
+})
+describe('BetweenFilter String Edge Cases', () => {
+  it('should return false if all are strings but range values are not valid dates', () => {
+    const filter = new BetweenFilter(['foo', 'bar'])
+    expect(filter.evaluate('baz')).toBe(false)
+  })
+  it('should return true if all are strings and both range values are valid dates and actualValue is between them', () => {
+    const filter = new BetweenFilter(['2023-01-01', '2023-12-31'])
+    expect(filter.evaluate('2023-06-01')).toBe(true)
+  })
+  it('should return false if all are strings and both range values are valid dates and actualValue is outside the range', () => {
+    const filter = new BetweenFilter(['2023-01-01', '2023-12-31'])
+    expect(filter.evaluate('2024-01-01')).toBe(false)
   })
 })
