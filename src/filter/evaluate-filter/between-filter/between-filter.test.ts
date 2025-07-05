@@ -208,3 +208,75 @@ describe('BetweenFilter String Edge Cases', () => {
     expect(filter.evaluate('2024-01-01')).toBe(false)
   })
 })
+describe('BetweenFilter Additional Edge Cases', () => {
+  it('should return false if actualValue is valid date but range values are not valid dates', () => {
+    const filter = new BetweenFilter(['not-a-date', 'also-not-a-date'])
+    expect(filter.evaluate(new Date('2023-01-01'))).toBe(false)
+  })
+  it('should return false if actualValue is valid date but one range value is not a valid date', () => {
+    const filter = new BetweenFilter(['not-a-date', '2023-12-31'])
+    expect(filter.evaluate(new Date('2023-06-01'))).toBe(false)
+    const filter2 = new BetweenFilter(['2023-01-01', 'not-a-date'])
+    expect(filter2.evaluate(new Date('2023-06-01'))).toBe(false)
+  })
+  it('should return false if range values are strings but not valid dates', () => {
+    const filter = new BetweenFilter(['foo', 'bar'])
+    expect(filter.evaluate('baz')).toBe(false)
+  })
+  it('should handle mixed types (string vs number) in range', () => {
+    const filter = new BetweenFilter([5, '10'])
+    expect(filter.evaluate('7')).toBe(false)
+    const filter2 = new BetweenFilter(['5', 10])
+    expect(filter2.evaluate(7)).toBe(false)
+  })
+  it('should handle NaN values in range', () => {
+    const filter = new BetweenFilter([NaN, 10])
+    expect(filter.evaluate(5)).toBe(false)
+    const filter2 = new BetweenFilter([5, NaN])
+    expect(filter2.evaluate(7)).toBe(false)
+  })
+  it('should handle NaN actualValue', () => {
+    const filter = new BetweenFilter([5, 10])
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+})
+describe('BetweenFilter Specific Edge Cases', () => {
+  it('should return false when actualValue is valid date but range[0] is not valid date', () => {
+    const filter = new BetweenFilter(['not-a-date', '2023-12-31'])
+    expect(filter.evaluate('2023-06-01')).toBe(false)
+  })
+  it('should return false when actualValue is valid date but range[1] is not valid date', () => {
+    const filter = new BetweenFilter(['2023-01-01', 'not-a-date'])
+    expect(filter.evaluate('2023-06-01')).toBe(false)
+  })
+  it('should return false when both range values are strings but not valid dates', () => {
+    const filter = new BetweenFilter(['foo', 'bar'])
+    expect(filter.evaluate('baz')).toBe(false)
+  })
+  it('should return false when both range values are strings but not valid dates (different test)', () => {
+    const filter = new BetweenFilter(['invalid', 'also-invalid'])
+    expect(filter.evaluate('test')).toBe(false)
+  })
+})
+describe('BetweenFilter Final Edge Cases', () => {
+  it('should return false when actualValue is Date object but range[0] is not valid date', () => {
+    const filter = new BetweenFilter(['not-a-date', '2023-12-31'])
+    expect(filter.evaluate(new Date('2023-06-01'))).toBe(false)
+  })
+  it('should return false when actualValue is Date object but range[1] is not valid date', () => {
+    const filter = new BetweenFilter(['2023-01-01', 'not-a-date'])
+    expect(filter.evaluate(new Date('2023-06-01'))).toBe(false)
+  })
+  it('should return false when both range values are strings but not valid dates (line 72-76)', () => {
+    const filter = new BetweenFilter(['foo', 'bar'])
+    expect(filter.evaluate('baz')).toBe(false)
+  })
+  it('should return false when both range values are strings but not valid dates (line 72-76) - variant', () => {
+    const filter = new BetweenFilter(['invalid', 'also-invalid'])
+    expect(filter.evaluate('test')).toBe(false)
+  })
+  it('should return false when both range values are strings but not valid dates (line 72-76) - another variant', () => {
+    const filter = new BetweenFilter(['abc', 'def'])
+    expect(filter.evaluate('ghi')).toBe(false)
+  })
+})

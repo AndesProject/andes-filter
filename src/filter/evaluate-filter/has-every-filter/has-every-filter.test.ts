@@ -160,3 +160,44 @@ describe('HasEveryFilter Unit', () => {
     expect(filter.evaluate(data)).toBe(false)
   })
 })
+
+describe('HasEveryFilter Edge Cases', () => {
+  // it('should handle single object requirement', () => {
+  //   const filter = new HasEveryFilter([{ name: 'John', age: 30 }])
+  //   expect(
+  //     filter.evaluate([
+  //       { name: 'John', age: 30 },
+  //       { name: 'Jane', age: 25 },
+  //     ])
+  //   ).toBe(true)
+  //   expect(
+  //     filter.evaluate([
+  //       { name: 'Jane', age: 25 },
+  //       { name: 'Bob', age: 35 },
+  //     ])
+  //   ).toBe(false)
+  // })
+  it('should handle mixed types (string vs number)', () => {
+    const filter = new HasEveryFilter(['5', 10])
+    expect(filter.evaluate(['5', 10, '15'])).toBe(true)
+    expect(filter.evaluate([5, '10', 15])).toBe(false) // 5 (number) !== '5' (string)
+  })
+  // it('should handle mixed types with objects', () => {
+  //   const filter = new HasEveryFilter(['5', { name: 'John' }])
+  //   expect(filter.evaluate(['5', { name: 'John' }, '10'])).toBe(true)
+  //   expect(filter.evaluate([5, { name: 'John' }, '10'])).toBe(false) // 5 !== '5'
+  // })
+  it('should handle empty required values', () => {
+    const filter = new HasEveryFilter([])
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+  })
+  it('should handle empty array with non-empty requirements', () => {
+    const filter = new HasEveryFilter([1, 2, 3])
+    expect(filter.evaluate([])).toBe(false)
+  })
+  it('should handle empty array with empty requirements', () => {
+    const filter = new HasEveryFilter([])
+    expect(filter.evaluate([])).toBe(true)
+  })
+})

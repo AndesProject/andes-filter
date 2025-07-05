@@ -138,3 +138,23 @@ describe('LessThanFilter Edge Cases', () => {
     expect(filter.evaluate(5)).toBe(false)
   })
 })
+describe('LessThanFilter Additional Edge Cases', () => {
+  it('should handle NaN in actualValue with number threshold', () => {
+    const filter = new LessThanFilter(5)
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+  it('should handle NaN in thresholdValue with number actualValue', () => {
+    const filter = new LessThanFilter(NaN)
+    expect(filter.evaluate(5)).toBe(false)
+  })
+  it('should handle one string as valid date and other as invalid date', () => {
+    const filter = new LessThanFilter('2022-01-01')
+    expect(filter.evaluate('not-a-date')).toBe(false)
+    const filter2 = new LessThanFilter('not-a-date')
+    expect(filter2.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should handle try-catch block with incompatible types', () => {
+    const filter = new LessThanFilter(5)
+    expect(filter.evaluate({})).toBe(false) // Object comparison should fail
+  })
+})

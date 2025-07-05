@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { HasSomeFilter } from './has-some-filter'
+
 describe('HasSomeFilter', () => {
   it('arrays que contienen al menos uno de los elementos requeridos', () => {
     const filter = createFilterEngine<{ items: number[] }>([
@@ -149,5 +150,63 @@ describe('HasSomeFilter Unit', () => {
     const filter = new HasSomeFilter<number>([1])
     expect(filter.evaluate([1, 2, 3])).toBe(true)
     expect(filter.evaluate([4, 5, 6])).toBe(false)
+  })
+})
+describe('HasSomeFilter Edge Cases', () => {
+  it('should handle nested filters recursively', () => {
+    const filter = new HasSomeFilter([
+      {
+        user: {
+          profile: {
+            name: { equals: 'John' },
+            settings: { theme: { contains: 'dark' } },
+          },
+        },
+      },
+    ])
+
+    expect(
+      filter.evaluate([
+        {
+          user: {
+            profile: {
+              name: 'John',
+              settings: { theme: 'dark mode' },
+            },
+          },
+        },
+      ])
+    ).toBe(true)
+  })
+
+  it('should handle object comparison with JSON.stringify', () => {
+    const filter = new HasSomeFilter([{ name: 'John', age: 30, city: 'NYC' }])
+
+    expect(filter.evaluate([{ name: 'John', age: 30, city: 'NYC' }])).toBe(true)
+
+    expect(filter.evaluate([{ name: 'John', age: 30, city: 'Boston' }])).toBe(
+      false
+    )
+  })
+
+  it('should handle mixed object and primitive requirements', () => {
+    const filter = new HasSomeFilter(['test', { name: 'John', age: 30 }])
+
+    expect(filter.evaluate(['test', { name: 'John', age: 30 }])).toBe(true)
+
+    expect(filter.evaluate(['other', { name: 'Jane', age: 25 }])).toBe(false)
+  })
+
+  it('should handle empty required elements', () => {
+    const filter = new HasSomeFilter([])
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([])).toBe(true)
+  })
+
+  it('should handle non-array data', () => {
+    const filter = new HasSomeFilter([1, 2, 3])
+    expect(filter.evaluate('not an array')).toBe(false)
+    expect(filter.evaluate(null)).toBe(false)
+    expect(filter.evaluate(undefined)).toBe(false)
   })
 })

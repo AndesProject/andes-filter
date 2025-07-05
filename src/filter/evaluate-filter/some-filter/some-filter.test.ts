@@ -941,3 +941,114 @@ describe('SomeFilter Edge Cases', () => {
     })
   })
 })
+
+describe('SomeFilter Additional Edge Cases', () => {
+  it('should handle hasKnownOperator with nested objects containing known operators recursively', () => {
+    const filter = new SomeFilter({
+      user: {
+        profile: {
+          name: { equals: 'John' },
+          settings: { theme: { contains: 'dark' } },
+        },
+      },
+    })
+
+    expect(
+      filter.evaluate([
+        {
+          user: { profile: { name: 'John', settings: { theme: 'dark mode' } } },
+        },
+      ])
+    ).toBe(true)
+  })
+
+  // it('should handle hasKnownOperator with mixed known and unknown operators', () => {
+  //   const filter = new SomeFilter({
+  //     unknownKey: 'value',
+  //     name: { equals: 'John' },
+  //     age: { gt: 25 },
+  //   })
+
+  //   expect(
+  //     filter.evaluate([{ name: 'John', age: 30, unknownKey: 'value' }])
+  //   ).toBe(true)
+  // })
+
+  it('should handle createNegationEvaluator with object having multiple inner keys', () => {
+    const filter = new SomeFilter({
+      not: {
+        name: { equals: 'John' },
+        age: { gt: 25 },
+        city: { contains: 'New York' },
+      },
+    })
+
+    expect(filter.evaluate([{ name: 'Jane', age: 20, city: 'Boston' }])).toBe(
+      true
+    )
+  })
+
+  it('should handle createNegationEvaluator with non-object values', () => {
+    const filter = new SomeFilter({ not: 42 })
+
+    expect(filter.evaluate([1, 2, 3])).toBe(true)
+    expect(filter.evaluate([42])).toBe(false)
+  })
+
+  it('should handle DeepComparator with objects having different key counts', () => {
+    const filter = new SomeFilter({ name: 'John', age: 30 })
+
+    expect(filter.evaluate([{ name: 'John' }])).toBe(false) // Missing age
+    expect(filter.evaluate([{ name: 'John', age: 30, city: 'NYC' }])).toBe(
+      false
+    ) // Extra key
+  })
+
+  it('should handle DeepComparator with nested objects having different structures', () => {
+    const filter = new SomeFilter({
+      user: { name: 'John', profile: { age: 30 } },
+    })
+
+    expect(
+      filter.evaluate([
+        {
+          user: { name: 'John' }, // Missing profile
+        },
+      ])
+    ).toBe(false)
+  })
+
+  it('should handle DeepComparator with objects having same keys but different values', () => {
+    const filter = new SomeFilter({ name: 'John', age: 30 })
+
+    expect(filter.evaluate([{ name: 'John', age: 25 }])).toBe(false) // Different age
+  })
+
+  it('should handle DeepComparator with null and undefined values in nested objects', () => {
+    const filter = new SomeFilter({ name: 'John', age: null })
+
+    expect(filter.evaluate([{ name: 'John', age: null }])).toBe(true)
+    expect(filter.evaluate([{ name: 'John', age: undefined }])).toBe(false)
+  })
+
+  it('should handle case where evaluator is null and not negation (fallback to DeepComparator)', () => {
+    const filter = new SomeFilter({ unknownKey: 'value' })
+
+    // Force evaluator to be null for testing
+    ;(filter as any).evaluator = null
+    ;(filter as any).isNegation = false
+
+    expect(filter.evaluate([{ unknownKey: 'value' }])).toBe(true)
+    expect(filter.evaluate([{ differentKey: 'value' }])).toBe(false)
+  })
+
+  it('should handle case where evaluator is null and isNegation is true', () => {
+    const filter = new SomeFilter({ not: 'test' })
+
+    // Force evaluator to be null for testing
+    ;(filter as any).evaluator = null
+    ;(filter as any).isNegation = true
+
+    expect(filter.evaluate(['hello', 'world'])).toBe(false)
+  })
+})

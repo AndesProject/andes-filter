@@ -242,3 +242,53 @@ describe('GreaterThanFilter Unit Tests', () => {
     })
   })
 })
+
+describe('GreaterThanFilter Edge Cases', () => {
+  it('should return false if actualValue is NaN', () => {
+    const filter = new GreaterThanFilter(5)
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+  it('should return false if thresholdValue is NaN', () => {
+    const filter = new GreaterThanFilter(NaN)
+    expect(filter.evaluate(5)).toBe(false)
+  })
+  it('should return false if one string is a valid date and the other is not', () => {
+    const filter = new GreaterThanFilter('2022-01-01')
+    expect(filter.evaluate('not-a-date')).toBe(false)
+    const filter2 = new GreaterThanFilter('not-a-date')
+    expect(filter2.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should return false if actualValue is object and thresholdValue is number', () => {
+    const filter = new GreaterThanFilter(5)
+    expect(filter.evaluate({})).toBe(false)
+  })
+  it('should return false if actualValue is string and thresholdValue is number', () => {
+    const filter = new GreaterThanFilter(5)
+    expect(filter.evaluate('5')).toBe(false)
+  })
+  it('should return false if actualValue is number and thresholdValue is string', () => {
+    const filter = new GreaterThanFilter('5')
+    expect(filter.evaluate(5)).toBe(false)
+  })
+})
+
+describe('GreaterThanFilter Additional Edge Cases', () => {
+  it('should handle NaN in actualValue with number threshold', () => {
+    const filter = new GreaterThanFilter(5)
+    expect(filter.evaluate(NaN)).toBe(false)
+  })
+  it('should handle NaN in thresholdValue with number actualValue', () => {
+    const filter = new GreaterThanFilter(NaN)
+    expect(filter.evaluate(5)).toBe(false)
+  })
+  it('should handle one string as valid date and other as invalid date', () => {
+    const filter = new GreaterThanFilter('2022-01-01')
+    expect(filter.evaluate('not-a-date')).toBe(false)
+    const filter2 = new GreaterThanFilter('not-a-date')
+    expect(filter2.evaluate('2022-01-01')).toBe(false)
+  })
+  it('should handle try-catch block with incompatible types', () => {
+    const filter = new GreaterThanFilter(5)
+    expect(filter.evaluate({})).toBe(false) // Object comparison should fail
+  })
+})
