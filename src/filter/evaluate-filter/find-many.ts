@@ -38,6 +38,7 @@ function removeDuplicateItems<T>(
     return true
   })
 }
+
 export function findMany<T>(
   filterQuery: FilterQuery<T>,
   dataSource: T[]
@@ -52,6 +53,7 @@ export function findMany<T>(
   const sortedItems = sortObjects(uniqueItems, filterQuery.orderBy || {})
   return paginateArray(sortedItems, extractPaginationOptions(filterQuery))
 }
+
 function extractPaginationOptions<T>(
   filterQuery: FilterQuery<T>
 ): PaginationOptions {

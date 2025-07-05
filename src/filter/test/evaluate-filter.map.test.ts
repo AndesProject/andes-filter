@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createFilterClassMap } from '../evaluate-filter/evaluate-filter.map'
 import { FilterCriteria } from '../filter.interface'
-class Dummy {}
+
 const typeToClass = {
   equals: 'EqualityFilter',
   not: 'InequalityFilter',

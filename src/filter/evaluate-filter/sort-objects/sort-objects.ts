@@ -21,6 +21,7 @@ export function sortObjects<T>(
   })
   return items
 }
+
 function compareValues<T>(
   firstItem: T,
   secondItem: T,

@@ -20,6 +20,12 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
+    'padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: 'function', next: 'function' },
+      { blankLine: 'always', prev: 'block-like', next: 'function' },
+      { blankLine: 'always', prev: 'function', next: 'block-like' },
+    ],
   },
   ignorePatterns: ['dist', 'node_modules', 'webpack.config.js'],
 }

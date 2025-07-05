@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { createFilterEngine } from '../../filter-from'
 import { FilterCriteria } from '../../filter.interface'
-import { matchesFilter } from '../matches-filter'
 import { NotFilterGroup } from './not-filter-group'
+
 describe('NotFilterGroup', () => {
   it('debe manejar correctamente un grupo vacío de filtros', () => {
     const emptyFilterGroup = new NotFilterGroup<{ value: any }>([])
@@ -104,11 +104,6 @@ describe('NotFilterGroup', () => {
     ])
     const val1 = { value: 'This is a test' }
     const val2 = { value: 'This is something else' }
-    const individualFilter = {
-      value: { contains: 'TEST', mode: 'insensitive' },
-    }
-    const individualResult1 = matchesFilter(individualFilter as any, val1)
-    const individualResult2 = matchesFilter(individualFilter as any, val2)
     const res1 = filter.evaluate(val1)
     const res2 = filter.evaluate(val2)
     expect(res1).toBe(false)

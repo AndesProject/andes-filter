@@ -6,7 +6,7 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "80...100"
+  range: '80...100'
   status:
     project:
       default:
@@ -33,9 +33,9 @@ parsers:
       macro: no
 
 ignore:
-  - "**/*.test.ts"
-  - "**/*.spec.ts"
-  - "**/test/**"
-  - "**/tests/**"
-  - "**/coverage/**"
-  - "**/node_modules/**"
+  - '**/*.test.ts'
+  - '**/*.spec.ts'
+  - '**/test/**'
+  - '**/tests/**'
+  - '**/coverage/**'
+  - '**/node_modules/**'
