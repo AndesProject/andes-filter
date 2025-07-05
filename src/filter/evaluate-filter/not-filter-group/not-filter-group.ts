@@ -4,8 +4,8 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
 
 export class NotFilterGroup<T> implements EvaluateFilter {
-  private filterCriteria: FilterCriteria<T, keyof T>[]
-  constructor(filterCriteria: FilterCriteria<T, keyof T>[]) {
+  private filterCriteria: FilterCriteria<T>[]
+  constructor(filterCriteria: FilterCriteria<T>[]) {
     this.filterCriteria = filterCriteria
   }
   public evaluate(targetData: any): boolean {

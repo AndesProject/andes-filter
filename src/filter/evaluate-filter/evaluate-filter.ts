@@ -38,9 +38,7 @@ const ARRAY_OPERATION_KEYS = ['some', 'none', 'every']
 
 // Clase responsable solo de inicializar filtros
 class FilterInitializer {
-  public static initializeFilters<T>(
-    filterCriteria: FilterCriteria<T, keyof T>
-  ): {
+  public static initializeFilters<T>(filterCriteria: FilterCriteria<T>): {
     fieldKey: string
     filterInstance: EvaluateFilter | FilterEvaluator<any>
   }[] {
@@ -55,7 +53,7 @@ class FilterInitializer {
       if (criteriaKey === 'mode') return
 
       const criteriaValue =
-        filterCriteria[criteriaKey as keyof FilterCriteria<T, keyof T>]
+        filterCriteria[criteriaKey as keyof FilterCriteria<T>]
 
       const filterInstance = FilterInitializer.createFilterInstance(
         criteriaKey,
@@ -206,9 +204,9 @@ export class FilterEvaluator<T> {
     fieldKey: string
     filterInstance: EvaluateFilter | FilterEvaluator<any>
   }[] = []
-  private filterCriteria: FilterCriteria<T, keyof T>
+  private filterCriteria: FilterCriteria<T>
 
-  constructor(filterCriteria: FilterCriteria<T, keyof T>) {
+  constructor(filterCriteria: FilterCriteria<T>) {
     this.filterCriteria = filterCriteria
     this.activeFilters = FilterInitializer.initializeFilters(filterCriteria)
   }

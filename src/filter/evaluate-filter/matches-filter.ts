@@ -3,10 +3,11 @@ import { AndFilterGroup } from './and-filter-group'
 import { FilterEvaluator } from './evaluate-filter'
 import { NotFilterGroup } from './not-filter-group'
 import { OrFilterGroup } from './or-filter-group'
+
 const LOGICAL_GROUP_KEYS = ['AND', 'OR', 'NOT', 'some', 'every', 'none']
 const ARRAY_OPERATION_KEYS = ['has', 'hasEvery', 'hasSome', 'length']
 export function matchesFilter<T = any>(
-  filterCriteria: FilterCriteria<T, keyof T>,
+  filterCriteria: FilterCriteria<T>,
   targetData: any
 ): boolean {
   if (!filterCriteria || typeof filterCriteria !== 'object') return false

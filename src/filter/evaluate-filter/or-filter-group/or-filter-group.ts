@@ -5,11 +5,9 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 import { matchesFilter } from '../matches-filter'
 
 export class OrFilterGroup<T> extends BaseCompositeFilter {
-  private filterCriteria: FilterCriteria<T, keyof T>[]
+  private filterCriteria: FilterCriteria<T>[]
 
-  constructor(
-    filterCriteria: FilterCriteria<T, keyof T>[] | FilterCriteria<T, keyof T>
-  ) {
+  constructor(filterCriteria: FilterCriteria<T>[] | FilterCriteria<T>) {
     // Permitir tanto array como objeto único
     const criteriaArray = Array.isArray(filterCriteria)
       ? filterCriteria

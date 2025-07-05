@@ -1,5 +1,5 @@
 {
-  "name": "@dnarvaezt/filter",
+  "name": "@andes-project/filter",
   "version": "1.0.0",
   "private": false,
   "description": "A powerful TypeScript filtering library for complex data queries with intuitive object-based syntax, supporting logical operators, pagination, and high performance.",

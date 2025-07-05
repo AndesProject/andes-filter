@@ -7,7 +7,7 @@ export class RegexFilter implements EvaluateFilter {
   private flags: string | undefined
 
   constructor(pattern: string | { pattern: string; flags?: string }) {
-    if (ValidationUtils.validateString(pattern)) {
+    if (typeof pattern === 'string') {
       this.pattern = pattern
       this.flags = undefined
     } else {

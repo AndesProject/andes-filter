@@ -52,7 +52,9 @@ export class ValidationUtils {
     if (!isObject(obj) || obj === null) return false
 
     return Object.keys(obj).every(
-      (key) => typeof obj[key] !== 'object' || obj[key] === null
+      (key) =>
+        typeof (obj as Record<string, any>)[key] !== 'object' ||
+        (obj as Record<string, any>)[key] === null
     )
   }
 }
