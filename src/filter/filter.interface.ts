@@ -94,7 +94,7 @@ export interface PaginationResult extends PaginationOptions {
 
 export interface FindManyResult<T> {
   data: T[]
-  pagination?: PaginationResult
+  pagination: PaginationResult
 }
 
 export type FindUniqueResult<T> = T | null
