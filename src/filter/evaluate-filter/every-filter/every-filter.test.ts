@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { EveryFilter } from './every-filter'
 describe('EveryFilter', () => {
   it('arrays con todos los elementos que cumplen el filtro', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [2, 2, 2] },
       { items: [2, 2] },
       { items: [2] },
@@ -15,7 +15,7 @@ describe('EveryFilter', () => {
     ).toBe(3)
   })
   it('arrays con algún elemento que no cumple el filtro', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [2, 2, 2] },
       { items: [2, 1, 2] },
       { items: [1, 1, 1] },
@@ -26,7 +26,7 @@ describe('EveryFilter', () => {
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [2, 2, 2] },
       { items: [2, 2] },
       { items: [2] },
@@ -41,7 +41,7 @@ describe('EveryFilter', () => {
     ).toBe(4)
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [2, 2, 2] },
       { items: [2, 1, 2] },
     ])
@@ -55,7 +55,7 @@ describe('EveryFilter', () => {
     expect(result2).toBe(null)
   })
   it('filtros complejos', () => {
-    const filter = createFilterEngine<{ posts: boolean[] }>([
+    const filter = createFilter<{ posts: boolean[] }>([
       { posts: [true, true] },
       { posts: [true, false] },
     ])
@@ -141,8 +141,8 @@ describe('EveryFilter Unit', () => {
   })
 })
 describe('EveryFilter Integration', () => {
-  it('should work with createFilterEngine for primitive arrays', () => {
-    const filter = createFilterEngine<{ arr: number[] }>([
+  it('should work with createFilter for primitive arrays', () => {
+    const filter = createFilter<{ arr: number[] }>([
       { arr: [1, 1, 1] },
       { arr: [1, 2, 1] },
       { arr: [2, 2, 2] },
@@ -193,8 +193,8 @@ describe('EveryFilter Integration', () => {
         .data[0].arr
     ).toEqual([2, 2, 2])
   })
-  it('should work with createFilterEngine for arrays of objects', () => {
-    const filter = createFilterEngine<{ arr: { a: number }[] }>([
+  it('should work with createFilter for arrays of objects', () => {
+    const filter = createFilter<{ arr: { a: number }[] }>([
       { arr: [{ a: 1 }, { a: 1 }] },
       { arr: [{ a: 1 }, { a: 2 }] },
       { arr: [{ a: 2 }, { a: 2 }] },
@@ -217,10 +217,7 @@ describe('EveryFilter Integration', () => {
     ).toBe(1)
   })
   it('should return true for empty array in integration', () => {
-    const filter = createFilterEngine<{ arr: number[] }>([
-      { arr: [] },
-      { arr: [1] },
-    ])
+    const filter = createFilter<{ arr: number[] }>([{ arr: [] }, { arr: [1] }])
     expect(
       filter.findMany({ where: { arr: { every: 1 } } } as any).data.length
     ).toBe(2)
@@ -229,7 +226,7 @@ describe('EveryFilter Integration', () => {
     ).toBe(1)
   })
   it('should handle empty filter with array of objects', () => {
-    const filter = createFilterEngine<{ arr: { x: number }[] }>([
+    const filter = createFilter<{ arr: { x: number }[] }>([
       { arr: [{ x: 1 }, { x: 2 }] },
       { arr: [{ x: 3 }] },
       { arr: [] },
@@ -239,7 +236,7 @@ describe('EveryFilter Integration', () => {
     )
   })
   it('should handle empty filter with array of primitives', () => {
-    const filter = createFilterEngine<{ arr: number[] }>([
+    const filter = createFilter<{ arr: number[] }>([
       { arr: [1, 2, 3] },
       { arr: [4, 5, 6] },
       { arr: [] },

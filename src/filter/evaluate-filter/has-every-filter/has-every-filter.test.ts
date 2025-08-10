@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { HasEveryFilter } from './has-every-filter'
 
 describe('HasEveryFilter', () => {
   it('arrays que contienen todos los elementos requeridos', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [1, 2, 3] },
       { items: [1, 2] },
@@ -23,7 +23,7 @@ describe('HasEveryFilter', () => {
     ).toBe(0)
   })
   it('arrays con strings', () => {
-    const filter = createFilterEngine<{ tags: string[] }>([
+    const filter = createFilter<{ tags: string[] }>([
       { tags: ['javascript', 'typescript', 'react'] },
       { tags: ['javascript', 'typescript'] },
       { tags: ['javascript'] },
@@ -40,7 +40,7 @@ describe('HasEveryFilter', () => {
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -54,7 +54,7 @@ describe('HasEveryFilter', () => {
     ).toBe(1)
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3, 4] },
       { items: [1, 2, 3] },
     ])
@@ -68,7 +68,7 @@ describe('HasEveryFilter', () => {
     expect(result2).toBe(null)
   })
   it('arrays con booleanos', () => {
-    const filter = createFilterEngine<{ flags: boolean[] }>([
+    const filter = createFilter<{ flags: boolean[] }>([
       { flags: [true, false, true] },
       { flags: [true, false] },
       { flags: [true] },
@@ -79,7 +79,7 @@ describe('HasEveryFilter', () => {
     ).toBe(2)
   })
   it('arrays con elementos duplicados', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 1, 2, 2, 3] },
       { items: [1, 2, 3] },
       { items: [1, 2] },

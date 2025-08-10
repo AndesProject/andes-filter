@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { HasFilter } from '../evaluate-filter/has-filter/has-filter'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('HasFilter Prisma/TypeORM Compatibility', () => {
   describe('Basic behavior', () => {
     it('should return true when array contains the element', () => {
@@ -107,9 +107,9 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       expect(filter.evaluate(['hello', 'world'])).toBe(false)
     })
   })
-  describe('Integration tests with createFilterEngine', () => {
+  describe('Integration tests with createFilter', () => {
     it('should work with number arrays', () => {
-      const filter = createFilterEngine<{ items: number[] }>([
+      const filter = createFilter<{ items: number[] }>([
         { items: [1, 2, 3] },
         { items: [4, 5, 6] },
         { items: [7, 8, 9] },
@@ -126,7 +126,7 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(1)
     })
     it('should work with string arrays', () => {
-      const filter = createFilterEngine<{ tags: string[] }>([
+      const filter = createFilter<{ tags: string[] }>([
         { tags: ['javascript', 'typescript'] },
         { tags: ['python', 'java'] },
         { tags: ['javascript', 'react'] },
@@ -143,7 +143,7 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(0)
     })
     it('should work with boolean arrays', () => {
-      const filter = createFilterEngine<{ flags: boolean[] }>([
+      const filter = createFilter<{ flags: boolean[] }>([
         { flags: [true, false] },
         { flags: [false, false] },
         { flags: [] },
@@ -157,7 +157,7 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
     })
     it('should work with object arrays', () => {
       const targetObject = { id: 1, name: 'Alice' }
-      const filter = createFilterEngine<{
+      const filter = createFilter<{
         users: { id: number; name: string }[]
       }>([
         { users: [targetObject, { id: 2, name: 'Bob' }] },
@@ -179,7 +179,7 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(0)
     })
     it('should handle null and undefined arrays', () => {
-      const filter = createFilterEngine<{ items: any }>([
+      const filter = createFilter<{ items: any }>([
         { items: [1, 2, 3] },
         { items: null },
         { items: undefined },

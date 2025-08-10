@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { StartsWithFilter } from './starts-with-filter'
 describe('StartsWithFilter', () => {
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -65,7 +65,7 @@ describe('StartsWithFilter', () => {
     ).toBe('Alice')
   })
   it('should handle case insensitive filtering correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'BOB' },
       { name: 'Charlie' },
@@ -109,7 +109,7 @@ describe('StartsWithFilter', () => {
     ).toBe(null)
   })
   it('should handle null and undefined values correctly', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 'hello' },
@@ -126,7 +126,7 @@ describe('StartsWithFilter', () => {
     ).toBe(0)
   })
   it('should handle empty strings and special cases correctly', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: '' },
       { value: 'hello' },
       { value: 'world' },

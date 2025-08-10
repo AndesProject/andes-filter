@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { LengthFilter } from './length-filter'
 describe('LengthFilter', () => {
   it('should filter arrays by exact length', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: [] },
       { items: [1] },
       { items: [1, 2] },
@@ -40,7 +40,7 @@ describe('LengthFilter', () => {
     expect(filter.findUnique({ where: { items: { length: 5 } } })).toBe(null)
   })
   it('should handle arrays with different types of elements', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: ['a', 'b'] },
       { items: [1, 2, 3] },
       { items: [true, false] },
@@ -58,7 +58,7 @@ describe('LengthFilter', () => {
     ).toBe(0)
   })
   it('should handle null and undefined values', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: null },
       { items: undefined },
       { items: [] },
@@ -82,7 +82,7 @@ describe('LengthFilter', () => {
     expect(filter.findUnique({ where: { items: { length: 2 } } })).toBe(null)
   })
   it('should handle non-array values', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: 'string' },
       { items: 123 },
       { items: true },
@@ -101,7 +101,7 @@ describe('LengthFilter', () => {
     ).toBe(0)
   })
   it('should work with empty arrays', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: [] },
       { items: [1] },
       { items: [1, 2] },
@@ -114,7 +114,7 @@ describe('LengthFilter', () => {
     ).toEqual([])
   })
   it('should work with nested arrays', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: [[1], [2]] },
       {
         items: [
@@ -136,7 +136,7 @@ describe('LengthFilter', () => {
     ).toBe(1)
   })
   it('should work with arrays of objects', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: [{ id: 1 }] },
       { items: [{ id: 1 }, { id: 2 }] },
       { items: [{ id: 1 }, { id: 2 }, { id: 3 }] },
@@ -152,7 +152,7 @@ describe('LengthFilter', () => {
     ).toBe(1)
   })
   it('should work with mixed arrays', () => {
-    const filter = createFilterEngine<{ items: any[] }>([
+    const filter = createFilter<{ items: any[] }>([
       { items: [1, 'string', true] },
       { items: [null, undefined, 0, ''] },
       { items: [{ id: 1 }, [1, 2], 'test'] },
@@ -165,7 +165,7 @@ describe('LengthFilter', () => {
     ).toBe(1)
   })
   it('should work in combination with other filters', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       items: any[]
       name: string
       active: boolean
@@ -202,7 +202,7 @@ describe('LengthFilter', () => {
     ).toBe(1)
   })
   it('should work with AND/OR conditions', () => {
-    const filter = createFilterEngine<{ items: any[]; category: string }>([
+    const filter = createFilter<{ items: any[]; category: string }>([
       { items: [1, 2], category: 'A' },
       { items: [1, 2, 3], category: 'B' },
       { items: [1], category: 'A' },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Object Filters', () => {
   const nestedData = [
     {
@@ -34,7 +34,7 @@ describe('Debug Object Filters', () => {
     },
   ]
   it('debug some filter', () => {
-    const filter = createFilterEngine(nestedData)
+    const filter = createFilter(nestedData)
     const result = filter.findMany({
       where: {
         profile: {
@@ -61,7 +61,7 @@ describe('Debug Object Filters', () => {
     ])
   })
   it('debug every filter', () => {
-    const result = createFilterEngine(nestedData).findMany({
+    const result = createFilter(nestedData).findMany({
       where: {
         profile: {
           every: {
@@ -81,7 +81,7 @@ describe('Debug Object Filters', () => {
     expect(result.data).toHaveLength(3)
   })
   it('debug none filter', () => {
-    const result = createFilterEngine(nestedData).findMany({
+    const result = createFilter(nestedData).findMany({
       where: {
         profile: {
           none: {

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { matchesFilter } from '../matches-filter'
 import { AndFilterGroup } from './and-filter-group'
 describe('AndFilterGroup', () => {
   it('should evaluate all conditions as true when all filters pass', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -29,7 +29,7 @@ describe('AndFilterGroup', () => {
     ])
   })
   it('should return empty array when any condition fails', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -51,7 +51,7 @@ describe('AndFilterGroup', () => {
     expect(result.data.length).toBe(0)
   })
   it('should work with different filter types', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       email: string
@@ -82,7 +82,7 @@ describe('AndFilterGroup', () => {
     expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane'])
   })
   it('should work with nested AND conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -109,7 +109,7 @@ describe('AndFilterGroup', () => {
     expect(result.data[0].name).toBe('Product A')
   })
   it('should work with OR conditions inside AND', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -133,7 +133,7 @@ describe('AndFilterGroup', () => {
     expect(result.data.map((x) => x.name)).toEqual(['Product A', 'Product C'])
   })
   it('should handle empty AND array', () => {
-    const filter = createFilterEngine<{ id: number; name: string }>([
+    const filter = createFilter<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
     ])
@@ -145,7 +145,7 @@ describe('AndFilterGroup', () => {
     expect(result.data.length).toBe(2)
   })
   it('should work with findUnique', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -162,7 +162,7 @@ describe('AndFilterGroup', () => {
     expect(result).toEqual({ id: 3, name: 'test3', active: true })
   })
   it('should return null when findUnique has no matches', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -178,7 +178,7 @@ describe('AndFilterGroup', () => {
     expect(result).toBe(null)
   })
   it('should work with complex nested conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -219,7 +219,7 @@ describe('AndFilterGroup', () => {
     expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone'])
   })
   it('should handle null and undefined values in conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string | null
       email: string | undefined
@@ -237,7 +237,7 @@ describe('AndFilterGroup', () => {
     expect(result.data[0].id).toBe(3)
   })
   it('debug: simple AND test', () => {
-    const filter = createFilterEngine<{ id: number; name: string }>([
+    const filter = createFilter<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
       { id: 3, name: 'test3' },

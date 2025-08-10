@@ -106,7 +106,7 @@ export enum SortDirection {
 
 export type FilterQuery<T> = {
   where: {
-    [P in keyof T]?: FilterCriteria<T>
+    [P in keyof T]?: FilterCriteria<T[P]>
   }
   pagination?: PaginationOptions
   orderBy?: { [P in keyof T]?: SortDirection }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () => {
   const testData = [
     {
@@ -40,7 +40,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
   ]
   describe('Date Objects', () => {
     it('after and gt should be equivalent for Date objects', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-01-15') },
@@ -56,7 +56,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
       expect(afterResult.data.map((item) => item.id)).toEqual([3, 4, 5])
     })
     it('after and gt should exclude the reference date', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-02-01') },
@@ -74,7 +74,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
   })
   describe('Timestamp Numbers', () => {
     it('after and gt should be equivalent for timestamp numbers', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           timestamp: { after: 1673740800000 },
@@ -92,7 +92,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
   })
   describe('Date Strings', () => {
     it('after and gt should be equivalent for date strings', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           dateString: { after: '2023-01-15' },
@@ -110,7 +110,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
   })
   describe('Regular Numbers', () => {
     it('after and gt should be equivalent for regular numbers', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           number: { after: 150 },
@@ -133,7 +133,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
         { id: 2, date: null },
         { id: 3, date: new Date('2023-02-01') },
       ]
-      const filter = createFilterEngine(dataWithNull)
+      const filter = createFilter(dataWithNull)
       const afterResult = filter.findMany({
         where: {
           date: { after: new Date('2023-01-15') },
@@ -154,7 +154,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
         { id: 2, date: 'invalid-date' },
         { id: 3, date: '2023-02-01' },
       ]
-      const filter = createFilterEngine(dataWithInvalid)
+      const filter = createFilter(dataWithInvalid)
       const afterResult = filter.findMany({
         where: {
           date: { after: '2023-01-15' },
@@ -170,7 +170,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
       expect(afterResult.data[0].id).toBe(3)
     })
     it('should handle invalid reference dates identically', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findMany({
         where: {
           date: { after: 'invalid-date' },
@@ -187,7 +187,7 @@ describe('After and GT Filter Equivalence - Prisma/TypeORM Compatibility', () =>
   })
   describe('findUnique Equivalence', () => {
     it('after and gt should work identically with findUnique', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const afterResult = filter.findUnique({
         where: {
           date: { after: new Date('2023-01-15') },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Simple Combined Filters', () => {
   const simpleData = [
     {
@@ -29,7 +29,7 @@ describe('Debug Simple Combined Filters', () => {
     },
   ]
   it('should debug combined length and some filters', () => {
-    const filter = createFilterEngine(simpleData)
+    const filter = createFilter(simpleData)
     console.log('=== DEBUGGING COMBINED FILTERS ===')
     const lengthResult = filter.findMany({
       where: {

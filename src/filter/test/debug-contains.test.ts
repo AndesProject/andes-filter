@@ -1,5 +1,5 @@
 import { describe, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Contains Filter', () => {
   it('should test contains behavior', () => {
     const data = [
@@ -8,7 +8,7 @@ describe('Debug Contains Filter', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = createFilterEngine(data)
+    const filter = createFilter(data)
     console.log('=== Debug contains: lic ===')
     data.forEach((item) => {
       const result = filter.findMany({

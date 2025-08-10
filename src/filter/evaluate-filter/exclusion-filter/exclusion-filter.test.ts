@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { ExclusionFilter } from './exclusion-filter'
 describe('ExclusionFilter', () => {
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -45,7 +45,7 @@ describe('ExclusionFilter', () => {
     ).toBe('Bob')
   })
   it('should filter numeric values correctly', () => {
-    const filter = createFilterEngine<{ size: number }>([
+    const filter = createFilter<{ size: number }>([
       { size: 0 },
       { size: 0 },
       { size: 1 },
@@ -71,7 +71,7 @@ describe('ExclusionFilter', () => {
     ).toBe(2)
   })
   it('should filter boolean values correctly', () => {
-    const filter = createFilterEngine<{ isValid: boolean }>([
+    const filter = createFilter<{ isValid: boolean }>([
       { isValid: true },
       { isValid: true },
       { isValid: false },
@@ -100,7 +100,7 @@ describe('ExclusionFilter', () => {
     ).toBe(undefined)
   })
   it('casos de borde', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: '' },
@@ -133,7 +133,7 @@ describe('ExclusionFilter', () => {
     const obj2 = { id: 2, name: 'test2' }
     const arr1 = [1, 2, 3]
     const arr2 = [4, 5, 6]
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: obj1 },
       { value: obj2 },
       { value: arr1 },

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { InequalityFilter } from './inequality-filter'
 describe('InequalityFilter', () => {
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -48,7 +48,7 @@ describe('InequalityFilter', () => {
     )
   })
   it('should filter numeric values correctly', () => {
-    const filter = createFilterEngine<{ size: number }>([
+    const filter = createFilter<{ size: number }>([
       { size: 1 },
       { size: 2 },
       { size: 3 },
@@ -72,7 +72,7 @@ describe('InequalityFilter', () => {
     expect(filter.findUnique({ where: { size: { not: 3 } } })?.size).toBe(1)
   })
   it('should filter boolean values correctly', () => {
-    const filter = createFilterEngine<{ isValid: boolean }>([
+    const filter = createFilter<{ isValid: boolean }>([
       { isValid: true },
       { isValid: true },
       { isValid: false },
@@ -100,7 +100,7 @@ describe('InequalityFilter', () => {
     ).toBe(true)
   })
   it('not con objeto FilterCriteria (condición anidada)', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Bob' },
       { name: 'Charlie' },
@@ -128,7 +128,7 @@ describe('InequalityFilter', () => {
     ).toEqual(['Bob', 'David'])
   })
   it('not anidado (doble negación)', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Bob' },
       { name: 'Charlie' },

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { BeforeFilter } from './before-filter'
 describe('BeforeFilter', () => {
   it('Date', () => {
     const fixedDate = new Date('2025-01-01')
-    const filter = createFilterEngine<{ date: Date }>([
+    const filter = createFilter<{ date: Date }>([
       { date: new Date() },
       { date: new Date() },
       { date: new Date(fixedDate.getTime() - 1000) },
@@ -21,7 +21,7 @@ describe('BeforeFilter', () => {
   })
   it('should filter numeric values correctly', () => {
     const now: number = Date.parse('2024-01-01T00:00:00.000Z')
-    const filter = createFilterEngine<{ date: number }>([
+    const filter = createFilter<{ date: number }>([
       { date: now },
       { date: now },
       { date: now - 1000 },
@@ -37,7 +37,7 @@ describe('BeforeFilter', () => {
   })
   it('should filter string values correctly', () => {
     const now: number = new Date().getTime()
-    const filter = createFilterEngine<{ date: string }>([
+    const filter = createFilter<{ date: string }>([
       { date: '2023-08-31' },
       { date: '2023-08-31' },
       { date: '2024-08-31' },
@@ -49,7 +49,7 @@ describe('BeforeFilter', () => {
     ).toBe(3)
   })
   it('null, undefined y fechas inválidas', () => {
-    const filter = createFilterEngine<{ date: any }>([
+    const filter = createFilter<{ date: any }>([
       { date: 'invalid-date' },
       { date: new Date() },
       { date: 0 },
@@ -65,7 +65,7 @@ describe('BeforeFilter', () => {
   })
   it('findUnique', () => {
     const now = new Date('2024-01-01T00:00:00.000Z')
-    const filter = createFilterEngine<{ date: Date }>([
+    const filter = createFilter<{ date: Date }>([
       { date: new Date('2023-12-31T23:59:59.000Z') },
       { date: new Date('2024-01-01T00:00:01.000Z') },
     ])

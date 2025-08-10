@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { InclusionFilter } from './inclusion-filter'
 describe('InclusionFilter', () => {
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -42,7 +42,7 @@ describe('InclusionFilter', () => {
     ).toBe('Alice')
   })
   it('should filter numeric values correctly', () => {
-    const filter = createFilterEngine<{ size: number }>([
+    const filter = createFilter<{ size: number }>([
       { size: 0 },
       { size: 1 },
       { size: 2 },
@@ -66,7 +66,7 @@ describe('InclusionFilter', () => {
     expect(filter.findUnique({ where: { size: { in: [1, 0] } } })?.size).toBe(0)
   })
   it('should filter boolean values correctly', () => {
-    const filter = createFilterEngine<{ isValid: boolean }>([
+    const filter = createFilter<{ isValid: boolean }>([
       { isValid: false },
       { isValid: false },
       { isValid: true },
@@ -90,7 +90,7 @@ describe('InclusionFilter', () => {
     ).toBe(true)
   })
   it('casos de borde', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: '' },
@@ -122,7 +122,7 @@ describe('InclusionFilter', () => {
     const obj2 = { id: 2, name: 'test2' }
     const arr1 = [1, 2, 3]
     const arr2 = [4, 5, 6]
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: obj1 },
       { value: obj2 },
       { value: arr1 },
@@ -185,7 +185,7 @@ describe('InclusionFilter Unit Tests', () => {
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe verificar contratos de retorno de findMany y findUnique', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Bob' },
       { name: 'Charlie' },

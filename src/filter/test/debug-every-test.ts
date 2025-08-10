@@ -1,4 +1,4 @@
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 
 const testData = [
   {
@@ -55,7 +55,7 @@ const testData = [
     ],
   },
 ]
-const filter = createFilterEngine(testData)
+const filter = createFilter(testData)
 console.log('=== Test 1: Solo rating >= 4.5 ===')
 const result1 = filter.findMany({
   where: {

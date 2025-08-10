@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { GreaterThanFilter } from './greater-than-filter'
 
 describe('GreaterThanFilter Integration Tests', () => {
@@ -15,7 +15,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     ]
 
     it('should find items greater than negative thresholds', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const minusTwoResult = filter.findMany({ where: { size: { gt: -2 } } })
       const minusOneResult = filter.findMany({ where: { size: { gt: -1 } } })
 
@@ -24,13 +24,13 @@ describe('GreaterThanFilter Integration Tests', () => {
     })
 
     it('should find items greater than zero', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const result = filter.findMany({ where: { size: { gt: 0 } } })
       expect(result.data.length).toBe(3)
     })
 
     it('should return empty results for values greater than maximum', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const maxResult = filter.findMany({ where: { size: { gt: 3 } } })
       const largeResult = filter.findMany({ where: { size: { gt: 100 } } })
 
@@ -39,7 +39,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with various thresholds', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const minusThreeResult = filter.findUnique({
         where: { size: { gt: -3 } },
       })
@@ -61,7 +61,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     const testData = [{ date: d1 }, { date: d2 }, { date: d3 }]
 
     it('should find items with dates greater than specified date', () => {
-      const filter = createFilterEngine<{ date: Date }>(testData)
+      const filter = createFilter<{ date: Date }>(testData)
       const afterD1Result = filter.findMany({ where: { date: { gt: d1 } } })
       const afterD2Result = filter.findMany({ where: { date: { gt: d2 } } })
       const afterD3Result = filter.findMany({ where: { date: { gt: d3 } } })
@@ -72,7 +72,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with date comparisons', () => {
-      const filter = createFilterEngine<{ date: Date }>(testData)
+      const filter = createFilter<{ date: Date }>(testData)
       const afterD1Result = filter.findUnique({ where: { date: { gt: d1 } } })
       const afterD3Result = filter.findUnique({ where: { date: { gt: d3 } } })
 
@@ -85,7 +85,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     const testData = [{ value: 'a' }, { value: 'b' }, { value: 'c' }]
 
     it('should find items with string values greater than specified string', () => {
-      const filter = createFilterEngine<{ value: string }>(testData)
+      const filter = createFilter<{ value: string }>(testData)
       const afterAResult = filter.findMany({ where: { value: { gt: 'a' } } })
       const afterBResult = filter.findMany({ where: { value: { gt: 'b' } } })
       const afterCResult = filter.findMany({ where: { value: { gt: 'c' } } })
@@ -96,7 +96,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with string comparisons', () => {
-      const filter = createFilterEngine<{ value: string }>(testData)
+      const filter = createFilter<{ value: string }>(testData)
       const afterAResult = filter.findUnique({ where: { value: { gt: 'a' } } })
       const afterCResult = filter.findUnique({ where: { value: { gt: 'c' } } })
 
@@ -114,7 +114,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     ]
 
     it('should find numeric values greater than specified threshold', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const greaterThanZeroResult = filter.findMany({
         where: { value: { gt: 0 } },
       })
@@ -127,7 +127,7 @@ describe('GreaterThanFilter Integration Tests', () => {
     })
 
     it('should return empty results for null and undefined comparisons', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const nullResult = filter.findMany({ where: { value: { gt: null } } })
       const undefinedResult = filter.findMany({
         where: { value: { gt: undefined } },

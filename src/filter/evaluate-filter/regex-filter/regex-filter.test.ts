@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { RegexFilter } from './regex-filter'
 describe('RegexFilter', () => {
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ name: string }>([
+    const filter = createFilter<{ name: string }>([
       { name: 'Alice' },
       { name: 'Alice' },
       { name: 'Bob' },
@@ -34,7 +34,7 @@ describe('RegexFilter', () => {
     ).toBe(0)
   })
   it('should handle null and undefined values correctly', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 'hello' },
@@ -51,7 +51,7 @@ describe('RegexFilter', () => {
     ).toBe(0)
   })
   it('patrones de regex especiales', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: 'hello123' },
       { value: 'world456' },
       { value: 'test' },
@@ -70,7 +70,7 @@ describe('RegexFilter', () => {
     ).toBe(1)
   })
   it('patrones de regex inválidos', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: 'hello' },
       { value: 'world' },
     ])
@@ -85,7 +85,7 @@ describe('RegexFilter', () => {
     ).toBe(0)
   })
   it('regex con flags como string', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: 'Hello' },
       { value: 'hello' },
       { value: 'HELLO' },
@@ -111,7 +111,7 @@ describe('RegexFilter', () => {
     ).toBe(0)
   })
   it('regex como objeto con flags edge cases', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: 'abc123' },
       { value: 'ABC123' },
       { value: 'def456' },

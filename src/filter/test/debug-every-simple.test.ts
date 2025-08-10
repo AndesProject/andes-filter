@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Every Filter', () => {
   const testData = [
     {
@@ -74,7 +74,7 @@ describe('Debug Every Filter', () => {
     },
   ]
   it('should debug every filter with rating only', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -93,7 +93,7 @@ describe('Debug Every Filter', () => {
     expect(result.data).toHaveLength(3)
   })
   it('should debug every filter with rating and reviews (every)', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -121,7 +121,7 @@ describe('Debug Every Filter', () => {
     ])
   })
   it('should debug every filter with reviews only', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         employees: {
@@ -144,7 +144,7 @@ describe('Debug Every Filter', () => {
     expect(result.data).toHaveLength(3)
   })
   it('should debug every filter with rating and reviews (every) - complex data', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         employees: {

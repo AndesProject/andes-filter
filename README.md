@@ -29,7 +29,7 @@ npm install @andes/filter
 ## Uso Básico
 
 ```typescript
-import { createFilterEngine } from '@andes/filter'
+import { createFilter } from '@andes/filter'
 
 // Datos de ejemplo
 const users = [
@@ -45,7 +45,7 @@ const users = [
 ]
 
 // Crear el motor de filtros
-const filter = createFilterEngine(users)
+const filter = createFilter(users)
 
 // Buscar usuarios activos mayores de 25 años
 const result = filter.findMany({
@@ -60,7 +60,7 @@ console.log(result.data) // [Charlie]
 
 ## API Principal
 
-### `createFilterEngine<T>(dataSource: T[])`
+### `createFilter<T>(dataSource: T[])`
 
 Crea un motor de filtros para una colección de datos.
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { EveryFilter } from '../evaluate-filter/every-filter/every-filter'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('EveryFilter Prisma/TypeORM Compatibility', () => {
   describe('Basic behavior', () => {
     it('should return true for empty arrays (vacuous truth)', () => {
@@ -96,9 +96,9 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       expect(filter.evaluate(['test', 'hello', 'test123'])).toBe(false)
     })
   })
-  describe('Integration tests with createFilterEngine', () => {
+  describe('Integration tests with createFilter', () => {
     it('should work with primitive arrays', () => {
-      const filter = createFilterEngine<{ arr: number[] }>([
+      const filter = createFilter<{ arr: number[] }>([
         { arr: [1, 1, 1] },
         { arr: [1, 2, 1] },
         { arr: [2, 2, 2] },
@@ -114,7 +114,7 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(2)
     })
     it('should work with object arrays', () => {
-      const filter = createFilterEngine<{ arr: { a: number }[] }>([
+      const filter = createFilter<{ arr: { a: number }[] }>([
         { arr: [{ a: 1 }, { a: 1 }] },
         { arr: [{ a: 1 }, { a: 2 }] },
         { arr: [{ a: 2 }, { a: 2 }] },
@@ -132,7 +132,7 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(2)
     })
     it('should handle empty filters correctly', () => {
-      const filter = createFilterEngine<{ arr: { x: number }[] }>([
+      const filter = createFilter<{ arr: { x: number }[] }>([
         { arr: [{ x: 1 }, { x: 2 }] },
         { arr: [{ x: 3 }] },
         { arr: [] },
@@ -142,7 +142,7 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       ).toBe(3)
     })
     it('should handle empty filters with primitive arrays', () => {
-      const filter = createFilterEngine<{ arr: number[] }>([
+      const filter = createFilter<{ arr: number[] }>([
         { arr: [1, 2, 3] },
         { arr: [4, 5, 6] },
         { arr: [] },

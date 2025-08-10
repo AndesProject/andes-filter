@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug NOT Every Filter', () => {
   it('should debug NOT every behavior', () => {
     const data = [
@@ -8,7 +8,7 @@ describe('Debug NOT Every Filter', () => {
       { id: 3, arr: [2, 2, 2] },
       { id: 4, arr: [] },
     ]
-    const filter = createFilterEngine(data)
+    const filter = createFilter(data)
     console.log('=== Debug every: { equals: 2 } ===')
     data.forEach((item) => {
       const result = filter.findMany({

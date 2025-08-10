@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Mode Insensitive', () => {
   const testData = [
     { id: 1, name: 'Alice', email: 'alice@test.com' },
@@ -10,7 +10,7 @@ describe('Debug Mode Insensitive', () => {
     { id: 6, name: 'Charlie', email: 'charlie@test.com' },
   ]
   it('should debug mode insensitive behavior', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     console.log('=== Debug Mode Insensitive ===')
     console.log('1. Testing name with insensitive mode')
     const nameResult = filter.findMany({

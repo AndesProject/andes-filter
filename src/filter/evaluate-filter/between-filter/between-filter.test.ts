@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { BetweenFilter } from './between-filter'
 
 describe('BetweenFilter', () => {
   it('string (fechas)', () => {
-    const filter = createFilterEngine<{ date: string }>([
+    const filter = createFilter<{ date: string }>([
       { date: '2024-09-01' },
       { date: '2024-09-08' },
       { date: '2024-09-09' },
@@ -34,7 +34,7 @@ describe('BetweenFilter', () => {
     ).toBe(4)
   })
   it('should filter numeric values correctly', () => {
-    const filter = createFilterEngine<{ value: number }>([
+    const filter = createFilter<{ value: number }>([
       { value: 1 },
       { value: 5 },
       { value: 10 },
@@ -53,7 +53,7 @@ describe('BetweenFilter', () => {
   })
   it('Date', () => {
     const now = new Date()
-    const filter = createFilterEngine<{ value: Date }>([
+    const filter = createFilter<{ value: Date }>([
       { value: new Date(now.getTime() - 10000) },
       { value: new Date(now.getTime() - 5000) },
       { value: now },
@@ -74,7 +74,7 @@ describe('BetweenFilter', () => {
     ).toBe(3)
   })
   it('null, undefined y fechas inválidas', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: 'invalid-date' },
       { value: new Date() },
       { value: 0 },
@@ -89,7 +89,7 @@ describe('BetweenFilter', () => {
     ).toBe(0)
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ value: number }>([
+    const filter = createFilter<{ value: number }>([
       { value: 1 },
       { value: 2 },
       { value: 3 },

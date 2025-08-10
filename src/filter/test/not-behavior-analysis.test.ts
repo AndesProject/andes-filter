@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
   describe('Basic NOT Behavior', () => {
     it('should handle primitive negation', () => {
@@ -10,7 +10,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 4, value: undefined },
         { id: 5, value: 0 },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { value: { not: 10 } } }).data
       ).toHaveLength(4)
@@ -37,7 +37,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, date: date3 },
         { id: 4, date: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { date: { not: date1 } } }).data
       ).toHaveLength(2)
@@ -55,7 +55,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, value: 0 },
         { id: 4, value: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { value: { not: NaN } } }).data
       ).toHaveLength(3)
@@ -70,7 +70,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, name: 'Bob' },
         { id: 4, name: 'ALICE' },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { name: { not: 'Alice' } } }).data
       ).toHaveLength(3)
@@ -95,7 +95,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, value: 3 },
         { id: 4, value: 4 },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { value: { not: { in: [1, 2] } } } }).data
       ).toHaveLength(2)
@@ -110,7 +110,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, name: 'Bob' },
         { id: 4, name: 'ALICE' },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { name: { not: { contains: 'lic' } } } }).data
       ).toHaveLength(2)
@@ -145,7 +145,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, arr: [2, 2, 2] },
         { id: 4, arr: [] },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { arr: { not: { some: { equals: 1 } } } } })
           .data
@@ -170,7 +170,7 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
         { id: 3, obj: { key: 'different' } },
         { id: 4, obj: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       expect(
         filter.findMany({ where: { obj: { not: obj1 } } }).data
       ).toHaveLength(3)

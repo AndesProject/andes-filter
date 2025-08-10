@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { GreaterThanOrEqualFilter } from './greater-than-or-equal-filter'
 describe('GreaterThanOrEqualFilter', () => {
   it('should filter numeric values correctly', () => {
-    const filter = createFilterEngine<{ size: number }>([
+    const filter = createFilter<{ size: number }>([
       { size: -2 },
       { size: -1 },
       { size: 0 },
@@ -32,7 +32,7 @@ describe('GreaterThanOrEqualFilter', () => {
     const d1 = new Date('2020-01-01')
     const d2 = new Date('2021-01-01')
     const d3 = new Date('2022-01-01')
-    const filter = createFilterEngine<{ date: Date }>([
+    const filter = createFilter<{ date: Date }>([
       { date: d1 },
       { date: d2 },
       { date: d3 },
@@ -54,7 +54,7 @@ describe('GreaterThanOrEqualFilter', () => {
     ).toBe(null)
   })
   it('should filter string values correctly', () => {
-    const filter = createFilterEngine<{ value: string }>([
+    const filter = createFilter<{ value: string }>([
       { value: 'a' },
       { value: 'b' },
       { value: 'c' },
@@ -74,7 +74,7 @@ describe('GreaterThanOrEqualFilter', () => {
     expect(filter.findUnique({ where: { value: { gte: 'z' } } })).toBe(null)
   })
   it('should handle null and undefined values correctly', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 0 },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { FilterCriteria } from '../../filter.interface'
 import { NotFilterGroup } from './not-filter-group'
 
@@ -155,7 +155,7 @@ describe('NotFilterGroup', () => {
 })
 describe('NotFilterGroup Integration Tests', () => {
   it('should work with findMany', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -172,7 +172,7 @@ describe('NotFilterGroup Integration Tests', () => {
     expect(result.data.length).toBe(0)
   })
   it('should work with findUnique', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -188,7 +188,7 @@ describe('NotFilterGroup Integration Tests', () => {
     expect(result).toEqual({ id: 2, name: 'test2', active: false })
   })
   it('should work with nested conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -208,7 +208,7 @@ describe('NotFilterGroup Integration Tests', () => {
     expect(result.data.length).toBe(0)
   })
   it('should work with complex nested NOT conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       price: number

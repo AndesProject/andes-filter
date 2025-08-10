@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { EqualityFilter } from './equality-filter'
 
 describe('EqualityFilter Integration Tests', () => {
@@ -19,55 +19,55 @@ describe('EqualityFilter Integration Tests', () => {
     ]
 
     it('should find exact string matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: 'Bob' } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should return empty results for non-existent strings', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: 'Mariana' } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should find multiple exact matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: 'Alice' } } })
       expect(result.data.length).toBe(2)
     })
 
     it('should be case sensitive for string matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: 'eva' } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should not match partial strings', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: 'ank' } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should handle null filter values', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: null } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should handle undefined filter values', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: undefined } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should handle empty string filter values', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { equals: '' } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should return null for findUnique with non-existent values', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       expect(filter.findUnique({ where: { name: { equals: '' } } })).toBe(null)
       expect(filter.findUnique({ where: { name: { equals: null } } })).toBe(
         null
@@ -81,7 +81,7 @@ describe('EqualityFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with exact matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       expect(
         filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name
       ).toBe('Bob')
@@ -95,7 +95,7 @@ describe('EqualityFilter Integration Tests', () => {
     const testData = [{ isValid: true }, { isValid: false }, { isValid: false }]
 
     it('should find exact boolean matches', () => {
-      const filter = createFilterEngine<{ isValid: boolean }>(testData)
+      const filter = createFilter<{ isValid: boolean }>(testData)
       const trueResult = filter.findMany({
         where: { isValid: { equals: true } },
       })
@@ -108,7 +108,7 @@ describe('EqualityFilter Integration Tests', () => {
     })
 
     it('should handle null and undefined filter values for booleans', () => {
-      const filter = createFilterEngine<{ isValid: boolean }>(testData)
+      const filter = createFilter<{ isValid: boolean }>(testData)
       const nullResult = filter.findMany({
         where: { isValid: { equals: null } },
       })
@@ -131,7 +131,7 @@ describe('EqualityFilter Integration Tests', () => {
     ]
 
     it('should find exact numeric matches', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const decimalResult = filter.findMany({
         where: { size: { equals: 0.5 } },
       })
@@ -142,7 +142,7 @@ describe('EqualityFilter Integration Tests', () => {
     })
 
     it('should return empty results for non-existent numbers', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const zeroResult = filter.findMany({ where: { size: { equals: 0 } } })
       const oneResult = filter.findMany({ where: { size: { equals: 1 } } })
 
@@ -151,13 +151,13 @@ describe('EqualityFilter Integration Tests', () => {
     })
 
     it('should find multiple exact numeric matches', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const result = filter.findMany({ where: { size: { equals: 12 } } })
       expect(result.data.length).toBe(2)
     })
 
     it('should handle null and undefined filter values for numbers', () => {
-      const filter = createFilterEngine<{ size: number }>(testData)
+      const filter = createFilter<{ size: number }>(testData)
       const nullResult = filter.findMany({ where: { size: { equals: null } } })
       const undefinedResult = filter.findMany({
         where: { size: { equals: undefined } },
@@ -177,13 +177,13 @@ describe('EqualityFilter Integration Tests', () => {
     ]
 
     it('should find exact null matches', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const result = filter.findMany({ where: { value: { equals: null } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should find exact undefined matches', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const result = filter.findMany({
         where: { value: { equals: undefined } },
       })
@@ -191,13 +191,13 @@ describe('EqualityFilter Integration Tests', () => {
     })
 
     it('should find exact string matches', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const result = filter.findMany({ where: { value: { equals: 'hello' } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should find exact number matches', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const result = filter.findMany({ where: { value: { equals: 123 } } })
       expect(result.data.length).toBe(1)
     })

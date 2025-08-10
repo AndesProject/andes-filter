@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { SomeFilter } from './some-filter'
 
 describe('SomeFilter', () => {
@@ -11,7 +11,7 @@ describe('SomeFilter', () => {
       name: string
       posts: Post[]
     }
-    const filter = createFilterEngine<User>([
+    const filter = createFilter<User>([
       { name: 'Alice', posts: [{ title: 'a' }] },
       { name: 'Alice', posts: [{ title: 'b' }] },
       { name: 'Bob', posts: [{ title: 'c' }] },
@@ -50,7 +50,7 @@ describe('SomeFilter', () => {
     ).toBe(1)
   })
   it('no array, array vacío, null y undefined', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: [1, 2, 3] as any },
       { items: [] },
       { items: null },
@@ -66,7 +66,7 @@ describe('SomeFilter', () => {
     ).toBe(0)
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3] as number[] },
       { items: [4, 5, 6] as number[] },
     ])

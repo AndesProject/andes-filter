@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug NOT Contains Step by Step', () => {
   it('should debug NOT contains step by step', () => {
     const data = [
@@ -8,7 +8,7 @@ describe('Debug NOT Contains Step by Step', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = createFilterEngine(data)
+    const filter = createFilter(data)
     console.log('=== Step by step debug ===')
     console.log('1. Testing contains: lic directly')
     const containsResult = filter.findMany({

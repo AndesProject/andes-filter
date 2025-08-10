@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Comprehensive Filter Tests', () => {
   const testData = [
     {
@@ -55,7 +55,7 @@ describe('Comprehensive Filter Tests', () => {
   ]
   describe('Basic Comparison Filters', () => {
     it('should handle equals filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { id: { equals: 1 } } as any,
       })
@@ -63,7 +63,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].id).toBe(1)
     })
     it('should handle not equals filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { id: { not: 1 } } as any,
       })
@@ -71,7 +71,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.id !== 1)).toBe(true)
     })
     it('should handle in filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { id: { in: [1, 3, 5] } } as any,
       })
@@ -79,7 +79,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.map((item) => item.id).sort()).toEqual([1, 3, 5])
     })
     it('should handle notIn filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { id: { notIn: [1, 3, 5] } } as any,
       })
@@ -89,7 +89,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Numeric Comparison Filters', () => {
     it('should handle less than filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { age: { lt: 30 } } as any,
       })
@@ -97,7 +97,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.age < 30)).toBe(true)
     })
     it('should handle less than or equal filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { age: { lte: 30 } } as any,
       })
@@ -105,7 +105,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.age <= 30)).toBe(true)
     })
     it('should handle greater than filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { age: { gt: 30 } } as any,
       })
@@ -113,7 +113,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.age > 30)).toBe(true)
     })
     it('should handle greater than or equal filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { age: { gte: 30 } } as any,
       })
@@ -123,7 +123,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('String Filters', () => {
     it('should handle contains filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { contains: 'a' } } as any,
       })
@@ -133,7 +133,7 @@ describe('Comprehensive Filter Tests', () => {
       ).toBe(true)
     })
     it('should handle notContains filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { notContains: 'a', mode: 'insensitive' } } as any,
       })
@@ -143,7 +143,7 @@ describe('Comprehensive Filter Tests', () => {
       ).toBe(true)
     })
     it('should handle startsWith filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { startsWith: 'A' } } as any,
       })
@@ -151,7 +151,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].name).toBe('Alice')
     })
     it('should handle notStartsWith filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { notStartsWith: 'A' } } as any,
       })
@@ -159,7 +159,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => !item.name.startsWith('A'))).toBe(true)
     })
     it('should handle endsWith filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { endsWith: 'e' } } as any,
       })
@@ -167,7 +167,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.name.endsWith('e'))).toBe(true)
     })
     it('should handle notEndsWith filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { notEndsWith: 'e' } } as any,
       })
@@ -175,7 +175,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => !item.name.endsWith('e'))).toBe(true)
     })
     it('should handle regex filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { regex: '^[A-C]' } } as any,
       })
@@ -185,7 +185,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('String Filters with Insensitive Mode', () => {
     it('should handle contains with insensitive mode', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { contains: 'ALICE', mode: 'insensitive' } } as any,
       })
@@ -193,7 +193,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].name).toBe('Alice')
     })
     it('should handle startsWith with insensitive mode', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { startsWith: 'al', mode: 'insensitive' } } as any,
       })
@@ -201,7 +201,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].name).toBe('Alice')
     })
     it('should handle endsWith with insensitive mode', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { endsWith: 'ICE', mode: 'insensitive' } } as any,
       })
@@ -211,7 +211,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Date Filters', () => {
     it('should handle before filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { createdAt: { before: new Date('2023-03-01') } } as any,
       })
@@ -221,7 +221,7 @@ describe('Comprehensive Filter Tests', () => {
       ).toBe(true)
     })
     it('should handle after filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { createdAt: { after: new Date('2023-03-01') } } as any,
       })
@@ -231,7 +231,7 @@ describe('Comprehensive Filter Tests', () => {
       ).toBe(true)
     })
     it('should handle between filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           createdAt: {
@@ -251,7 +251,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Array Filters', () => {
     it('should handle has filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { tags: { has: 'admin' } } as any,
       })
@@ -261,7 +261,7 @@ describe('Comprehensive Filter Tests', () => {
       )
     })
     it('should handle hasEvery filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { tags: { hasEvery: ['user', 'moderator'] } } as any,
       })
@@ -270,7 +270,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].tags).toContain('moderator')
     })
     it('should handle hasSome filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { tags: { hasSome: ['admin', 'moderator'] } } as any,
       })
@@ -282,7 +282,7 @@ describe('Comprehensive Filter Tests', () => {
       ).toBe(true)
     })
     it('should handle length filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { tags: { length: 2 } } as any,
       })
@@ -324,7 +324,7 @@ describe('Comprehensive Filter Tests', () => {
       },
     ]
     it('should handle some filter', () => {
-      const filter = createFilterEngine(nestedData)
+      const filter = createFilter(nestedData)
       const result = filter.findMany({
         where: {
           profile: {
@@ -341,7 +341,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data).toHaveLength(2)
     })
     it('should handle every filter', () => {
-      const filter = createFilterEngine(nestedData)
+      const filter = createFilter(nestedData)
       const result = filter.findMany({
         where: {
           profile: {
@@ -354,7 +354,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data).toHaveLength(3)
     })
     it('should handle none filter', () => {
-      const filter = createFilterEngine(nestedData)
+      const filter = createFilter(nestedData)
       const result = filter.findMany({
         where: {
           profile: {
@@ -375,7 +375,7 @@ describe('Comprehensive Filter Tests', () => {
       { id: 4, name: 'David', email: 'david@test.com' },
     ]
     it('should handle isNull filter', () => {
-      const filter = createFilterEngine(nullData)
+      const filter = createFilter(nullData)
       const result = filter.findMany({
         where: { email: { isNull: true } } as any,
       })
@@ -383,7 +383,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data.every((item) => item.email == null)).toBe(true)
     })
     it('should handle isNull false filter', () => {
-      const filter = createFilterEngine(nullData)
+      const filter = createFilter(nullData)
       const result = filter.findMany({
         where: { email: { isNull: false } } as any,
       })
@@ -397,7 +397,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 3, value: 0 },
         { id: 4, value: 1 },
       ] as any
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({
         where: { value: { in: [null, undefined] } as any },
       })
@@ -406,7 +406,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Logical Group Filters', () => {
     it('should handle AND filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           AND: [{ age: { gte: 25 } }, { active: { equals: true } }],
@@ -418,7 +418,7 @@ describe('Comprehensive Filter Tests', () => {
       )
     })
     it('should handle OR filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           OR: [{ age: { lt: 25 } }, { active: { equals: false } }],
@@ -430,7 +430,7 @@ describe('Comprehensive Filter Tests', () => {
       )
     })
     it('should handle NOT filter', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           NOT: [{ age: { gte: 30 } }, { active: { equals: false } }],
@@ -444,7 +444,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Complex Nested Filters', () => {
     it('should handle nested AND/OR combinations', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -458,7 +458,7 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data).toHaveLength(4)
     })
     it('should handle nested NOT with other operators', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: {
           AND: [
@@ -474,7 +474,7 @@ describe('Comprehensive Filter Tests', () => {
   })
   describe('Edge Cases', () => {
     it('should handle empty arrays', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { tags: { length: 0 } } as any,
       })
@@ -482,21 +482,21 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data[0].tags).toEqual([])
     })
     it('should handle empty string searches', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { contains: '' } } as any,
       })
       expect(result.data).toHaveLength(5)
     })
     it('should handle invalid regex patterns gracefully', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { name: { regex: '[' } } as any,
       })
       expect(result.data).toHaveLength(0)
     })
     it('should handle non-string values in string filters', () => {
-      const filter = createFilterEngine(testData)
+      const filter = createFilter(testData)
       const result = filter.findMany({
         where: { id: { contains: '1' } } as any,
       })
@@ -514,7 +514,7 @@ describe('Comprehensive Filter Tests', () => {
         tags: i % 3 === 0 ? ['admin'] : ['user'],
         createdAt: new Date(2023, 0, 1 + i),
       }))
-      const filter = createFilterEngine(largeData)
+      const filter = createFilter(largeData)
       const startTime = Date.now()
       const result = filter.findMany({
         where: {
@@ -542,7 +542,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 3, date: date3 },
         { id: 4, date: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({ where: { date: { in: [date1] } } })
       expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 3])
     })
@@ -553,7 +553,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 3, value: 0 },
         { id: 4, value: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({ where: { value: { in: [NaN, 1] } } })
       expect(result.data.map((d) => (d as any).id).sort()).toEqual([1, 2])
     })
@@ -564,7 +564,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 3, value: 0 },
         { id: 4, value: 1 },
       ] as any
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({
         where: { value: { in: [null, undefined] } as any },
       })
@@ -579,7 +579,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 3, obj: { key: 'different' } },
         { id: 4, obj: null },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({ where: { obj: { in: [obj1] } } })
       expect(result.data.map((d) => (d as any).id)).toEqual([1])
     })
@@ -589,7 +589,7 @@ describe('Comprehensive Filter Tests', () => {
         { id: 2, value: 2 },
         { id: 3, value: 3 },
       ]
-      const filter = createFilterEngine(data)
+      const filter = createFilter(data)
       const result = filter.findMany({ where: { value: { in: [] } } })
       expect(result.data).toHaveLength(0)
     })

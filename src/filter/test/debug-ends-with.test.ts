@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug EndsWith Filter', () => {
   it('should debug endsWith behavior', () => {
     const data = [
@@ -8,7 +8,7 @@ describe('Debug EndsWith Filter', () => {
       { id: 3, name: 'Bob' },
       { id: 4, name: 'ALICE' },
     ]
-    const filter = createFilterEngine(data)
+    const filter = createFilter(data)
     console.log('=== Debug endsWith: e ===')
     data.forEach((item) => {
       const result = filter.findMany({

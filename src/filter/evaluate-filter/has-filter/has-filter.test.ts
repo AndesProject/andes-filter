@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { HasFilter } from './has-filter'
 describe('HasFilter', () => {
   it('arrays que contienen el elemento', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
       { items: [7, 8, 9] },
@@ -16,7 +16,7 @@ describe('HasFilter', () => {
     )
   })
   it('arrays con strings', () => {
-    const filter = createFilterEngine<{ tags: string[] }>([
+    const filter = createFilter<{ tags: string[] }>([
       { tags: ['javascript', 'typescript'] },
       { tags: ['python', 'java'] },
       { tags: ['javascript', 'react'] },
@@ -29,7 +29,7 @@ describe('HasFilter', () => {
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -40,7 +40,7 @@ describe('HasFilter', () => {
     )
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
     ])
@@ -50,7 +50,7 @@ describe('HasFilter', () => {
     expect(result2).toBe(null)
   })
   it('arrays con booleanos', () => {
-    const filter = createFilterEngine<{ flags: boolean[] }>([
+    const filter = createFilter<{ flags: boolean[] }>([
       { flags: [true, false] },
       { flags: [false, false] },
     ])

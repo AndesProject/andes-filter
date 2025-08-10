@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { IsNullFilter } from './is-null-filter'
 describe('IsNullFilter', () => {
   it('should match null and undefined when isNull is true', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 0 },
@@ -20,7 +20,7 @@ describe('IsNullFilter', () => {
     })
   })
   it('should match non-null and non-undefined when isNull is false', () => {
-    const filter = createFilterEngine<{ value: any }>([
+    const filter = createFilter<{ value: any }>([
       { value: null },
       { value: undefined },
       { value: 0 },
@@ -43,7 +43,7 @@ describe('IsNullFilter', () => {
     })
   })
   it('should work with arrays and objects', () => {
-    const filter = createFilterEngine<{ arr: any; obj: any }>([
+    const filter = createFilter<{ arr: any; obj: any }>([
       { arr: null, obj: null },
       { arr: undefined, obj: undefined },
       { arr: [], obj: {} },
@@ -63,7 +63,7 @@ describe('IsNullFilter', () => {
     ).toBe(2)
   })
   it('should work in combination with other filters', () => {
-    const filter = createFilterEngine<{ value: any; name: string }>([
+    const filter = createFilter<{ value: any; name: string }>([
       { value: null, name: 'a' },
       { value: 1, name: 'b' },
       { value: undefined, name: 'c' },
@@ -86,7 +86,7 @@ describe('IsNullFilter', () => {
     ).toBe(1)
   })
   it('should work with AND/OR conditions', () => {
-    const filter = createFilterEngine<{ value: any; flag: boolean }>([
+    const filter = createFilter<{ value: any; flag: boolean }>([
       { value: null, flag: true },
       { value: 1, flag: false },
       { value: undefined, flag: true },

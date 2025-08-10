@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { NoneFilter } from './none-filter'
 describe('NoneFilter', () => {
   it('arrays con elementos', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
       { items: [7, 8, 9] },
@@ -17,7 +17,7 @@ describe('NoneFilter', () => {
     ).toBe(2)
   })
   it('arrays vacíos, null y undefined', () => {
-    const filter = createFilterEngine<{ items: any }>([
+    const filter = createFilter<{ items: any }>([
       { items: [] },
       { items: null },
       { items: undefined },
@@ -28,7 +28,7 @@ describe('NoneFilter', () => {
     ).toBe(3)
   })
   it('findUnique', () => {
-    const filter = createFilterEngine<{ items: number[] }>([
+    const filter = createFilter<{ items: number[] }>([
       { items: [1, 2, 3] },
       { items: [4, 5, 6] },
     ])
@@ -42,7 +42,7 @@ describe('NoneFilter', () => {
     expect(result2).toEqual({ items: [4, 5, 6] })
   })
   it('filtros complejos', () => {
-    const filter = createFilterEngine<{ posts: number[] }>([
+    const filter = createFilter<{ posts: number[] }>([
       { posts: [1, 2] },
       { posts: [3, 4] },
     ])

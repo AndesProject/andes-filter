@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 
 describe('Complex Filter Integration Tests', () => {
   const complexData = [
@@ -99,7 +99,7 @@ describe('Complex Filter Integration Tests', () => {
 
   describe('Complex nested filtering scenarios', () => {
     it('should filter companies with employees having projects with length >= 1', () => {
-      const filter = createFilterEngine(complexData)
+      const filter = createFilter(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -121,7 +121,7 @@ describe('Complex Filter Integration Tests', () => {
     })
 
     it('should filter companies with employees having projects with milestones >= 2', () => {
-      const filter = createFilterEngine(complexData)
+      const filter = createFilter(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -146,7 +146,7 @@ describe('Complex Filter Integration Tests', () => {
     })
 
     it('should filter companies with employees having projects with team size >= 2', () => {
-      const filter = createFilterEngine(complexData)
+      const filter = createFilter(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -171,7 +171,7 @@ describe('Complex Filter Integration Tests', () => {
     })
 
     it('should filter companies with employees having projects >= 1 AND milestones >= 2', () => {
-      const filter = createFilterEngine(complexData)
+      const filter = createFilter(complexData)
       const result = filter.findMany({
         where: {
           employees: {
@@ -197,7 +197,7 @@ describe('Complex Filter Integration Tests', () => {
     })
 
     it('should apply complex filter with multiple conditions', () => {
-      const filter = createFilterEngine(complexData)
+      const filter = createFilter(complexData)
       const result = filter.findMany({
         where: {
           employees: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { ContainsFilter } from './contains-filter'
 
 describe('ContainsFilter Integration Tests', () => {
@@ -20,7 +20,7 @@ describe('ContainsFilter Integration Tests', () => {
     ]
 
     it('should find items containing the specified substring', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({
         where: { name: { contains: 'Cerati' } },
       })
@@ -28,13 +28,13 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should find items containing exact name matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: 'Bob' } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should return empty results for non-existent substrings', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({
         where: { name: { contains: 'Mariana' } },
       })
@@ -42,49 +42,49 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should find multiple items containing the same substring', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: 'Alice' } } })
       expect(result.data.length).toBe(2)
     })
 
     it('should be case sensitive for substring matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: 'eva' } } })
       expect(result.data.length).toBe(0)
     })
 
     it('should find items containing partial substrings', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: 'ank' } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should find items containing space characters', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: ' ' } } })
       expect(result.data.length).toBe(1)
     })
 
     it('should return all items when searching for empty string', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({ where: { name: { contains: '' } } })
       expect(result.data.length).toBe(12)
     })
 
     it('should return correct item for findUnique with space-containing names', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findUnique({ where: { name: { contains: ' ' } } })
       expect(result?.name).toBe('Gustavo Cerati')
     })
 
     it('should return first item for findUnique with empty string search', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findUnique({ where: { name: { contains: '' } } })
       expect(result?.name).toBe('Alice')
     })
 
     it('should return null for findUnique with non-existent substrings', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findUnique({
         where: { name: { contains: 'Mariana' } },
       })
@@ -92,7 +92,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with exact substring matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const bobResult = filter.findUnique({
         where: { name: { contains: 'Bob' } },
       })
@@ -115,7 +115,7 @@ describe('ContainsFilter Integration Tests', () => {
     ]
 
     it('should find items regardless of case when using insensitive mode', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const aliceResult = filter.findMany({
         where: { name: { contains: 'alice', mode: 'insensitive' } },
       })
@@ -132,7 +132,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should find items with partial case-insensitive matches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({
         where: { name: { contains: 'char', mode: 'insensitive' } },
       })
@@ -140,7 +140,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should return empty results for non-existent case-insensitive searches', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findMany({
         where: { name: { contains: 'xyz', mode: 'insensitive' } },
       })
@@ -148,7 +148,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should return correct item for findUnique with case-insensitive search', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findUnique({
         where: { name: { contains: 'alice', mode: 'insensitive' } },
       })
@@ -156,7 +156,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should return null for findUnique with non-existent case-insensitive search', () => {
-      const filter = createFilterEngine<{ name: string }>(testData)
+      const filter = createFilter<{ name: string }>(testData)
       const result = filter.findUnique({
         where: { name: { contains: 'xyz', mode: 'insensitive' } },
       })
@@ -173,7 +173,7 @@ describe('ContainsFilter Integration Tests', () => {
     ]
 
     it('should find string values containing specified substrings', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const helloResult = filter.findMany({
         where: { value: { contains: 'hello' } },
       })
@@ -186,7 +186,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should return empty results for non-existent substrings in mixed data', () => {
-      const filter = createFilterEngine<{ value: any }>(testData)
+      const filter = createFilter<{ value: any }>(testData)
       const result = filter.findMany({ where: { value: { contains: 'xyz' } } })
       expect(result.data.length).toBe(0)
     })
@@ -201,13 +201,13 @@ describe('ContainsFilter Integration Tests', () => {
     ]
 
     it('should return all items when searching for empty string', () => {
-      const filter = createFilterEngine<{ value: string }>(testData)
+      const filter = createFilter<{ value: string }>(testData)
       const result = filter.findMany({ where: { value: { contains: '' } } })
       expect(result.data.length).toBe(4)
     })
 
     it('should find items containing the specified substring', () => {
-      const filter = createFilterEngine<{ value: string }>(testData)
+      const filter = createFilter<{ value: string }>(testData)
       const helloResult = filter.findMany({
         where: { value: { contains: 'hello' } },
       })
@@ -220,7 +220,7 @@ describe('ContainsFilter Integration Tests', () => {
     })
 
     it('should find items containing complete phrases', () => {
-      const filter = createFilterEngine<{ value: string }>(testData)
+      const filter = createFilter<{ value: string }>(testData)
       const result = filter.findMany({
         where: { value: { contains: 'hello world' } },
       })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Nested Filter', () => {
   const testData = [
     {
@@ -19,7 +19,7 @@ describe('Debug Nested Filter', () => {
     },
   ]
   it('should debug nested filter with every and team length', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         team: {
@@ -35,7 +35,7 @@ describe('Debug Nested Filter', () => {
     expect(result.data[0].name).toBe('Project A')
   })
   it('should debug nested filter with milestones length', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         milestones: {

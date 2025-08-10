@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../../filter-from'
+import { createFilter } from '../../filter-from'
 import { OrFilterGroup } from './or-filter-group'
 describe('OrFilterGroup', () => {
   it('should evaluate as true when any filter passes', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -28,7 +28,7 @@ describe('OrFilterGroup', () => {
     ])
   })
   it('should return empty array when no conditions match', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -49,7 +49,7 @@ describe('OrFilterGroup', () => {
     expect(result.data.length).toBe(0)
   })
   it('should work with different filter types', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       email: string
@@ -80,7 +80,7 @@ describe('OrFilterGroup', () => {
     expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane', 'Bob'])
   })
   it('should work with nested OR conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -111,7 +111,7 @@ describe('OrFilterGroup', () => {
     ])
   })
   it('should work with AND conditions inside OR', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -139,7 +139,7 @@ describe('OrFilterGroup', () => {
     ])
   })
   it('should handle empty OR array', () => {
-    const filter = createFilterEngine<{ id: number; name: string }>([
+    const filter = createFilter<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
     ])
@@ -151,7 +151,7 @@ describe('OrFilterGroup', () => {
     expect(result.data.length).toBe(0)
   })
   it('should work with findUnique', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -168,7 +168,7 @@ describe('OrFilterGroup', () => {
     expect(result).toEqual({ id: 1, name: 'test1', active: true })
   })
   it('should return null when findUnique has no matches', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       active: boolean
@@ -184,7 +184,7 @@ describe('OrFilterGroup', () => {
     expect(result).toBe(null)
   })
   it('should work with complex nested conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string
       category: string
@@ -225,7 +225,7 @@ describe('OrFilterGroup', () => {
     expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone', 'Book'])
   })
   it('should handle null and undefined values in conditions', () => {
-    const filter = createFilterEngine<{
+    const filter = createFilter<{
       id: number
       name: string | null
       email: string | undefined
@@ -243,7 +243,7 @@ describe('OrFilterGroup', () => {
     expect(result.data.map((x) => x.id)).toEqual([1, 2])
   })
   it('should work with single condition', () => {
-    const filter = createFilterEngine<{ id: number; name: string }>([
+    const filter = createFilter<{ id: number; name: string }>([
       { id: 1, name: 'test1' },
       { id: 2, name: 'test2' },
       { id: 3, name: 'test3' },

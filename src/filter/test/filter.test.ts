@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 class User {
   name: string
 }
-describe('createFilterEngine', () => {
+describe('createFilter', () => {
   it('should create an object with findMany and findUnique methods', () => {
-    const filter = createFilterEngine<User>([])
+    const filter = createFilter<User>([])
     expect(typeof filter.findMany).toBe('function')
     expect(typeof filter.findUnique).toBe('function')
   })
 })
 describe('distinct en findMany', () => {
   it('distinct: true elimina duplicados de objetos completos', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: 'a' },
       { id: 1, name: 'a' },
       { id: 2, name: 'b' },
@@ -28,7 +28,7 @@ describe('distinct en findMany', () => {
     ])
   })
   it('distinct por campo string', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: 'a' },
       { id: 2, name: 'a' },
       { id: 3, name: 'b' },
@@ -40,7 +40,7 @@ describe('distinct en findMany', () => {
     expect(result.data.map((x) => x.name).sort()).toEqual(['a', 'b', 'c'])
   })
   it('distinct por múltiples campos', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: 'a', group: 1 },
       { id: 2, name: 'a', group: 2 },
       { id: 3, name: 'a', group: 1 },
@@ -57,7 +57,7 @@ describe('distinct en findMany', () => {
     ])
   })
   it('distinct funciona junto a otros filtros', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: 'a', active: true },
       { id: 2, name: 'a', active: false },
       { id: 3, name: 'b', active: true },
@@ -72,7 +72,7 @@ describe('distinct en findMany', () => {
     expect(result.data.map((x) => x.name).sort()).toEqual(['a', 'b', 'c'])
   })
   it('distinct ignora null y undefined', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: null },
       { id: 2, name: undefined },
       { id: 3, name: null },
@@ -86,7 +86,7 @@ describe('distinct en findMany', () => {
     expect(result.data.map((x) => x.name)).toContain('a')
   })
   it('distinct con arrays y objetos anidados', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, tags: [1, 2] },
       { id: 2, tags: [1, 2] },
       { id: 3, tags: [2, 3] },
@@ -102,7 +102,7 @@ describe('distinct en findMany', () => {
     ])
   })
   it('findUnique no aplica distinct, retorna el primer match', () => {
-    const filter = createFilterEngine([
+    const filter = createFilter([
       { id: 1, name: 'a' },
       { id: 2, name: 'a' },
       { id: 3, name: 'b' },

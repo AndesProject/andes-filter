@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createFilterEngine } from '../filter-from'
+import { createFilter } from '../filter-from'
 describe('Debug Team Filter', () => {
   const testData = [
     {
@@ -14,7 +14,7 @@ describe('Debug Team Filter', () => {
     },
   ]
   it('should debug team filter with length and every', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         team: {
@@ -30,7 +30,7 @@ describe('Debug Team Filter', () => {
     expect(result.data[0].name).toBe('Project A')
   })
   it('should debug team filter with just length', () => {
-    const filter = createFilterEngine(testData)
+    const filter = createFilter(testData)
     const result = filter.findMany({
       where: {
         team: {
