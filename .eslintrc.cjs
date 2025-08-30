@@ -27,5 +27,5 @@ module.exports = {
       { blankLine: 'always', prev: 'function', next: 'block-like' },
     ],
   },
-  ignorePatterns: ['dist', 'node_modules', 'webpack.config.js'],
+  ignorePatterns: ['dist', 'node_modules', 'webpack.config.js', '*.test.ts'],
 }

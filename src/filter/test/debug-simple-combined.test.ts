@@ -30,7 +30,6 @@ describe('Debug Simple Combined Filters', () => {
   ]
   it('should debug combined length and some filters', () => {
     const filter = createFilter(simpleData)
-    console.log('=== DEBUGGING COMBINED FILTERS ===')
     const lengthResult = filter.findMany({
       where: {
         projects: {
@@ -38,10 +37,6 @@ describe('Debug Simple Combined Filters', () => {
         },
       } as any,
     })
-    console.log(
-      'Length only result:',
-      lengthResult.data.map((item) => item.name)
-    )
     const someResult = filter.findMany({
       where: {
         projects: {
@@ -53,10 +48,6 @@ describe('Debug Simple Combined Filters', () => {
         },
       } as any,
     })
-    console.log(
-      'Some only result:',
-      someResult.data.map((item) => item.name)
-    )
     const combinedResult = filter.findMany({
       where: {
         projects: {
@@ -69,10 +60,6 @@ describe('Debug Simple Combined Filters', () => {
         },
       } as any,
     })
-    console.log(
-      'Combined result:',
-      combinedResult.data.map((item) => item.name)
-    )
     expect(combinedResult.data).toHaveLength(1)
     expect(combinedResult.data[0].name).toBe('Company A')
   })

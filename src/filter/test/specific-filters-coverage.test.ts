@@ -571,10 +571,7 @@ describe('Cobertura total de filtros base y compuestos', () => {
   describe('BaseComparisonFilter', () => {
     class TestCompFilter extends BaseComparisonFilter {
       evaluate(actual: any): boolean {
-        console.log('TestCompFilter.evaluate called with:', actual)
-        console.log('this.expectedValue:', this.expectedValue)
         const result = this.compareObjects(this.expectedValue, actual)
-        console.log('compareObjects result:', result)
         return result
       }
     }

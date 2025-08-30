@@ -11,8 +11,6 @@ describe('Debug Mode Insensitive', () => {
   ]
   it('should debug mode insensitive behavior', () => {
     const filter = createFilter(testData)
-    console.log('=== Debug Mode Insensitive ===')
-    console.log('1. Testing name with insensitive mode')
     const nameResult = filter.findMany({
       where: {
         name: {
@@ -21,15 +19,6 @@ describe('Debug Mode Insensitive', () => {
         },
       },
     })
-    console.log(
-      'Name result:',
-      nameResult.data.map((item) => ({
-        id: item.id,
-        name: item.name,
-        email: item.email,
-      }))
-    )
-    console.log('2. Testing email with sensitive mode')
     const emailResult = filter.findMany({
       where: {
         email: {
@@ -37,15 +26,6 @@ describe('Debug Mode Insensitive', () => {
         },
       },
     })
-    console.log(
-      'Email result:',
-      emailResult.data.map((item) => ({
-        id: item.id,
-        name: item.name,
-        email: item.email,
-      }))
-    )
-    console.log('3. Testing combined filter')
     const combinedResult = filter.findMany({
       where: {
         name: {
@@ -57,14 +37,6 @@ describe('Debug Mode Insensitive', () => {
         },
       },
     })
-    console.log(
-      'Combined result:',
-      combinedResult.data.map((item) => ({
-        id: item.id,
-        name: item.name,
-        email: item.email,
-      }))
-    )
     expect(combinedResult.data).toHaveLength(1)
     expect(combinedResult.data[0].id).toBe(2)
   })

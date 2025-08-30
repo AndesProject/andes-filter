@@ -9,13 +9,11 @@ describe('Debug After vs GT', () => {
       { id: 2, date: 'invalid-date' },
       { id: 3, date: '2023-02-01' },
     ]
-    console.log('=== Debug After vs GT ===')
     const afterFilter = new AfterFilter('2023-01-15')
     const gtFilter = new GreaterThanFilter('2023-01-15')
     dataWithInvalid.forEach((item) => {
       const afterResult = afterFilter.evaluate(item.date)
       const gtResult = gtFilter.evaluate(item.date)
-      console.log(`ID ${item.id}: after=${afterResult}, gt=${gtResult}`)
     })
     const filter = createFilter(dataWithInvalid)
     const afterResult = filter.findMany({
@@ -28,14 +26,6 @@ describe('Debug After vs GT', () => {
         date: { gt: '2023-01-15' },
       },
     })
-    console.log(
-      'After result:',
-      afterResult.data.map((d) => d.id)
-    )
-    console.log(
-      'GT result:',
-      gtResult.data.map((d) => d.id)
-    )
     expect(afterResult.data).toEqual(gtResult.data)
   })
 })

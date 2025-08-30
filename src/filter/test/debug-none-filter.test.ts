@@ -12,10 +12,8 @@ describe('Debug NoneFilter', () => {
       { id: 6, tags: [{ name: 'qux' }, { name: 'foo' }] },
     ]
     const noneFilter = new NoneFilter({ name: { equals: 'foo' } } as any)
-    console.log('=== Individual evaluations ===')
     testData.forEach((item) => {
       const result = noneFilter.evaluate(item.tags)
-      console.log(`ID ${item.id}: ${JSON.stringify(item.tags)} -> ${result}`)
     })
     const filter = createFilter(testData)
     const result = filter.findMany({
@@ -23,12 +21,6 @@ describe('Debug NoneFilter', () => {
         tags: { none: { name: { equals: 'foo' } } as any },
       },
     })
-    console.log('=== Filter result ===')
-    console.log('Expected: [2, 3, 4, 5]')
-    console.log(
-      'Actual:',
-      result.data.map((x) => x.id)
-    )
     expect(result.data.map((x) => x.id)).toEqual([2, 3, 4, 5])
   })
   it('should debug empty filter with primitives', () => {
@@ -38,10 +30,8 @@ describe('Debug NoneFilter', () => {
       { id: 3, values: null },
     ]
     const noneFilter = new NoneFilter({})
-    console.log('=== Empty filter with primitives ===')
     data.forEach((item) => {
       const result = noneFilter.evaluate(item.values)
-      console.log(`ID ${item.id}: ${JSON.stringify(item.values)} -> ${result}`)
     })
     const filter = createFilter(data)
     const result = filter.findMany({
@@ -49,12 +39,6 @@ describe('Debug NoneFilter', () => {
         values: { none: {} as any },
       },
     })
-    console.log('=== Filter result ===')
-    console.log('Expected: [2, 3]')
-    console.log(
-      'Actual:',
-      result.data.map((x) => x.id)
-    )
     expect(result.data.map((x) => x.id).sort()).toEqual([2, 3])
   })
 })

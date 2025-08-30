@@ -62,19 +62,6 @@ describe('Debug Length Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result:',
-      result.data.map((item) => ({
-        name: item.name,
-        employees: item.employees.map((emp) => ({
-          name: emp.name,
-          projects: emp.projects.map((proj) => ({
-            name: proj.name,
-            team: proj.team,
-          })),
-        })),
-      }))
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'Company A',
@@ -96,10 +83,6 @@ describe('Debug Length Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Length 2 result:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Company A')
   })
@@ -115,10 +98,6 @@ describe('Debug Length Filter', () => {
         items: { length: { gte: 1 } },
       } as any,
     })
-    console.log(
-      'Simple length result:',
-      result.data.map((item) => item.id)
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.id)).toEqual([1, 2])
   })
@@ -129,13 +108,7 @@ describe('Debug Length Filter', () => {
       { id: 3, items: [] },
     ]
     const filterConfig = { items: { length: { gte: 1 } } }
-    console.log('Filter config:', JSON.stringify(filterConfig, null, 2))
-    simpleArrayData.forEach((item, index) => {
-      console.log(`Item ${index}:`, item)
-      console.log(`Items array:`, item.items)
-      console.log(`Items length:`, item.items.length)
-      console.log(`Should pass gte 1:`, item.items.length >= 1)
-    })
+    simpleArrayData.forEach((item, index) => {})
   })
   it('should debug manual evaluation', () => {
     const simpleArrayData = [
@@ -146,11 +119,8 @@ describe('Debug Length Filter', () => {
     const filterEvaluator = new FilterEvaluator({
       items: { length: { gte: 1 } },
     } as any)
-    console.log('Filter evaluator created')
-    console.log('Filters:', filterEvaluator['filters'])
     simpleArrayData.forEach((item, index) => {
       const result = filterEvaluator.evaluate(item)
-      console.log(`Item ${index} evaluation:`, result)
     })
   })
 })

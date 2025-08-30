@@ -286,16 +286,6 @@ describe('Debug HasEvery Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result:',
-      result.data.map((item) => ({
-        name: item.name,
-        departments: item.departments.map((dept) => ({
-          name: dept.name,
-          productivity: dept.metrics.productivity,
-        })),
-      }))
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',
@@ -330,16 +320,6 @@ describe('Debug HasEvery Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Simple test result:',
-      result.data.map((item) => ({
-        name: item.name,
-        departments: item.departments.map((dept) => ({
-          name: dept.name,
-          productivity: dept.productivity,
-        })),
-      }))
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Company B')
   })

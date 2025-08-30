@@ -27,10 +27,6 @@ describe('Debug Nested Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })
@@ -43,10 +39,6 @@ describe('Debug Nested Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with milestones:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })

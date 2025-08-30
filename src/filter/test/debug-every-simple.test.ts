@@ -86,10 +86,6 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with rating only:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(3)
   })
   it('should debug every filter with rating and reviews (every)', () => {
@@ -110,10 +106,6 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with rating and reviews (every):',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',
@@ -137,10 +129,6 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with reviews only:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(3)
   })
   it('should debug every filter with rating and reviews (every) - complex data', () => {
@@ -161,10 +149,6 @@ describe('Debug Every Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with complex data:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.name)).toEqual([
       'StartupXYZ',

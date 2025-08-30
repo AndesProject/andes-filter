@@ -48,12 +48,6 @@ describe('Debug Object Filters', () => {
         } as any,
       },
     })
-    console.log('Result data:', result.data)
-    console.log('Expected: Alice, Bob (USA addresses)')
-    console.log(
-      'Actual:',
-      result.data.map((item) => item.profile[0].name)
-    )
     expect(result.data).toHaveLength(2)
     expect(result.data.map((item) => item.profile[0].name).sort()).toEqual([
       'Alice',
@@ -70,14 +64,6 @@ describe('Debug Object Filters', () => {
         },
       },
     })
-    console.log('Result data:', result.data)
-    console.log('Expected: All (age >= 25)')
-    console.log(
-      'Actual:',
-      result.data.map(
-        (item) => `${item.profile[0].name} (${item.profile[0].age})`
-      )
-    )
     expect(result.data).toHaveLength(3)
   })
   it('debug none filter', () => {
@@ -90,14 +76,6 @@ describe('Debug Object Filters', () => {
         },
       },
     })
-    console.log('Result data:', result.data)
-    console.log('Expected: All (none age < 25)')
-    console.log(
-      'Actual:',
-      result.data.map(
-        (item) => `${item.profile[0].name} (${item.profile[0].age})`
-      )
-    )
     expect(result.data).toHaveLength(3)
   })
 })

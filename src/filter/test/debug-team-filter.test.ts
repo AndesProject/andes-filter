@@ -22,10 +22,6 @@ describe('Debug Team Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })
@@ -38,10 +34,6 @@ describe('Debug Team Filter', () => {
         },
       } as any,
     })
-    console.log(
-      'Result with just length:',
-      result.data.map((item) => item.name)
-    )
     expect(result.data).toHaveLength(1)
     expect(result.data[0].name).toBe('Project A')
   })
