@@ -158,3 +158,17 @@ describe('LessThanFilter Additional Edge Cases', () => {
     expect(filter.evaluate({})).toBe(false) // Object comparison should fail
   })
 })
+
+describe('LessThanFilter - extra coverage for string dates and catch', () => {
+  it('should compare valid string dates when both are valid', () => {
+    const f = new LessThanFilter('2023-01-02')
+    expect(f.evaluate('2023-01-01')).toBe(true)
+    expect(f.evaluate('2023-01-03')).toBe(false)
+  })
+  it('should trigger catch branch when comparing with Symbol', () => {
+    const f = new LessThanFilter(Symbol('s')) as unknown as {
+      evaluate: (v: any) => boolean
+    }
+    expect(f.evaluate(Symbol('x'))).toBe(false)
+  })
+})

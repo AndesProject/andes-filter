@@ -208,12 +208,12 @@ describe('EveryFilter Integration', () => {
   })
   it('should return true for empty array in integration', () => {
     const filter = createFilter<{ arr: number[] }>([{ arr: [] }, { arr: [1] }])
-    expect(filter.findMany({ where: { arr: { every: 1 } } }).data.length).toBe(
-      2
-    )
-    expect(filter.findMany({ where: { arr: { every: 2 } } }).data.length).toBe(
-      1
-    )
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length
+    ).toBe(2)
+    expect(
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length
+    ).toBe(1)
   })
   it('should handle empty filter with array of objects', () => {
     const filter = createFilter<{ arr: { x: number }[] }>([
@@ -234,5 +234,12 @@ describe('EveryFilter Integration', () => {
     expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
       3
     )
+  })
+})
+describe('EveryFilter - final false branch coverage', () => {
+  it('should return false when filter is an array (no flags set, no evaluator)', () => {
+    // Using an array as filter makes constructor skip all flags and evaluators
+    const filter = new EveryFilter([1, 2] as unknown as any)
+    expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
 })

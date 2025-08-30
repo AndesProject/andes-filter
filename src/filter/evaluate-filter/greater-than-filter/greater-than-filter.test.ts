@@ -292,3 +292,12 @@ describe('GreaterThanFilter Additional Edge Cases', () => {
     expect(filter.evaluate({})).toBe(false) // Object comparison should fail
   })
 })
+
+describe('GreaterThanFilter - extra coverage for catch', () => {
+  it('should trigger catch when comparing Symbols', () => {
+    const f = new GreaterThanFilter(Symbol('t')) as unknown as {
+      evaluate: (v: any) => boolean
+    }
+    expect(f.evaluate(Symbol('x'))).toBe(false)
+  })
+})

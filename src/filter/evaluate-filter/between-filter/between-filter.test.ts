@@ -70,7 +70,7 @@ describe('BetweenFilter', () => {
             ],
           },
         },
-      }).data.length
+      } as any).data.length
     ).toBe(3)
   })
   it('null, undefined y fechas inválidas', () => {
@@ -278,5 +278,23 @@ describe('BetweenFilter Final Edge Cases', () => {
   it('should return false when both range values are strings but not valid dates (line 72-76) - another variant', () => {
     const filter = new BetweenFilter(['abc', 'def'])
     expect(filter.evaluate('ghi')).toBe(false)
+  })
+})
+describe('BetweenFilter String comparison branch coverage', () => {
+  it('should compare strings when range are valid date strings but actualValue is non-date string (inside range)', () => {
+    const filter = new BetweenFilter(['2023-01-01', '2023-12-31'])
+    // actualValue is NOT a valid date string, so it should hit the string branch (72-74)
+    expect(filter.evaluate('2023-06-15X')).toBe(true)
+  })
+  it('should compare strings when range are valid date strings but actualValue is non-date string (outside range)', () => {
+    const filter = new BetweenFilter(['2023-01-01', '2023-12-31'])
+    expect(filter.evaluate('2022-12-31X')).toBe(false)
+    expect(filter.evaluate('2024-01-01X')).toBe(false)
+  })
+})
+describe('BetweenFilter - string range mixed validity branch', () => {
+  it('should return false when range strings are not both valid dates (one valid, one invalid)', () => {
+    const filter = new BetweenFilter(['2023-01-01', 'invalid-date'])
+    expect(filter.evaluate('2023-06-01X')).toBe(false)
   })
 })
