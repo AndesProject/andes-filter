@@ -38,11 +38,11 @@ export class NoneFilter implements EvaluateFilter {
       }
       if (key === 'not') {
         this.isNegation = true
-        this.evaluator = createFilterClassMap(key as any, value)
+        this.evaluator = createFilterClassMap(String(key), value)
         return
       }
       if (isKnownOperator(key)) {
-        this.evaluator = createFilterClassMap(key as any, value)
+        this.evaluator = createFilterClassMap(String(key), value)
       } else {
         this.evaluator = new FilterEvaluator(this.filter)
       }

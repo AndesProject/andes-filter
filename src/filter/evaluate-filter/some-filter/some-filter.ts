@@ -105,7 +105,7 @@ class FilterConfigurationAnalyzer {
         return {
           isEmptyFilter: false,
           isNegation: true,
-          evaluator: createFilterClassMap(innerKey as any, innerValue),
+          evaluator: createFilterClassMap(String(innerKey), innerValue),
         }
       } else {
         return {

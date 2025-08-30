@@ -1,4 +1,3 @@
-import { FilterCriteria } from '../filter.interface'
 import { Logger } from '../utils/logger'
 import { AfterFilter } from './after-filter'
 import { AndFilterGroup } from './and-filter-group'
@@ -117,8 +116,8 @@ registerCoreFilters()
 
 // Clase principal responsable de coordinar la creación de filtros
 class FilterFactory {
-  public static createFilter<T>(
-    filterType: keyof FilterCriteria<T>,
+  public static createFilter(
+    filterType: string,
     filterValue: any,
     isCaseInsensitive?: boolean
   ): EvaluateFilter | null {
@@ -127,13 +126,13 @@ class FilterFactory {
     if (factory) {
       return factory(filterValue, isCaseInsensitive)
     }
-    Logger.unknownFilter(filterType)
+    Logger.unknownFilter(String(filterType))
     return null
   }
 }
 
-export function createFilterClassMap<T>(
-  filterType: keyof FilterCriteria<T>,
+export function createFilterClassMap(
+  filterType: string,
   filterValue: any,
   isCaseInsensitive?: boolean
 ): any {

@@ -71,11 +71,11 @@ describe('SomeFilter', () => {
       { items: [4, 5, 6] as number[] },
     ])
     const result = filter.findUnique({
-      where: { items: { some: { equals: 2 } } },
+      where: { items: { some: { equals: 2 as any } } },
     })
     expect(result).toEqual({ items: [1, 2, 3] as number[] })
     const result2 = filter.findUnique({
-      where: { items: { some: { equals: 999 } } },
+      where: { items: { some: { equals: 999 as any } } },
     })
     expect(result2).toBe(null)
   })
@@ -299,6 +299,85 @@ describe('SomeFilter Unit', () => {
     expect(
       filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')])
     ).toBe(false)
+  })
+
+  it('debe manejar some con objetos anidados y listas de hijos heterogéneas', () => {
+    type Comment = { id: number; message: string }
+    type Post = { id: number; tags?: string[]; comments?: Comment[] | null }
+    type User = {
+      id: number
+      profile: {
+        name: string
+        posts: Post[] | null | undefined
+      }
+    }
+
+    const data: User[] = [
+      {
+        id: 1,
+        profile: {
+          name: 'Alice',
+          posts: [
+            {
+              id: 10,
+              tags: ['js', 'ts'],
+              comments: [{ id: 1, message: 'hello' }],
+            },
+            { id: 11, tags: ['react'], comments: [{ id: 2, message: 'ok' }] },
+          ],
+        },
+      },
+      {
+        id: 2,
+        profile: {
+          name: 'Bob',
+          posts: [
+            { id: 20, tags: [], comments: [] }, // hijo vacío
+            { id: 21, tags: ['angular'], comments: null }, // null
+            { id: 22, tags: undefined, comments: [{ id: 3, message: 'bad' }] }, // undefined
+          ],
+        },
+      },
+      {
+        id: 3,
+        profile: {
+          name: 'Charlie',
+          posts: null, // lista de hijos null
+        },
+      },
+      {
+        id: 4,
+        profile: {
+          name: 'Dave',
+          posts: undefined, // lista de hijos undefined
+        },
+      },
+    ]
+
+    const filter = createFilter<User>(data)
+
+    // Buscar usuarios cuya lista de posts tenga SOME post que a su vez tenga SOME comment
+    // con message que contenga 'ok' (case-insensitive) y tags que contengan 'react'.
+    const result = filter.findMany({
+      where: {
+        profile: {
+          posts: {
+            some: {
+              AND: [
+                { tags: { some: { equals: 'react' } } } as any,
+                {
+                  comments: {
+                    some: { message: { contains: 'OK', mode: 'insensitive' } },
+                  },
+                } as any,
+              ],
+            } as any,
+          },
+        } as any,
+      },
+    })
+
+    expect(result.data.map((u) => u.id)).toEqual([1])
   })
   it('debe manejar filtros con operadores de some', () => {
     const filter = new SomeFilter({ some: { equals: 2 } } as any)
@@ -939,6 +1018,47 @@ describe('SomeFilter Edge Cases', () => {
       expect(filter.evaluate([{ unknownKey: 'value' }])).toBe(true)
       expect(filter.evaluate([{ otherKey: 'value' }])).toBe(false)
     })
+  })
+})
+
+describe('SomeFilter Additional Edge Cases', () => {
+  it('should identify user when some phone has operator equals 2', () => {
+    type Phone = { number: string; operator: number }
+    type User = { name: string; age: number; phone: Phone[] | null | undefined }
+
+    const data: User[] = [
+      {
+        name: 'Jane',
+        age: 20,
+        phone: [
+          { number: '1234567890', operator: 2 },
+          { number: '1234567891', operator: 4 },
+          { number: '1234567892', operator: 2 },
+          { number: '1234567893', operator: 1 },
+        ],
+      },
+      {
+        name: 'Bob',
+        age: 30,
+        phone: [
+          { number: '1111111111', operator: 3 },
+          { number: '2222222222', operator: 4 },
+        ],
+      },
+      { name: 'NullCase', age: 40, phone: null },
+      { name: 'UndefinedCase', age: 50, phone: undefined },
+    ]
+
+    const filter = createFilter<User>(data)
+    const result = filter.findMany({
+      where: {
+        phone: {
+          some: { operator: { equals: 2 } },
+        },
+      },
+    })
+
+    expect(result.data.map((u) => u.name)).toEqual(['Jane'])
   })
 })
 

@@ -53,7 +53,7 @@ describe('NoneFilter', () => {
 })
 describe('NoneFilter Unit', () => {
   it('debe retornar true si ningún elemento cumple el filtro', () => {
-    const filter = new NoneFilter<any>({ equals: 10 })
+    const filter = new NoneFilter({ equals: 10 })
     expect(filter.evaluate([1, 2, 3])).toBe(true)
     expect(filter.evaluate([10, 20, 30])).toBe(false)
   })
@@ -83,27 +83,27 @@ describe('NoneFilter Unit', () => {
     const filter = new NoneFilter({
       equals: 2,
       gt: 1,
-    } as any)
+    })
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores individuales', () => {
-    const filter = new NoneFilter({ equals: 2 } as any)
+    const filter = new NoneFilter({ equals: 2 })
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores de comparación', () => {
-    const filter = new NoneFilter({ gt: 2 } as any)
+    const filter = new NoneFilter({ gt: 2 })
     expect(filter.evaluate([1, 2])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores de string', () => {
-    const filter = new NoneFilter({ contains: 'test' } as any)
+    const filter = new NoneFilter({ contains: 'test' })
     expect(filter.evaluate(['hello', 'world'])).toBe(true)
     expect(filter.evaluate(['hello', 'test', 'world'])).toBe(false)
   })
   it('debe manejar filtros con operadores de fecha', () => {
-    const filter = new NoneFilter({ after: new Date('2023-01-01') } as any)
+    const filter = new NoneFilter({ after: new Date('2023-01-01') })
     expect(
       filter.evaluate([new Date('2022-12-01'), new Date('2022-11-01')])
     ).toBe(true)
@@ -112,7 +112,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de array', () => {
-    const filter = new NoneFilter({ has: 2 } as any)
+    const filter = new NoneFilter({ has: 2 })
     expect(
       filter.evaluate([
         [1, 3, 4],
@@ -127,41 +127,41 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de longitud', () => {
-    const filter = new NoneFilter({ length: { equals: 3 } } as any)
+    const filter = new NoneFilter({ length: { equals: 3 } })
     expect(filter.evaluate(['ab', 'def', 'ghij'])).toBe(false)
     expect(filter.evaluate(['abc', 'def', 'ghi'])).toBe(false)
   })
   it('debe manejar filtros con operadores lógicos', () => {
     const filter = new NoneFilter({
       AND: [{ equals: 2 }, { gt: 1 }],
-    } as any)
+    })
     expect(filter.evaluate([1, 1, 3])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores de regex', () => {
     const filter = new NoneFilter({
       regex: { pattern: 'test', flags: 'i' },
-    } as any)
+    })
     expect(filter.evaluate(['hello', 'world'])).toBe(true)
     expect(filter.evaluate(['hello', 'TEST', 'world'])).toBe(false)
   })
   it('debe manejar filtros con operadores de inclusión', () => {
-    const filter = new NoneFilter({ in: [2, 4, 6] } as any)
+    const filter = new NoneFilter({ in: [2, 4, 6] })
     expect(filter.evaluate([1, 3, 5])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores de exclusión', () => {
-    const filter = new NoneFilter({ notIn: [1, 3, 5] } as any)
+    const filter = new NoneFilter({ notIn: [1, 3, 5] })
     expect(filter.evaluate([1, 3, 5])).toBe(true)
     expect(filter.evaluate([2, 4, 6])).toBe(false)
   })
   it('debe manejar filtros con operadores de null', () => {
-    const filter = new NoneFilter({ isNull: true } as any)
+    const filter = new NoneFilter({ isNull: true })
     expect(filter.evaluate(['hello', 'test', 'world'])).toBe(true)
     expect(filter.evaluate([null, 'test', 'world'])).toBe(true)
   })
   it('debe manejar filtros con operadores de negación', () => {
-    const filter = new NoneFilter({ not: { equals: 2 } } as any)
+    const filter = new NoneFilter({ not: { equals: 2 } })
     expect(filter.evaluate([2, 2, 2])).toBe(true)
     expect(filter.evaluate([1, 3, 4])).toBe(false)
   })
@@ -169,17 +169,17 @@ describe('NoneFilter Unit', () => {
     const filter = new NoneFilter({
       contains: 'TEST',
       mode: 'insensitive',
-    } as any)
+    })
     expect(filter.evaluate(['hello', 'world'])).toBe(true)
     expect(filter.evaluate(['hello', 'test', 'world'])).toBe(false)
   })
   it('debe manejar filtros con operadores de rango', () => {
-    const filter = new NoneFilter({ between: [2, 4] } as any)
+    const filter = new NoneFilter({ between: [2, 4] })
     expect(filter.evaluate([1, 5, 6])).toBe(true)
     expect(filter.evaluate([1, 3, 5])).toBe(false)
   })
   it('debe manejar filtros con operadores de hasEvery', () => {
-    const filter = new NoneFilter({ hasEvery: [2, 4] } as any)
+    const filter = new NoneFilter({ hasEvery: [2, 4] })
     expect(
       filter.evaluate([
         [1, 3, 5],
@@ -194,7 +194,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de hasSome', () => {
-    const filter = new NoneFilter({ hasSome: [2, 4] } as any)
+    const filter = new NoneFilter({ hasSome: [2, 4] })
     expect(
       filter.evaluate([
         [1, 3, 5],
@@ -209,7 +209,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de distinct', () => {
-    const filter = new NoneFilter({ distinct: true } as any)
+    const filter = new NoneFilter({ distinct: true })
     expect(filter.evaluate([1, 1, 2])).toBe(false)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
@@ -221,34 +221,34 @@ describe('NoneFilter Unit', () => {
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros con operadores de startsWith', () => {
-    const filter = new NoneFilter({ startsWith: 'test' } as any)
+    const filter = new NoneFilter({ startsWith: 'test' })
     expect(filter.evaluate(['hello', 'world'])).toBe(true)
     expect(filter.evaluate(['test123', 'hello', 'world'])).toBe(false)
   })
   it('debe manejar filtros con operadores de endsWith', () => {
-    const filter = new NoneFilter({ endsWith: 'test' } as any)
+    const filter = new NoneFilter({ endsWith: 'test' })
     expect(filter.evaluate(['hello', 'world'])).toBe(true)
     expect(filter.evaluate(['hello', 'world', '123test'])).toBe(false)
   })
   it('debe manejar filtros con operadores de notContains', () => {
-    const filter = new NoneFilter<any>({ notContains: 'test' } as any)
+    const filter = new NoneFilter({ notContains: 'test' })
     expect(filter.evaluate(['hello', 'test', 'world'])).toBe(false)
     expect(filter.evaluate(['hello', 'world', 'example'])).toBe(false)
   })
   it('debe manejar filtros con operadores de notStartsWith', () => {
-    const filter = new NoneFilter<any>({ notStartsWith: 'test' } as any)
+    const filter = new NoneFilter({ notStartsWith: 'test' })
     expect(filter.evaluate(['test123', 'hello', 'world'])).toBe(false)
     expect(filter.evaluate(['hello', 'world', 'example'])).toBe(false)
   })
   it('debe manejar filtros con operadores de notEndsWith', () => {
-    const filter = new NoneFilter<any>({ notEndsWith: 'test' } as any)
+    const filter = new NoneFilter({ notEndsWith: 'test' })
     expect(filter.evaluate(['hello', 'world', '123test'])).toBe(false)
     expect(filter.evaluate(['hello', 'world', 'example'])).toBe(false)
   })
   it('debe manejar filtros con operadores de before', () => {
-    const filter = new NoneFilter<any>({
+    const filter = new NoneFilter({
       before: new Date('2023-06-01'),
-    } as any)
+    })
     expect(
       filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')])
     ).toBe(true)
@@ -257,7 +257,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de some', () => {
-    const filter = new NoneFilter<any>({ some: { equals: 2 } } as any)
+    const filter = new NoneFilter({ some: { equals: 2 } })
     expect(
       filter.evaluate([
         [1, 3, 4],
@@ -272,7 +272,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de none', () => {
-    const filter = new NoneFilter<any>({ none: { equals: 2 } } as any)
+    const filter = new NoneFilter({ none: { equals: 2 } })
     expect(
       filter.evaluate([
         [1, 2, 3],
@@ -287,7 +287,7 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de every', () => {
-    const filter = new NoneFilter<any>({ every: { equals: 2 } } as any)
+    const filter = new NoneFilter({ every: { equals: 2 } })
     expect(
       filter.evaluate([
         [1, 2, 3],
@@ -302,15 +302,15 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar filtros primitivos', () => {
-    const filter = new NoneFilter<any>(2)
+    const filter = new NoneFilter(2)
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })
   it('debe manejar filtros complejos sin evaluador específico', () => {
-    const filter = new NoneFilter<any>({
+    const filter = new NoneFilter({
       name: { contains: 'John' },
       age: { gte: 25 },
-    } as any)
+    })
     expect(
       filter.evaluate([
         { name: 'Jane Smith', age: 20 },
@@ -325,20 +325,20 @@ describe('NoneFilter Unit', () => {
     ).toBe(false)
   })
   it('debe manejar elementos null en el array', () => {
-    const filter = new NoneFilter<any>({ equals: 2 } as any)
+    const filter = new NoneFilter({ equals: 2 })
     expect(filter.evaluate([1, null, 3])).toBe(true)
     expect(filter.evaluate([1, 2, null])).toBe(false)
   })
   it('debe manejar elementos undefined en el array', () => {
-    const filter = new NoneFilter<any>({ equals: 2 } as any)
+    const filter = new NoneFilter({ equals: 2 })
     expect(filter.evaluate([1, undefined, 3])).toBe(true)
     expect(filter.evaluate([1, 2, undefined])).toBe(false)
   })
   it('debe manejar filtros con múltiples keys', () => {
-    const filter = new NoneFilter<any>({
+    const filter = new NoneFilter({
       equals: 2,
       gt: 1,
-    } as any)
+    })
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
   })

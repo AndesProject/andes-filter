@@ -19,7 +19,7 @@ describe('OrFilterGroup', () => {
           { name: { contains: 'test2' } },
           { active: { equals: false } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data).toEqual([
@@ -44,7 +44,7 @@ describe('OrFilterGroup', () => {
           { name: { contains: 'nonexistent' } },
           { active: { equals: null } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(0)
   })
@@ -74,7 +74,7 @@ describe('OrFilterGroup', () => {
           { tags: { has: 'admin' } },
           { name: { equals: 'Bob' } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(3)
     expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane', 'Bob'])
@@ -99,9 +99,9 @@ describe('OrFilterGroup', () => {
               { active: { equals: true } },
               { name: { contains: 'Product' } },
             ],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(3)
     expect(result.data.map((x) => x.name)).toEqual([
@@ -127,9 +127,9 @@ describe('OrFilterGroup', () => {
           { category: { equals: 'electronics' } },
           {
             AND: [{ price: { lt: 100 } }, { name: { contains: 'Product' } }],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(3)
     expect(result.data.map((x) => x.name)).toEqual([
@@ -146,7 +146,7 @@ describe('OrFilterGroup', () => {
     const result = filter.findMany({
       where: {
         OR: [],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(0)
   })
@@ -163,7 +163,7 @@ describe('OrFilterGroup', () => {
     const result = filter.findUnique({
       where: {
         OR: [{ id: { equals: 2 } }, { active: { equals: true } }],
-      } as any,
+      },
     })
     expect(result).toEqual({ id: 1, name: 'test1', active: true })
   })
@@ -179,7 +179,7 @@ describe('OrFilterGroup', () => {
     const result = filter.findUnique({
       where: {
         OR: [{ id: { equals: 999 } }, { active: { equals: null } }],
-      } as any,
+      },
     })
     expect(result).toBe(null)
   })
@@ -217,9 +217,9 @@ describe('OrFilterGroup', () => {
               { tags: { has: 'premium' } },
               { name: { contains: 'Laptop' } },
             ],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(3)
     expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone', 'Book'])
@@ -237,7 +237,7 @@ describe('OrFilterGroup', () => {
     const result = filter.findMany({
       where: {
         OR: [{ name: { isNull: true } }, { email: { isNull: true } }],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data.map((x) => x.id)).toEqual([1, 2])
@@ -251,7 +251,7 @@ describe('OrFilterGroup', () => {
     const result = filter.findMany({
       where: {
         OR: [{ id: { equals: 2 } }],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(1)
     expect(result.data[0].id).toBe(2)

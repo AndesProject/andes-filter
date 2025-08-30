@@ -52,8 +52,7 @@ class FilterInitializer {
     Object.keys(filterCriteria).forEach((criteriaKey) => {
       if (criteriaKey === 'mode') return
 
-      const criteriaValue =
-        filterCriteria[criteriaKey as keyof FilterCriteria<T>]
+      const criteriaValue = (filterCriteria as any)[criteriaKey]
 
       const filterInstance = FilterInitializer.createFilterInstance(
         criteriaKey,
@@ -76,7 +75,7 @@ class FilterInitializer {
   ): EvaluateFilter | FilterEvaluator<any> | null {
     if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
       return createFilterClassMap(
-        criteriaKey as any,
+        criteriaKey,
         criteriaValue,
         isCaseInsensitiveMode
       )
@@ -84,7 +83,7 @@ class FilterInitializer {
 
     if (ARRAY_OPERATION_KEYS.includes(criteriaKey)) {
       return createFilterClassMap(
-        criteriaKey as any,
+        criteriaKey,
         criteriaValue,
         isCaseInsensitiveMode
       )
@@ -119,7 +118,7 @@ class FilterInitializer {
       const singleKey = keys[0]
       if (SUPPORTED_OPERATORS.includes(singleKey)) {
         return createFilterClassMap(
-          singleKey as any,
+          singleKey,
           criteriaValue[singleKey],
           isCaseInsensitiveMode
         )
@@ -127,7 +126,7 @@ class FilterInitializer {
 
       if (ARRAY_OPERATION_KEYS.includes(singleKey)) {
         return createFilterClassMap(
-          singleKey as any,
+          singleKey,
           criteriaValue[singleKey],
           isCaseInsensitiveMode
         )
@@ -148,7 +147,7 @@ class FilterInitializer {
 
       const subCriteriaValue = criteriaValue[subCriteriaKey]
       const filterInstance = createFilterClassMap(
-        subCriteriaKey as any,
+        subCriteriaKey,
         subCriteriaValue,
         true
       )

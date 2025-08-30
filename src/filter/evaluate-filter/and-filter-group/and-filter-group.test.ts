@@ -20,7 +20,7 @@ describe('AndFilterGroup', () => {
           { name: { contains: 'test' } },
           { active: { equals: true } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data).toEqual([
@@ -46,7 +46,7 @@ describe('AndFilterGroup', () => {
           { active: { equals: true } },
           { id: { equals: 1 } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(0)
   })
@@ -76,7 +76,7 @@ describe('AndFilterGroup', () => {
           { tags: { has: 'dev' } },
           { name: { not: 'Bob' } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data.map((x) => x.name)).toEqual(['John', 'Jane'])
@@ -101,9 +101,9 @@ describe('AndFilterGroup', () => {
               { active: { equals: true } },
               { name: { contains: 'Product' } },
             ],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(1)
     expect(result.data[0].name).toBe('Product A')
@@ -125,9 +125,9 @@ describe('AndFilterGroup', () => {
           { category: { equals: 'electronics' } },
           {
             OR: [{ price: { lt: 150 } }, { name: { contains: 'C' } }],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data.map((x) => x.name)).toEqual(['Product A', 'Product C'])
@@ -140,7 +140,7 @@ describe('AndFilterGroup', () => {
     const result = filter.findMany({
       where: {
         AND: [],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
   })
@@ -157,7 +157,7 @@ describe('AndFilterGroup', () => {
     const result = filter.findUnique({
       where: {
         AND: [{ id: { gte: 2 } }, { active: { equals: true } }],
-      } as any,
+      },
     })
     expect(result).toEqual({ id: 3, name: 'test3', active: true })
   })
@@ -173,7 +173,7 @@ describe('AndFilterGroup', () => {
     const result = filter.findUnique({
       where: {
         AND: [{ id: { equals: 999 } }, { active: { equals: true } }],
-      } as any,
+      },
     })
     expect(result).toBe(null)
   })
@@ -211,9 +211,9 @@ describe('AndFilterGroup', () => {
               { tags: { has: 'premium' } },
               { name: { contains: 'Laptop' } },
             ],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(2)
     expect(result.data.map((x) => x.name)).toEqual(['Laptop', 'Phone'])
@@ -231,7 +231,7 @@ describe('AndFilterGroup', () => {
     const result = filter.findMany({
       where: {
         AND: [{ name: { isNull: false } }, { email: { isNull: false } }],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(1)
     expect(result.data[0].id).toBe(3)
@@ -243,19 +243,19 @@ describe('AndFilterGroup', () => {
       { id: 3, name: 'test3' },
     ])
     const simpleResult = filter.findMany({
-      where: { id: { equals: 1 } } as any,
+      where: { id: { equals: 1 } },
     })
     const andResult = filter.findMany({
       where: {
         AND: [{ id: { equals: 1 } }, { name: { contains: 'test' } }],
-      } as any,
+      },
     })
     expect(simpleResult.data.length).toBe(1)
     expect(andResult.data.length).toBe(1)
     expect(andResult.data[0]).toEqual({ id: 1, name: 'test1' })
   })
   it('debug: test AndFilterGroup directly', () => {
-    const filter = new AndFilterGroup<any>([{ id: { equals: 1 } } as any])
+    const filter = new AndFilterGroup<any>([{ id: { equals: 1 } }])
     const result1 = filter.evaluate({ id: 1, name: 'test1' })
     const result2 = filter.evaluate({ id: 2, name: 'test2' })
     expect(result1).toBe(true)
@@ -264,7 +264,7 @@ describe('AndFilterGroup', () => {
   it('debug: test matchesFilter with AND', () => {
     const filter = {
       AND: [{ id: { equals: 1 } }, { name: { contains: 'test' } }],
-    } as any
+    }
     const result1 = matchesFilter(filter, { id: 1, name: 'test1' })
     const result2 = matchesFilter(filter, { id: 2, name: 'test2' })
     expect(result1).toBe(true)
@@ -278,28 +278,25 @@ describe('AndFilterGroup class', () => {
   })
   it('should return true when all conditions are met', () => {
     const filter = new AndFilterGroup<any>([
-      { id: { equals: 1 } } as any,
-      { name: { contains: 'test' } } as any,
+      { id: { equals: 1 } },
+      { name: { contains: 'test' } },
     ])
     expect(filter.evaluate({ id: 1, name: 'test' })).toBe(true)
   })
   it('should return false when any condition fails', () => {
     const filter = new AndFilterGroup<any>([
-      { id: { equals: 1 } } as any,
-      { name: { contains: 'test' } } as any,
+      { id: { equals: 1 } },
+      { name: { contains: 'test' } },
     ])
     expect(filter.evaluate({ id: 1, name: 'other' })).toBe(false)
     expect(filter.evaluate({ id: 2, name: 'test' })).toBe(false)
   })
   it('should handle complex nested conditions', () => {
     const filter = new AndFilterGroup<any>([
-      { id: { gte: 1 } } as any,
+      { id: { gte: 1 } },
       {
-        AND: [
-          { name: { contains: 'test' } } as any,
-          { active: { equals: true } } as any,
-        ],
-      } as any,
+        AND: [{ name: { contains: 'test' } }, { active: { equals: true } }],
+      },
     ])
     expect(filter.evaluate({ id: 1, name: 'test', active: true })).toBe(true)
     expect(filter.evaluate({ id: 1, name: 'test', active: false })).toBe(false)

@@ -36,9 +36,9 @@ export interface DateOperators<T> {
 }
 
 export interface ArrayOperators<T> {
-  some?: T extends object ? FilterCriteria<T> : never
-  none?: T extends object ? FilterCriteria<T> : never
-  every?: T extends object ? FilterCriteria<T> : never
+  some?: T extends Array<infer U> ? FilterCriteria<U> : never
+  none?: T extends Array<infer U> ? FilterCriteria<U> : never
+  every?: T extends Array<infer U> ? FilterCriteria<U> : never
   has?: T extends Array<infer U> ? U : never
   hasEvery?: T extends Array<infer U> ? U[] : never
   hasSome?: T extends Array<infer U> ? U[] : never
@@ -57,14 +57,18 @@ export interface UtilityOperators {
 }
 
 // Interfaz principal que combina todas las operaciones específicas
-export interface FilterCriteria<T>
-  extends ComparisonOperators<T>,
-    NumericOperators<T>,
-    StringOperators<T>,
-    DateOperators<T>,
-    ArrayOperators<T>,
-    LogicalOperators<T>,
-    UtilityOperators {}
+export type FilterCriteria<T> = ComparisonOperators<T> &
+  NumericOperators<T> &
+  StringOperators<T> &
+  DateOperators<T> &
+  ArrayOperators<T> &
+  LogicalOperators<T> &
+  UtilityOperators &
+  (T extends Array<any>
+    ? unknown
+    : T extends object
+      ? { [P in keyof T]?: FilterCriteria<T[P]> }
+      : unknown)
 
 // Interfaces específicas para diferentes tipos de filtros
 export interface ComparisonFilterCriteria<T> extends ComparisonOperators<T> {}
@@ -105,9 +109,7 @@ export enum SortDirection {
 }
 
 export type FilterQuery<T> = {
-  where: {
-    [P in keyof T]?: FilterCriteria<T[P]>
-  }
+  where: FilterCriteria<T>
   pagination?: PaginationOptions
   orderBy?: { [P in keyof T]?: SortDirection }
   distinct?: boolean | string | string[]

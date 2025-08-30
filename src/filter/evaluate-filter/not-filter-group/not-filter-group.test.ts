@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { createFilter } from '../../filter-from'
-import { FilterCriteria } from '../../filter.interface'
 import { NotFilterGroup } from './not-filter-group'
 
 describe('NotFilterGroup', () => {
@@ -15,15 +14,15 @@ describe('NotFilterGroup', () => {
   })
   it('should negate a single filter', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: 'test' } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: 'test' } },
     ])
     expect(filter.evaluate({ value: 'test' })).toBe(false)
     expect(filter.evaluate({ value: 'other' })).toBe(true)
   })
   it('should negate multiple filters (conjunction)', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: 'test' } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { startsWith: 't' } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: 'test' } },
+      { value: { startsWith: 't' } },
     ])
     expect(filter.evaluate({ value: 'test' })).toBe(false)
     expect(filter.evaluate({ value: 'other' })).toBe(true)
@@ -31,12 +30,9 @@ describe('NotFilterGroup', () => {
   })
   it('should handle complex nested filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: 'test' } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { in: ['test', 'other'] } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
-      { value: { startsWith: 't' } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: 'test' } },
+      { value: { in: ['test', 'other'] } },
+      { value: { startsWith: 't' } },
     ])
     expect(filter.evaluate({ value: 'test' })).toBe(false)
     expect(filter.evaluate({ value: 'other' })).toBe(false)
@@ -48,7 +44,7 @@ describe('NotFilterGroup', () => {
   })
   it('should handle null and undefined values', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: null } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: null } },
     ])
     expect(filter.evaluate({ value: null })).toBe(false)
     expect(filter.evaluate({ value: undefined })).toBe(true)
@@ -56,8 +52,8 @@ describe('NotFilterGroup', () => {
   })
   it('should work with different data types', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: 42 } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { gt: 10 } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: 42 } },
+      { value: { gt: 10 } },
     ])
     expect(filter.evaluate({ value: 42 })).toBe(false)
     expect(filter.evaluate({ value: 50 })).toBe(false)
@@ -66,8 +62,8 @@ describe('NotFilterGroup', () => {
   })
   it('should handle array filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { has: 'item1' } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { length: 2 } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { has: 'item1' } },
+      { value: { length: 2 } },
     ])
     expect(filter.evaluate({ value: ['item1', 'item2'] })).toBe(false)
     expect(filter.evaluate({ value: ['item1'] })).toBe(false)
@@ -75,10 +71,7 @@ describe('NotFilterGroup', () => {
   })
   it('should handle object filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { some: { name: { equals: 'nested' } } } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
+      { value: { some: { name: { equals: 'nested' } } } },
     ])
     expect(filter.evaluate({ value: [{ name: 'nested' }] })).toBe(false)
     expect(filter.evaluate({ value: [{ name: 'other' }] })).toBe(true)
@@ -88,8 +81,8 @@ describe('NotFilterGroup', () => {
     const date2 = new Date('2023-01-02')
     const date3 = new Date('2023-01-03')
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { after: date1 } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { before: date3 } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { after: date1 } },
+      { value: { before: date3 } },
     ])
     expect(filter.evaluate({ value: date2 })).toBe(false)
     expect(filter.evaluate({ value: date1 })).toBe(false)
@@ -97,10 +90,7 @@ describe('NotFilterGroup', () => {
   })
   it('should handle string filters with insensitive mode', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { contains: 'TEST', mode: 'insensitive' } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
+      { value: { contains: 'TEST', mode: 'insensitive' } },
     ])
     const val1 = { value: 'This is a test' }
     const val2 = { value: 'This is something else' }
@@ -111,20 +101,14 @@ describe('NotFilterGroup', () => {
   })
   it('should handle regex filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { regex: '^test.*' } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
+      { value: { regex: '^test.*' } },
     ])
     expect(filter.evaluate({ value: 'test123' })).toBe(false)
     expect(filter.evaluate({ value: 'other123' })).toBe(true)
   })
   it('should handle between filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { between: [10, 20] } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
+      { value: { between: [10, 20] } },
     ])
     expect(filter.evaluate({ value: 15 })).toBe(false)
     expect(filter.evaluate({ value: 5 })).toBe(true)
@@ -132,7 +116,7 @@ describe('NotFilterGroup', () => {
   })
   it('should handle isNull filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { isNull: true } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { isNull: true } },
     ])
     expect(filter.evaluate({ value: null })).toBe(false)
     expect(filter.evaluate({ value: undefined })).toBe(false)
@@ -140,13 +124,10 @@ describe('NotFilterGroup', () => {
   })
   it('should handle complex mixed filters', () => {
     const filter = new NotFilterGroup<{ value: any }>([
-      { value: { equals: 'test' } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { in: ['test', 'other'] } } as FilterCriteria<
-        { value: any },
-        'value'
-      >,
-      { value: { startsWith: 't' } } as FilterCriteria<{ value: any }, 'value'>,
-      { value: { length: 4 } } as FilterCriteria<{ value: any }, 'value'>,
+      { value: { equals: 'test' } },
+      { value: { in: ['test', 'other'] } },
+      { value: { startsWith: 't' } },
+      { value: { length: 4 } },
     ])
     expect(filter.evaluate({ value: 'test' })).toBe(false)
     expect(filter.evaluate({ value: 'other' })).toBe(false)
@@ -167,7 +148,7 @@ describe('NotFilterGroup Integration Tests', () => {
     const result = filter.findMany({
       where: {
         NOT: [{ id: { equals: 1 } }, { name: { contains: 'test' } }],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(0)
   })
@@ -183,7 +164,7 @@ describe('NotFilterGroup Integration Tests', () => {
     const result = filter.findUnique({
       where: {
         NOT: [{ id: { equals: 1 } }, { active: { equals: true } }],
-      } as any,
+      },
     })
     expect(result).toEqual({ id: 2, name: 'test2', active: false })
   })
@@ -203,7 +184,7 @@ describe('NotFilterGroup Integration Tests', () => {
           { category: { equals: 'electronics' } },
           { name: { contains: 'Product' } },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(0)
   })
@@ -223,9 +204,9 @@ describe('NotFilterGroup Integration Tests', () => {
           { price: { gte: 100 } },
           {
             AND: [{ name: { contains: 'Laptop' } }, { price: { gte: 500 } }],
-          } as any,
+          },
         ],
-      } as any,
+      },
     })
     expect(result.data.length).toBe(1)
     expect(result.data[0].name).toBe('Book')
