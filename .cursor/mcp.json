@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "andes-filter": {
+      "command": "npm",
+      "args": ["run", "mcp:server"],
+      "cwd": "."
+    }
+  }
+}
