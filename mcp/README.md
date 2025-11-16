@@ -8,7 +8,15 @@ El servidor MCP ya está incluido en el paquete `@andes-project/filter`. Solo ne
 
 ## Ejecución
 
-Para ejecutar el servidor MCP:
+Para ejecutar el servidor MCP, puedes usar cualquiera de estos métodos:
+
+### Usando npx (recomendado, similar a shadcn):
+
+```bash
+npx @andes-project/filter mcp
+```
+
+### Usando npm:
 
 ```bash
 npm run mcp:server
@@ -93,6 +101,26 @@ Para usar este servidor MCP en Cursor, agrega la siguiente configuración en tu 
 {
   "mcpServers": {
     "andes-filter": {
+      "command": "npx",
+      "args": ["-y", "@andes-project/filter", "filter", "mcp"],
+      "cwd": "."
+    }
+  }
+}
+```
+
+Esta configuración usa `npx` para ejecutar el binario `filter` del paquete `@andes-project/filter` con el comando `mcp`.
+
+**Nota:** Para scoped packages como `@andes-project/filter`, npx requiere especificar el nombre del binario (`filter`) explícitamente. El comando completo es: `npx @andes-project/filter filter mcp`.
+
+### Alternativas
+
+Si prefieres usar npm directamente:
+
+```json
+{
+  "mcpServers": {
+    "andes-filter": {
       "command": "npm",
       "args": ["run", "mcp:server"],
       "cwd": "/ruta/a/andes-filter"
@@ -162,4 +190,3 @@ Para desarrollo local:
 npm install
 npm run mcp:server
 ```
-

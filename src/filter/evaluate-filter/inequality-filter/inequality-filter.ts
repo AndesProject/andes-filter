@@ -3,8 +3,8 @@ import { isObject, isString } from '../../utils/filter.helpers'
 import { FilterEvaluator } from '../evaluate-filter'
 import { EvaluateFilter } from '../evaluate-filter.interface'
 import { createFilterClassMap } from '../evaluate-filter.map'
-import { NoneFilter } from '../none-filter/none-filter'
-import { SomeFilter } from '../some-filter/some-filter'
+import { NoneFilter } from '../none-filter'
+import { SomeFilter } from '../some-filter'
 
 export class InequalityFilter<T> implements EvaluateFilter {
   private evaluator: EvaluateFilter | null = null
@@ -14,6 +14,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
   private isDistinct: boolean = false
   private rawTarget: any = null
   private isArrayEquivalence: boolean = false
+  private evaluatorType: 'some' | 'none' | 'every' | 'other' = 'other'
   constructor(
     private targetValue: T | FilterCriteria<T> | null,
     insensitive?: boolean,
@@ -51,11 +52,13 @@ export class InequalityFilter<T> implements EvaluateFilter {
         if (key === 'some') {
           this.evaluator = new NoneFilter(value)
           this.isArrayEquivalence = true
+          this.evaluatorType = 'some'
 
           return
         } else if (key === 'none') {
           this.evaluator = new SomeFilter(value)
           this.isArrayEquivalence = true
+          this.evaluatorType = 'none'
 
           return
         } else if (key === 'every') {
@@ -69,6 +72,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
             },
           }
           this.isArrayEquivalence = true
+          this.evaluatorType = 'every'
 
           return
         }
@@ -92,7 +96,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     if (this.isDistinct) return false
     if (this.evaluator) {
       if (
-        this.evaluator instanceof SomeFilter &&
+        this.evaluatorType === 'none' &&
         this.shouldNegate === false &&
         Array.isArray(value) &&
         value.length === 0

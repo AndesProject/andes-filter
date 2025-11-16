@@ -1,7 +1,7 @@
-import { AndFilterGroup } from './and-filter-group/and-filter-group'
-import { BeforeFilter } from './before-filter/before-filter'
-import { ContainsFilter } from './contains-filter/contains-filter'
-import { EqualityFilter } from './equality-filter/equality-filter'
+import { AndFilterGroup } from './and-filter-group'
+import { BeforeFilter } from './before-filter'
+import { ContainsFilter } from './contains-filter'
+import { EqualityFilter } from './equality-filter'
 import {
   ArrayFilter,
   ComparisonFilter,
@@ -10,8 +10,8 @@ import {
   NumericFilter,
   StringFilter,
 } from './evaluate-filter.interface'
-import { GreaterThanFilter } from './greater-than-filter/greater-than-filter'
-import { SomeFilter } from './some-filter/some-filter'
+import { GreaterThanFilter } from './greater-than-filter'
+import { SomeFilter } from './some-filter'
 
 // Abstracción para el registro de filtros
 export interface IFilterRegistry {

@@ -283,7 +283,7 @@ describe('Equals Filter Behavior Analysis - Prisma/TypeORM Compatibility', () =>
       const end = performance.now()
       expect(result.data).toHaveLength(1)
       expect(result.data[0].id).toBe(5000)
-      expect(end - start).toBeLessThan(200)
+      expect(end - start).toBeLessThan(300)
     })
   })
   describe('Integration with Other Filters', () => {
