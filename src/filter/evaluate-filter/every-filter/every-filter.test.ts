@@ -11,7 +11,7 @@ describe('EveryFilter', () => {
     ])
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
-        .length
+        .length,
     ).toBe(3)
   })
   it('arrays con algún elemento que no cumple el filtro', () => {
@@ -22,7 +22,7 @@ describe('EveryFilter', () => {
     ])
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
-        .length
+        .length,
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
@@ -37,7 +37,7 @@ describe('EveryFilter', () => {
     ])
     expect(
       filter.findMany({ where: { items: { every: { equals: 2 } } } }).data
-        .length
+        .length,
     ).toBe(4)
   })
   it('findUnique', () => {
@@ -61,7 +61,7 @@ describe('EveryFilter', () => {
     ])
     expect(
       filter.findMany({ where: { posts: { every: { equals: true } } } }).data
-        .length
+        .length,
     ).toBe(1)
   })
 })
@@ -94,13 +94,13 @@ describe('EveryFilter Unit', () => {
       filter.evaluate([
         { a: 1, b: 2 },
         { a: 1, b: 2 },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { a: 1, b: 2 },
         { a: 1, b: 3 },
-      ])
+      ]),
     ).toBe(false)
   })
   it('should return true for empty filter and array of objects', () => {
@@ -149,38 +149,38 @@ describe('EveryFilter Integration', () => {
       { arr: [] },
     ])
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 3 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 3 } } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data[0].arr
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data[0].arr,
     ).toEqual([1, 1, 1])
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data[0].arr
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data[0].arr,
     ).toEqual([2, 2, 2])
     expect(
       filter.findMany({ where: { arr: { every: { equals: 1 } } } } as any)
-        .data[0].arr
+        .data[0].arr,
     ).not.toEqual([1, 2, 1])
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 3 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 3 } } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data[0].arr
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data[0].arr,
     ).toEqual([1, 1, 1])
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data[0].arr
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data[0].arr,
     ).toEqual([2, 2, 2])
   })
   it('should work with createFilter for arrays of objects', () => {
@@ -193,26 +193,26 @@ describe('EveryFilter Integration', () => {
     expect(
       filter.findMany({
         where: { arr: { every: { a: { equals: 1 } } } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { arr: { every: { a: { equals: 2 } } } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { arr: { every: { a: { equals: 3 } } } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('should return true for empty array in integration', () => {
     const filter = createFilter<{ arr: number[] }>([{ arr: [] }, { arr: [1] }])
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length
+      filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data.length,
     ).toBe(1)
   })
   it('should handle empty filter with array of objects', () => {
@@ -222,7 +222,7 @@ describe('EveryFilter Integration', () => {
       { arr: [] },
     ])
     expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
-      3
+      3,
     )
   })
   it('should handle empty filter with array of primitives', () => {
@@ -232,7 +232,7 @@ describe('EveryFilter Integration', () => {
       { arr: [] },
     ])
     expect(filter.findMany({ where: { arr: { every: {} } } }).data.length).toBe(
-      3
+      3,
     )
   })
 })

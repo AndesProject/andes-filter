@@ -18,6 +18,7 @@ export class RegexFilter implements EvaluateFilter {
 
   public evaluate(input: any): boolean {
     if (!ValidationUtils.validateString(input)) return false
+
     return SafeEvaluator.testRegex(this.pattern, this.flags, input)
   }
 }

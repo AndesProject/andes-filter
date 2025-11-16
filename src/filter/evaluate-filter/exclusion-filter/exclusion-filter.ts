@@ -11,7 +11,7 @@ export class ExclusionFilter<T> implements EvaluateFilter {
   private insensitive: boolean = false
   constructor(
     private targetValues: T[],
-    insensitive?: boolean
+    insensitive?: boolean,
   ) {
     this.insensitive = !!insensitive
   }
@@ -25,6 +25,7 @@ export class ExclusionFilter<T> implements EvaluateFilter {
       ) {
         continue
       }
+
       if (
         isNumber(value) &&
         isNumber(v) &&
@@ -38,16 +39,20 @@ export class ExclusionFilter<T> implements EvaluateFilter {
         if (compareDates(value, v)) return false
         continue
       }
+
       if (isObject(value) && value !== null && isObject(v) && v !== null) {
         if (value === v) return false
         continue
       }
+
       if (isString(value) && isString(v)) {
         if (compareStrings(value, v, this.insensitive)) return false
         continue
       }
+
       if (value === v) return false
     }
+
     return true
   }
 }

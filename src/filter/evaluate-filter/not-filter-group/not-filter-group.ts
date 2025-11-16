@@ -10,8 +10,9 @@ export class NotFilterGroup<T> implements EvaluateFilter {
   }
   public evaluate(targetData: any): boolean {
     if (!this.filterCriteria || this.filterCriteria.length === 0) return true
+
     return noItemMatches(this.filterCriteria, (criteria) =>
-      matchesFilter(criteria, targetData)
+      matchesFilter(criteria, targetData),
     )
   }
 }

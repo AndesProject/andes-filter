@@ -13,7 +13,7 @@ export class LengthFilter implements EvaluateFilter {
           gt?: number
           lt?: number
           equals?: number
-        }
+        },
   ) {
     if (isNumber(target)) {
       this.targetLength = target
@@ -27,21 +27,27 @@ export class LengthFilter implements EvaluateFilter {
     if (value === null || value === undefined) return false
     if (!Array.isArray(value) && typeof value !== 'string') return false
     const len = value.length
+
     if ('equals' in this.ops) {
       if (len !== this.ops.equals) return false
     }
+
     if ('gte' in this.ops) {
       if (len < this.ops.gte) return false
     }
+
     if ('lte' in this.ops) {
       if (len > this.ops.lte) return false
     }
+
     if ('gt' in this.ops) {
       if (len <= this.ops.gt) return false
     }
+
     if ('lt' in this.ops) {
       if (len >= this.ops.lt) return false
     }
+
     return true
   }
 }

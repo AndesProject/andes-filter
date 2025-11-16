@@ -64,13 +64,13 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
         filter.evaluate([
           { a: 1, b: 2 },
           { a: 1, b: 2 },
-        ])
+        ]),
       ).toBe(true)
       expect(
         filter.evaluate([
           { a: 1, b: 2 },
           { a: 1, b: 3 },
-        ])
+        ]),
       ).toBe(false)
     })
     it('should handle nested object filters', () => {
@@ -106,11 +106,11 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       ])
       expect(
         filter.findMany({ where: { arr: { every: { equals: 1 } } } }).data
-          .length
+          .length,
       ).toBe(2)
       expect(
         filter.findMany({ where: { arr: { every: { equals: 2 } } } }).data
-          .length
+          .length,
       ).toBe(2)
     })
     it('should work with object arrays', () => {
@@ -123,12 +123,12 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
       expect(
         filter.findMany({
           where: { arr: { every: { a: { equals: 1 } } } } as any,
-        }).data.length
+        }).data.length,
       ).toBe(2)
       expect(
         filter.findMany({
           where: { arr: { every: { a: { equals: 2 } } } } as any,
-        }).data.length
+        }).data.length,
       ).toBe(2)
     })
     it('should handle empty filters correctly', () => {
@@ -138,7 +138,7 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
         { arr: [] },
       ])
       expect(
-        filter.findMany({ where: { arr: { every: {} } } }).data.length
+        filter.findMany({ where: { arr: { every: {} } } }).data.length,
       ).toBe(3)
     })
     it('should handle empty filters with primitive arrays', () => {
@@ -148,7 +148,7 @@ describe('EveryFilter Prisma/TypeORM Compatibility', () => {
         { arr: [] },
       ])
       expect(
-        filter.findMany({ where: { arr: { every: {} } } }).data.length
+        filter.findMany({ where: { arr: { every: {} } } }).data.length,
       ).toBe(3)
     })
   })

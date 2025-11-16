@@ -16,7 +16,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
   private isArrayEquivalence: boolean = false
   constructor(
     private targetValue: T | FilterCriteria<T> | null,
-    insensitive?: boolean
+    insensitive?: boolean,
   ) {
     this.insensitive = !!insensitive
     this.rawTarget = targetValue
@@ -28,6 +28,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     ) {
       this.modeInsensitive = true
     }
+
     if (
       this.targetValue &&
       isObject(this.targetValue) &&
@@ -35,34 +36,45 @@ export class InequalityFilter<T> implements EvaluateFilter {
       this.targetValue !== null
     ) {
       const keys = Object.keys(this.targetValue)
+
       if (keys.length === 1) {
         const key = keys[0]
+
         const value = (this.targetValue as any)[key]
+
         if (key === 'distinct') {
           this.isDistinct = true
+
           return
         }
+
         if (key === 'some') {
           this.evaluator = new NoneFilter(value)
           this.isArrayEquivalence = true
+
           return
         } else if (key === 'none') {
           this.evaluator = new SomeFilter(value)
           this.isArrayEquivalence = true
+
           return
         } else if (key === 'every') {
           this.evaluator = {
             evaluate: (arr: any) => {
               if (!Array.isArray(arr) || arr.length === 0) return false
+
               return arr.some(
-                (item: any) => !new FilterEvaluator(value).evaluate(item)
+                (item: any) => !new FilterEvaluator(value).evaluate(item),
               )
             },
           }
           this.isArrayEquivalence = true
+
           return
         }
+
         let subInsensitive = this.insensitive || this.modeInsensitive
+
         if (
           isObject(value) &&
           value !== null &&
@@ -71,6 +83,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
         ) {
           subInsensitive = true
         }
+
         this.evaluator = createFilterClassMap(key as any, value, subInsensitive)
       }
     }
@@ -86,11 +99,14 @@ export class InequalityFilter<T> implements EvaluateFilter {
       ) {
         return false
       }
+
       if (this.isArrayEquivalence) {
         return this.evaluator.evaluate(value)
       }
+
       return !this.evaluator.evaluate(value)
     }
+
     if (
       this.targetValue &&
       isObject(this.targetValue) &&
@@ -126,32 +142,39 @@ export class InequalityFilter<T> implements EvaluateFilter {
           'NOT',
           'isNull',
           'distinct',
-        ].includes(k)
+        ].includes(k),
       )
     ) {
       return !new FilterEvaluator(
-        this.targetValue as FilterCriteria<T>
+        this.targetValue as FilterCriteria<T>,
       ).evaluate(value)
     }
+
     if (this.targetValue instanceof Date && value instanceof Date) {
       return this.targetValue.getTime() !== value.getTime()
     }
+
     if (this.targetValue instanceof Date || value instanceof Date) {
       const date1 =
         this.targetValue instanceof Date
           ? this.targetValue
           : new Date(this.targetValue as any)
+
       const date2 = value instanceof Date ? value : new Date(value)
+
       return date1.getTime() !== date2.getTime()
     }
+
     if (Number.isNaN(this.targetValue) || Number.isNaN(value))
       return !(Number.isNaN(this.targetValue) && Number.isNaN(value))
     if (isString(this.targetValue) && isString(value)) {
       if (this.insensitive || this.modeInsensitive) {
         return this.targetValue.toLowerCase() !== value.toLowerCase()
       }
+
       return this.targetValue !== value
     }
+
     if (
       isObject(this.targetValue) &&
       this.targetValue !== null &&
@@ -160,6 +183,7 @@ export class InequalityFilter<T> implements EvaluateFilter {
     ) {
       return this.targetValue !== value
     }
+
     return value !== this.targetValue
   }
 }

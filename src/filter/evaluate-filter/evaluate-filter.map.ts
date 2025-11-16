@@ -40,14 +40,14 @@ class FilterRegistry {
 
   public static registerFilter(
     type: string,
-    factory: (value: any, isCaseInsensitive?: boolean) => EvaluateFilter
+    factory: (value: any, isCaseInsensitive?: boolean) => EvaluateFilter,
   ) {
     this.filterMap[type] = factory
     this.operatorSet.add(type)
   }
 
   public static getFilter(
-    type: string
+    type: string,
   ): ((value: any, isCaseInsensitive?: boolean) => EvaluateFilter) | undefined {
     return this.filterMap[type]
   }
@@ -74,20 +74,20 @@ function registerCoreFilters() {
   FilterRegistry.registerFilter('contains', (v, i) => new ContainsFilter(v, i))
   FilterRegistry.registerFilter(
     'notContains',
-    (v, i) => new NotContainsFilter(v, i)
+    (v, i) => new NotContainsFilter(v, i),
   )
   FilterRegistry.registerFilter(
     'startsWith',
-    (v, i) => new StartsWithFilter(v, i)
+    (v, i) => new StartsWithFilter(v, i),
   )
   FilterRegistry.registerFilter(
     'notStartsWith',
-    (v, i) => new NotStartsWithFilter(v, i)
+    (v, i) => new NotStartsWithFilter(v, i),
   )
   FilterRegistry.registerFilter('endsWith', (v, i) => new EndsWithFilter(v, i))
   FilterRegistry.registerFilter(
     'notEndsWith',
-    (v, i) => new NotEndsWithFilter(v, i)
+    (v, i) => new NotEndsWithFilter(v, i),
   )
   FilterRegistry.registerFilter('regex', (v) => new RegexFilter(v))
   FilterRegistry.registerFilter('before', (v) => new BeforeFilter(v))
@@ -108,10 +108,12 @@ function registerCoreFilters() {
     evaluate: (arrayData: any) => {
       if (!Array.isArray(arrayData)) return false
       const uniqueValues = new Set(arrayData)
+
       return uniqueValues.size === arrayData.length
     },
   }))
 }
+
 registerCoreFilters()
 
 // Clase principal responsable de coordinar la creación de filtros
@@ -119,14 +121,17 @@ class FilterFactory {
   public static createFilter(
     filterType: string,
     filterValue: any,
-    isCaseInsensitive?: boolean
+    isCaseInsensitive?: boolean,
   ): EvaluateFilter | null {
     if (filterType === 'mode') return null
     const factory = FilterRegistry.getFilter(filterType as string)
+
     if (factory) {
       return factory(filterValue, isCaseInsensitive)
     }
+
     Logger.unknownFilter(String(filterType))
+
     return null
   }
 }
@@ -134,7 +139,7 @@ class FilterFactory {
 export function createFilterClassMap(
   filterType: string,
   filterValue: any,
-  isCaseInsensitive?: boolean
+  isCaseInsensitive?: boolean,
 ): any {
   return FilterFactory.createFilter(filterType, filterValue, isCaseInsensitive)
 }
@@ -142,7 +147,7 @@ export function createFilterClassMap(
 // API para registrar nuevos filtros y operadores desde fuera del core
 export function registerCustomFilter(
   type: string,
-  factory: (value: any, isCaseInsensitive?: boolean) => EvaluateFilter
+  factory: (value: any, isCaseInsensitive?: boolean) => EvaluateFilter,
 ) {
   FilterRegistry.registerFilter(type, factory)
 }

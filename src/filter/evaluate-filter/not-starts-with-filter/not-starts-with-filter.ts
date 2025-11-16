@@ -4,7 +4,7 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export class NotStartsWithFilter implements EvaluateFilter {
   constructor(
     private excludedPrefix: string,
-    private isCaseInsensitive: boolean = false
+    private isCaseInsensitive: boolean = false,
   ) {}
   public evaluate(targetString: any): boolean {
     return performStringOperation(
@@ -12,7 +12,7 @@ export class NotStartsWithFilter implements EvaluateFilter {
       targetString,
       this.excludedPrefix,
       this.isCaseInsensitive,
-      true
+      true,
     )
   }
 }

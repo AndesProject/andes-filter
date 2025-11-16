@@ -383,7 +383,7 @@ describe('sortObjects', () => {
       { a: 2, b: 1 },
     ]
     expect(
-      sortObjects([...arr], { a: SortDirection.ASC, b: SortDirection.DESC })
+      sortObjects([...arr], { a: SortDirection.ASC, b: SortDirection.DESC }),
     ).toEqual([
       { a: 1, b: 2 },
       { a: 1, b: 1 },

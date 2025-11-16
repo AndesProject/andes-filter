@@ -16,21 +16,21 @@ describe('BetweenFilter', () => {
         where: {
           date: { between: ['2024-09-01', '2024-09-11'] },
         },
-      }).data.length
+      }).data.length,
     ).toBe(5)
     expect(
       filter.findMany({
         where: {
           date: { between: ['2024-09-02', '2024-09-11'] },
         },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: {
           date: { between: ['2024-09-01', '2024-09-10'] },
         },
-      }).data.length
+      }).data.length,
     ).toBe(4)
   })
   it('should filter numeric values correctly', () => {
@@ -42,13 +42,13 @@ describe('BetweenFilter', () => {
       { value: 20 },
     ])
     expect(
-      filter.findMany({ where: { value: { between: [5, 15] } } }).data.length
+      filter.findMany({ where: { value: { between: [5, 15] } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { value: { between: [0, 1] } } }).data.length
+      filter.findMany({ where: { value: { between: [0, 1] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { between: [21, 30] } } }).data.length
+      filter.findMany({ where: { value: { between: [21, 30] } } }).data.length,
     ).toBe(0)
   })
   it('Date', () => {
@@ -70,7 +70,7 @@ describe('BetweenFilter', () => {
             ],
           },
         },
-      } as any).data.length
+      } as any).data.length,
     ).toBe(3)
   })
   it('null, undefined y fechas inválidas', () => {
@@ -80,12 +80,12 @@ describe('BetweenFilter', () => {
       { value: 0 },
     ])
     expect(
-      filter.findMany({ where: { value: { between: [0, 1000] } } }).data.length
+      filter.findMany({ where: { value: { between: [0, 1000] } } }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { value: { between: ['invalid-date', 'invalid-date'] } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
   })
   it('findUnique', () => {

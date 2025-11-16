@@ -13,15 +13,15 @@ describe('GreaterThanOrEqualFilter', () => {
       { size: 3 },
     ])
     expect(filter.findMany({ where: { size: { gte: -2 } } }).data.length).toBe(
-      7
+      7,
     )
     expect(filter.findMany({ where: { size: { gte: -1 } } }).data.length).toBe(
-      6
+      6,
     )
     expect(filter.findMany({ where: { size: { gte: 0 } } }).data.length).toBe(5)
     expect(filter.findMany({ where: { size: { gte: 3 } } }).data.length).toBe(1)
     expect(filter.findMany({ where: { size: { gte: 100 } } }).data.length).toBe(
-      0
+      0,
     )
     expect(filter.findUnique({ where: { size: { gte: -3 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { gte: -2 } } })?.size).toBe(-2)
@@ -38,19 +38,19 @@ describe('GreaterThanOrEqualFilter', () => {
       { date: d3 },
     ])
     expect(filter.findMany({ where: { date: { gte: d1 } } }).data.length).toBe(
-      3
+      3,
     )
     expect(filter.findMany({ where: { date: { gte: d2 } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { date: { gte: d3 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findUnique({ where: { date: { gte: d1 } } })?.date).toEqual(
-      d1
+      d1,
     )
     expect(
-      filter.findUnique({ where: { date: { gte: new Date('2023-01-01') } } })
+      filter.findUnique({ where: { date: { gte: new Date('2023-01-01') } } }),
     ).toBe(null)
   })
   it('should filter string values correctly', () => {
@@ -60,16 +60,16 @@ describe('GreaterThanOrEqualFilter', () => {
       { value: 'c' },
     ])
     expect(
-      filter.findMany({ where: { value: { gte: 'a' } } }).data.length
+      filter.findMany({ where: { value: { gte: 'a' } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { value: { gte: 'b' } } }).data.length
+      filter.findMany({ where: { value: { gte: 'b' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { value: { gte: 'c' } } }).data.length
+      filter.findMany({ where: { value: { gte: 'c' } } }).data.length,
     ).toBe(1)
     expect(filter.findUnique({ where: { value: { gte: 'a' } } })?.value).toBe(
-      'a'
+      'a',
     )
     expect(filter.findUnique({ where: { value: { gte: 'z' } } })).toBe(null)
   })
@@ -81,16 +81,16 @@ describe('GreaterThanOrEqualFilter', () => {
       { value: 1 },
     ])
     expect(filter.findMany({ where: { value: { gte: 0 } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { value: { gte: 1 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(
-      filter.findMany({ where: { value: { gte: null } } }).data.length
+      filter.findMany({ where: { value: { gte: null } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { value: { gte: undefined } } }).data.length
+      filter.findMany({ where: { value: { gte: undefined } } }).data.length,
     ).toBe(0)
   })
 })

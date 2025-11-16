@@ -11,13 +11,13 @@ describe('HasSomeFilter', () => {
       { items: [11, 12] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasSome: [1, 5] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1, 5] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { hasSome: [99, 100] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [99, 100] } } }).data.length,
     ).toBe(0)
   })
   it('arrays con strings', () => {
@@ -29,12 +29,12 @@ describe('HasSomeFilter', () => {
     expect(
       filter.findMany({
         where: { tags: { hasSome: ['javascript', 'python'] } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { tags: { hasSome: ['javascript', 'typescript'] } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
@@ -45,10 +45,10 @@ describe('HasSomeFilter', () => {
       { items: [1, 2, 3] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasSome: [] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length,
     ).toBe(1)
   })
   it('findUnique', () => {
@@ -71,7 +71,7 @@ describe('HasSomeFilter', () => {
     ])
     expect(
       filter.findMany({ where: { flags: { hasSome: [true, false] } } }).data
-        .length
+        .length,
     ).toBe(3)
   })
   it('arrays con elementos duplicados', () => {
@@ -81,10 +81,10 @@ describe('HasSomeFilter', () => {
       { items: [7, 8] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasSome: [1, 4] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1, 4] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1, 2, 3] } } }).data.length,
     ).toBe(1)
   })
   it('arrays con un solo elemento requerido', () => {
@@ -94,10 +94,10 @@ describe('HasSomeFilter', () => {
       { items: [7, 8, 9] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [1] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { hasSome: [4] } } }).data.length
+      filter.findMany({ where: { items: { hasSome: [4] } } }).data.length,
     ).toBe(1)
   })
 })
@@ -175,7 +175,7 @@ describe('HasSomeFilter Edge Cases', () => {
             },
           },
         },
-      ])
+      ]),
     ).toBe(true)
   })
 
@@ -185,7 +185,7 @@ describe('HasSomeFilter Edge Cases', () => {
     expect(filter.evaluate([{ name: 'John', age: 30, city: 'NYC' }])).toBe(true)
 
     expect(filter.evaluate([{ name: 'John', age: 30, city: 'Boston' }])).toBe(
-      false
+      false,
     )
   })
 
@@ -208,5 +208,54 @@ describe('HasSomeFilter Edge Cases', () => {
     expect(filter.evaluate('not an array')).toBe(false)
     expect(filter.evaluate(null)).toBe(false)
     expect(filter.evaluate(undefined)).toBe(false)
+  })
+
+  it('should handle hasNestedFilters with nested objects containing null values', () => {
+    const filter = new HasSomeFilter([
+      {
+        user: {
+          profile: {
+            name: { equals: 'John' },
+          },
+        },
+      },
+    ])
+
+    const dataWithNull = [
+      {
+        user: {
+          profile: {
+            name: 'John',
+            metadata: null,
+          },
+        },
+      },
+    ]
+
+    expect(filter.evaluate(dataWithNull)).toBe(true)
+  })
+
+  it('should handle hasNestedFilters with objects containing null values that return false', () => {
+    const filter = new HasSomeFilter([
+      {
+        user: {
+          name: 'John',
+          metadata: null,
+          score: 100,
+        },
+      },
+    ])
+
+    expect(
+      filter.evaluate([
+        {
+          user: {
+            name: 'John',
+            metadata: null,
+            score: 100,
+          },
+        },
+      ]),
+    ).toBe(true)
   })
 })

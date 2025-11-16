@@ -10,10 +10,11 @@ describe('NoneFilter', () => {
     ])
     expect(
       filter.findMany({ where: { items: { none: { equals: 10 } } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { items: { none: { equals: 2 } } } }).data.length
+      filter.findMany({ where: { items: { none: { equals: 2 } } } }).data
+        .length,
     ).toBe(2)
   })
   it('arrays vacíos, null y undefined', () => {
@@ -24,7 +25,8 @@ describe('NoneFilter', () => {
       { items: [1, 2, 3] },
     ])
     expect(
-      filter.findMany({ where: { items: { none: { equals: 1 } } } }).data.length
+      filter.findMany({ where: { items: { none: { equals: 1 } } } }).data
+        .length,
     ).toBe(3)
   })
   it('findUnique', () => {
@@ -47,7 +49,8 @@ describe('NoneFilter', () => {
       { posts: [3, 4] },
     ])
     expect(
-      filter.findMany({ where: { posts: { none: { equals: 3 } } } }).data.length
+      filter.findMany({ where: { posts: { none: { equals: 3 } } } }).data
+        .length,
     ).toBe(1)
   })
 })
@@ -105,10 +108,10 @@ describe('NoneFilter Unit', () => {
   it('debe manejar filtros con operadores de fecha', () => {
     const filter = new NoneFilter({ after: new Date('2023-01-01') })
     expect(
-      filter.evaluate([new Date('2022-12-01'), new Date('2022-11-01')])
+      filter.evaluate([new Date('2022-12-01'), new Date('2022-11-01')]),
     ).toBe(true)
     expect(
-      filter.evaluate([new Date('2023-06-01'), new Date('2022-12-01')])
+      filter.evaluate([new Date('2023-06-01'), new Date('2022-12-01')]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de array', () => {
@@ -117,13 +120,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de longitud', () => {
@@ -184,13 +187,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 3, 5],
         [2, 6],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [2, 4, 6],
         [1, 3],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de hasSome', () => {
@@ -199,13 +202,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 3, 5],
         [6, 7],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de distinct', () => {
@@ -250,10 +253,10 @@ describe('NoneFilter Unit', () => {
       before: new Date('2023-06-01'),
     })
     expect(
-      filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')])
+      filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')]),
     ).toBe(true)
     expect(
-      filter.evaluate([new Date('2023-01-01'), new Date('2023-12-01')])
+      filter.evaluate([new Date('2023-01-01'), new Date('2023-12-01')]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de some', () => {
@@ -262,13 +265,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de none', () => {
@@ -277,13 +280,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(false)
     expect(
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de every', () => {
@@ -292,13 +295,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [2, 2, 2],
         [1, 2],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros primitivos', () => {
@@ -315,13 +318,13 @@ describe('NoneFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane Smith', age: 20 },
         { name: 'Bob Johnson', age: 18 },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { name: 'John Doe', age: 30 },
         { name: 'Jane Smith', age: 20 },
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar elementos null en el array', () => {
@@ -341,5 +344,26 @@ describe('NoneFilter Unit', () => {
     })
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([1, 2, 3])).toBe(false)
+  })
+})
+
+describe('NoneFilter - cobertura del fallback de igualdad (línea final)', () => {
+  it('usa comparación directa item !== filter cuando no hay evaluator', () => {
+    const nf = new NoneFilter({} as any) as unknown as {
+      evaluate: (data: any[]) => boolean
+      // Fuerzo flags para cubrir la rama final
+      isEmptyFilter: boolean
+      isDistinct: boolean
+      isNegation: boolean
+      evaluator: any
+      filter: any
+    }
+    nf.isEmptyFilter = false
+    nf.isDistinct = false
+    nf.isNegation = false
+    nf.evaluator = null
+    nf.filter = 2
+    expect(nf.evaluate([1, 3, 4])).toBe(true)
+    expect(nf.evaluate([1, 2, 3])).toBe(false)
   })
 })

@@ -18,7 +18,7 @@ export class HasEveryFilter<T> implements EvaluateFilter {
       this.requiredValues[0] !== null
     ) {
       this.filterEvaluators = this.requiredValues.map(
-        (requiredValue) => new FilterEvaluator(requiredValue as any)
+        (requiredValue) => new FilterEvaluator(requiredValue as any),
       )
     }
   }
@@ -28,26 +28,31 @@ export class HasEveryFilter<T> implements EvaluateFilter {
     if (this.requiredValues.length === 0) return true
     if (this.requiredValues.length === 1 && isObject(this.requiredValues[0])) {
       const singleEvaluator = new FilterEvaluator(this.requiredValues[0] as any)
+
       return allItemsMatch(arrayValue, (item) => singleEvaluator.evaluate(item))
     }
+
     if (this.filterEvaluators.length > 0) {
       return this.filterEvaluators.every((evaluator) => {
         return anyItemMatches(arrayValue, (item) => evaluator.evaluate(item))
       })
     }
+
     if (
       this.requiredValues.some(
-        (requiredValue) => isObject(requiredValue) && requiredValue !== null
+        (requiredValue) => isObject(requiredValue) && requiredValue !== null,
       )
     ) {
       return this.requiredValues.every((requiredValue) => {
         return anyItemMatches(arrayValue, (item) =>
-          matchesFilter(requiredValue as any, item)
+          matchesFilter(requiredValue as any, item),
         )
       })
     }
+
     for (const required of this.requiredValues) {
       let found = false
+
       for (const item of arrayValue) {
         if (
           (isString(item) && isNumber(required)) ||
@@ -55,18 +60,17 @@ export class HasEveryFilter<T> implements EvaluateFilter {
         ) {
           continue
         }
-        if (isObject(item) && isObject(required)) {
-          if (item === required) {
-            found = true
-            break
-          }
-        } else if (item === required) {
+
+        // Comparación directa para primitivos; los objetos se manejan en ramas anteriores
+        if (item === required) {
           found = true
           break
         }
       }
+
       if (!found) return false
     }
+
     return true
   }
 }

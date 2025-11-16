@@ -68,7 +68,7 @@ describe('createFilterClassMap', () => {
     const filter = createFilterClassMap('unknown' as any, {})
     expect(filter).toBeNull()
     expect(spy).toHaveBeenCalledWith(
-      '[FilterRegistry] Unknown filter type: unknown'
+      '[FilterRegistry] Unknown filter type: unknown',
     )
     spy.mockRestore()
   })

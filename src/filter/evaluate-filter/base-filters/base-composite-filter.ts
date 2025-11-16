@@ -49,6 +49,7 @@ export abstract class BaseCompositeFilter implements CompositeFilter {
 
   public removeFilter(filter: EvaluateFilter): void {
     const index = this.filters.indexOf(filter)
+
     if (index > -1) {
       this.filters.splice(index, 1)
     }

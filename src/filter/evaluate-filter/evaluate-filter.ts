@@ -34,6 +34,7 @@ const SUPPORTED_OPERATORS = [
   'isNull',
   'distinct',
 ]
+
 const ARRAY_OPERATION_KEYS = ['some', 'none', 'every']
 
 // Clase responsable solo de inicializar filtros
@@ -57,7 +58,7 @@ class FilterInitializer {
       const filterInstance = FilterInitializer.createFilterInstance(
         criteriaKey,
         criteriaValue,
-        isCaseInsensitiveMode
+        isCaseInsensitiveMode,
       )
 
       if (filterInstance) {
@@ -71,13 +72,13 @@ class FilterInitializer {
   private static createFilterInstance(
     criteriaKey: string,
     criteriaValue: any,
-    isCaseInsensitiveMode: boolean
+    isCaseInsensitiveMode: boolean,
   ): EvaluateFilter | FilterEvaluator<any> | null {
     if (SUPPORTED_OPERATORS.includes(criteriaKey)) {
       return createFilterClassMap(
         criteriaKey,
         criteriaValue,
-        isCaseInsensitiveMode
+        isCaseInsensitiveMode,
       )
     }
 
@@ -85,7 +86,7 @@ class FilterInitializer {
       return createFilterClassMap(
         criteriaKey,
         criteriaValue,
-        isCaseInsensitiveMode
+        isCaseInsensitiveMode,
       )
     }
 
@@ -93,7 +94,7 @@ class FilterInitializer {
       return FilterInitializer.handleObjectCriteria(
         criteriaKey,
         criteriaValue,
-        isCaseInsensitiveMode
+        isCaseInsensitiveMode,
       )
     }
 
@@ -103,12 +104,12 @@ class FilterInitializer {
   private static handleObjectCriteria(
     criteriaKey: string,
     criteriaValue: any,
-    isCaseInsensitiveMode: boolean
+    isCaseInsensitiveMode: boolean,
   ): EvaluateFilter | FilterEvaluator<any> | null {
     if ('mode' in criteriaValue && criteriaValue.mode === 'insensitive') {
       return FilterInitializer.handleInsensitiveModeCriteria(
         criteriaKey,
-        criteriaValue
+        criteriaValue,
       )
     }
 
@@ -116,11 +117,12 @@ class FilterInitializer {
 
     if (keys.length === 1) {
       const singleKey = keys[0]
+
       if (SUPPORTED_OPERATORS.includes(singleKey)) {
         return createFilterClassMap(
           singleKey,
           criteriaValue[singleKey],
-          isCaseInsensitiveMode
+          isCaseInsensitiveMode,
         )
       }
 
@@ -128,7 +130,7 @@ class FilterInitializer {
         return createFilterClassMap(
           singleKey,
           criteriaValue[singleKey],
-          isCaseInsensitiveMode
+          isCaseInsensitiveMode,
         )
       }
     }
@@ -138,7 +140,7 @@ class FilterInitializer {
 
   private static handleInsensitiveModeCriteria(
     criteriaKey: string,
-    criteriaValue: any
+    criteriaValue: any,
   ): EvaluateFilter | FilterEvaluator<any> | null {
     const filterInstances: EvaluateFilter[] = []
 
@@ -146,10 +148,11 @@ class FilterInitializer {
       if (subCriteriaKey === 'mode') return
 
       const subCriteriaValue = criteriaValue[subCriteriaKey]
+
       const filterInstance = createFilterClassMap(
         subCriteriaKey,
         subCriteriaValue,
-        true
+        true,
       )
 
       if (filterInstance) {
@@ -171,15 +174,16 @@ class DataEvaluator {
     activeFilters: {
       fieldKey: string
       filterInstance: EvaluateFilter | FilterEvaluator<any>
-    }[]
+    }[],
   ): boolean {
     if (activeFilters.length === 0) return true
 
     return activeFilters.every(({ fieldKey, filterInstance }) => {
       const dataToEvaluate = DataEvaluator.extractDataToEvaluate(
         targetData,
-        fieldKey
+        fieldKey,
       )
+
       return filterInstance.evaluate(dataToEvaluate)
     })
   }
@@ -190,6 +194,7 @@ class DataEvaluator {
     }
 
     const isDirectOperatorField = SUPPORTED_OPERATORS.includes(fieldKey)
+
     if (isDirectOperatorField) {
       return targetData
     }

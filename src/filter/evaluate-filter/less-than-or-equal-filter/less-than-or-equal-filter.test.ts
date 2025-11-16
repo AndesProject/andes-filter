@@ -14,15 +14,15 @@ describe('LessThanOrEqualFilter', () => {
       { size: 3 },
     ])
     expect(filter.findMany({ where: { size: { lte: -2 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findMany({ where: { size: { lte: -1 } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { size: { lte: 0 } } }).data.length).toBe(4)
     expect(filter.findMany({ where: { size: { lte: 3 } } }).data.length).toBe(7)
     expect(filter.findMany({ where: { size: { lte: 100 } } }).data.length).toBe(
-      7
+      7,
     )
     expect(filter.findUnique({ where: { size: { lte: -3 } } })).toBe(null)
     expect(filter.findUnique({ where: { size: { lte: -2 } } })?.size).toBe(-2)
@@ -39,19 +39,19 @@ describe('LessThanOrEqualFilter', () => {
       { date: d3 },
     ])
     expect(filter.findMany({ where: { date: { lte: d2 } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { date: { lte: d3 } } }).data.length).toBe(
-      3
+      3,
     )
     expect(filter.findMany({ where: { date: { lte: d1 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findUnique({ where: { date: { lte: d1 } } })?.date).toEqual(
-      d1
+      d1,
     )
     expect(
-      filter.findUnique({ where: { date: { lte: new Date('2019-01-01') } } })
+      filter.findUnique({ where: { date: { lte: new Date('2019-01-01') } } }),
     ).toBe(null)
   })
   it('should filter string values correctly', () => {
@@ -61,16 +61,16 @@ describe('LessThanOrEqualFilter', () => {
       { value: 'c' },
     ])
     expect(
-      filter.findMany({ where: { value: { lte: 'b' } } }).data.length
+      filter.findMany({ where: { value: { lte: 'b' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { value: { lte: 'c' } } }).data.length
+      filter.findMany({ where: { value: { lte: 'c' } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { value: { lte: 'a' } } }).data.length
+      filter.findMany({ where: { value: { lte: 'a' } } }).data.length,
     ).toBe(1)
     expect(filter.findUnique({ where: { value: { lte: 'a' } } })?.value).toBe(
-      'a'
+      'a',
     )
     expect(filter.findUnique({ where: { value: { lte: 'A' } } })).toBe(null)
   })
@@ -82,16 +82,16 @@ describe('LessThanOrEqualFilter', () => {
       { value: 1 },
     ])
     expect(filter.findMany({ where: { value: { lte: 1 } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { value: { lte: 0 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(
-      filter.findMany({ where: { value: { lte: null } } }).data.length
+      filter.findMany({ where: { value: { lte: null } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { value: { lte: undefined } } }).data.length
+      filter.findMany({ where: { value: { lte: undefined } } }).data.length,
     ).toBe(0)
   })
 })
@@ -118,6 +118,21 @@ describe('LessThanOrEqualFilter Unit Tests', () => {
     expect(filterDate.evaluate(d)).toBe(true)
     expect(filterDate.evaluate(new Date('2023-01-01'))).toBe(true)
     expect(filterDate.evaluate(new Date('2024-01-01'))).toBe(false)
+  })
+  it('should handle valid date strings (equal and greater)', () => {
+    const filter = new LessThanOrEqualFilter('2021-01-01')
+    // Igualdad (debe entrar a rama de fechas string válidas y ser true)
+    expect(filter.evaluate('2021-01-01')).toBe(true)
+    // Mayor (debe ser false)
+    expect(filter.evaluate('2022-01-01')).toBe(false)
+    // Menor (debe ser true)
+    expect(filter.evaluate('2020-12-31')).toBe(true)
+  })
+  it('should trigger catch branch when comparing with Symbol', () => {
+    const f = new LessThanOrEqualFilter(Symbol('s')) as unknown as {
+      evaluate: (v: any) => boolean
+    }
+    expect(f.evaluate(Symbol('x'))).toBe(false)
   })
   it('should handle null and undefined values', () => {
     const filter = new LessThanOrEqualFilter(1)

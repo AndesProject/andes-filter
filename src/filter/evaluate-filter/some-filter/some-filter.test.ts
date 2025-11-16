@@ -32,7 +32,7 @@ describe('SomeFilter', () => {
             } as any,
           },
         },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
@@ -46,7 +46,7 @@ describe('SomeFilter', () => {
             } as any,
           },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('no array, array vacío, null y undefined', () => {
@@ -58,11 +58,12 @@ describe('SomeFilter', () => {
       { items: 'not-an-array' },
     ])
     expect(
-      filter.findMany({ where: { items: { some: { equals: 2 } } } }).data.length
+      filter.findMany({ where: { items: { some: { equals: 2 } } } }).data
+        .length,
     ).toBe(1)
     expect(
       filter.findMany({ where: { items: { some: { equals: 999 } } } }).data
-        .length
+        .length,
     ).toBe(0)
   })
   it('findUnique', () => {
@@ -106,13 +107,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'John Doe', age: 30 },
         { name: 'Jane Smith', age: 20 },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { name: 'Jane Smith', age: 20 },
         { name: 'Bob Johnson', age: 18 },
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con múltiples operadores', () => {
@@ -151,10 +152,10 @@ describe('SomeFilter Unit', () => {
   it('debe manejar filtros con operadores de fecha', () => {
     const filter = new SomeFilter({ after: new Date('2023-01-01') } as any)
     expect(
-      filter.evaluate([new Date('2023-06-01'), new Date('2022-12-01')])
+      filter.evaluate([new Date('2023-06-01'), new Date('2022-12-01')]),
     ).toBe(true)
     expect(
-      filter.evaluate([new Date('2022-12-01'), new Date('2022-11-01')])
+      filter.evaluate([new Date('2022-12-01'), new Date('2022-11-01')]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de array', () => {
@@ -163,13 +164,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de longitud', () => {
@@ -209,6 +210,12 @@ describe('SomeFilter Unit', () => {
     expect(filter.evaluate([1, 3, 4])).toBe(true)
     expect(filter.evaluate([2, 2, 2])).toBe(false)
   })
+  it('cubre rama de negación con items nulos (línea 156)', () => {
+    const filter = new SomeFilter({ not: { equals: 2 } } as any)
+    // item null activa el early-return del callback en la rama de negación
+    expect(filter.evaluate([null])).toBe(false)
+    expect(filter.evaluate([null, 3])).toBe(true)
+  })
   it('debe manejar filtros con operadores de modo insensible', () => {
     const filter = new SomeFilter({
       contains: 'TEST',
@@ -228,13 +235,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [2, 4, 6],
         [1, 3],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 3, 5],
         [2, 6],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de hasSome', () => {
@@ -243,13 +250,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 3, 5],
         [6, 7],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de distinct', () => {
@@ -294,10 +301,10 @@ describe('SomeFilter Unit', () => {
       before: new Date('2023-06-01'),
     } as any)
     expect(
-      filter.evaluate([new Date('2023-01-01'), new Date('2023-12-01')])
+      filter.evaluate([new Date('2023-01-01'), new Date('2023-12-01')]),
     ).toBe(true)
     expect(
-      filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')])
+      filter.evaluate([new Date('2023-12-01'), new Date('2024-01-01')]),
     ).toBe(false)
   })
 
@@ -385,13 +392,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros con operadores de none', () => {
@@ -400,13 +407,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [1, 3, 4],
         [5, 6],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar filtros con operadores de every', () => {
@@ -415,13 +422,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         [2, 2, 2],
         [1, 2],
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         [1, 2, 3],
         [4, 5],
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar comparación directa cuando no hay evaluador', () => {
@@ -456,13 +463,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane', age: 20 },
         { name: 'Bob', age: 30 },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { name: 'John', age: 30 },
         { name: 'Jane', age: 20 },
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar comparación directa cuando no hay evaluador y el filtro es un objeto no reconocido', () => {
@@ -483,7 +490,7 @@ describe('SomeFilter Unit', () => {
           unknown1: 'value1',
           unknown2: 'value2',
         },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
@@ -491,7 +498,7 @@ describe('SomeFilter Unit', () => {
           unknown1: 'value1',
           unknown2: 'different',
         },
-      ])
+      ]),
     ).toBe(false)
   })
   it('debe manejar filtros NOT con objetos anidados que tienen múltiples claves', () => {
@@ -506,13 +513,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane', age: 20, city: 'Boston' },
         { name: 'Bob', age: 30, city: 'Chicago' },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { name: 'John', age: 30, city: 'New York' },
         { name: 'Jane', age: 20, city: 'Boston' },
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar filtros NOT con valores primitivos (no objetos)', () => {
@@ -567,7 +574,7 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane', age: 20 },
         { name: 'Bob', age: 30 },
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar filtros NOT con objetos que tienen una sola clave interna', () => {
@@ -589,7 +596,7 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane', age: 20 },
         { name: 'Bob', age: 30 },
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar filtros NOT con objetos que tienen múltiples claves internas anidadas', () => {
@@ -603,7 +610,7 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { name: 'Jane', address: { city: 'Boston' } },
         { name: 'Bob', address: { city: 'Chicago' } },
-      ])
+      ]),
     ).toBe(true)
   })
   it('debe manejar filtros NOT con objetos que tienen claves no reconocidas', () => {
@@ -613,7 +620,7 @@ describe('SomeFilter Unit', () => {
       },
     } as any)
     expect(
-      filter.evaluate([{ otherKey: 'value' }, { differentKey: 'value' }])
+      filter.evaluate([{ otherKey: 'value' }, { differentKey: 'value' }]),
     ).toBe(true)
   })
   it('debe manejar filtros con una sola clave no reconocida (sin operadores)', () => {
@@ -621,10 +628,10 @@ describe('SomeFilter Unit', () => {
       unknownKey: 'value',
     } as any)
     expect(
-      filter.evaluate([{ unknownKey: 'value' }, { otherKey: 'value' }])
+      filter.evaluate([{ unknownKey: 'value' }, { otherKey: 'value' }]),
     ).toBe(true)
     expect(
-      filter.evaluate([{ differentKey: 'value' }, { anotherKey: 'value' }])
+      filter.evaluate([{ differentKey: 'value' }, { anotherKey: 'value' }]),
     ).toBe(false)
   })
   it('debe manejar filtros con múltiples claves no reconocidas (sin operadores)', () => {
@@ -636,13 +643,13 @@ describe('SomeFilter Unit', () => {
       filter.evaluate([
         { key1: 'value1', key2: 'value2' },
         { otherKey: 'value' },
-      ])
+      ]),
     ).toBe(true)
     expect(
       filter.evaluate([
         { key1: 'value1', key2: 'different' },
         { otherKey: 'value' },
-      ])
+      ]),
     ).toBe(false)
   })
 })
@@ -732,7 +739,7 @@ describe('FilterConfigurationAnalyzer Coverage', () => {
       filter.evaluate([
         { user: { name: 'John', age: 30 } },
         { user: { name: 'Jane', age: 20 } },
-      ])
+      ]),
     ).toBe(true)
   })
 
@@ -793,7 +800,7 @@ describe('SomeFilter Edge Cases', () => {
       filter.evaluate([
         { name: 'Jane', age: 20 },
         { name: 'Bob', age: 30 },
-      ])
+      ]),
     ).toBe(true)
   })
 
@@ -1078,7 +1085,7 @@ describe('SomeFilter Additional Edge Cases', () => {
         {
           user: { profile: { name: 'John', settings: { theme: 'dark mode' } } },
         },
-      ])
+      ]),
     ).toBe(true)
   })
 
@@ -1104,7 +1111,7 @@ describe('SomeFilter Additional Edge Cases', () => {
     })
 
     expect(filter.evaluate([{ name: 'Jane', age: 20, city: 'Boston' }])).toBe(
-      true
+      true,
     )
   })
 
@@ -1120,7 +1127,7 @@ describe('SomeFilter Additional Edge Cases', () => {
 
     expect(filter.evaluate([{ name: 'John' }])).toBe(false) // Missing age
     expect(filter.evaluate([{ name: 'John', age: 30, city: 'NYC' }])).toBe(
-      false
+      false,
     ) // Extra key
   })
 
@@ -1134,7 +1141,7 @@ describe('SomeFilter Additional Edge Cases', () => {
         {
           user: { name: 'John' }, // Missing profile
         },
-      ])
+      ]),
     ).toBe(false)
   })
 

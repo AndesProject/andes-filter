@@ -16,10 +16,12 @@ export class StringNormalizer {
   static contains(
     source: string,
     target: string,
-    caseInsensitive: boolean
+    caseInsensitive: boolean,
   ): boolean {
     const normalizedSource = this.normalize(source, caseInsensitive)
+
     const normalizedTarget = this.normalize(target, caseInsensitive)
+
     return normalizedSource.includes(normalizedTarget)
   }
 
@@ -27,10 +29,12 @@ export class StringNormalizer {
   static startsWith(
     source: string,
     target: string,
-    caseInsensitive: boolean
+    caseInsensitive: boolean,
   ): boolean {
     const normalizedSource = this.normalize(source, caseInsensitive)
+
     const normalizedTarget = this.normalize(target, caseInsensitive)
+
     return normalizedSource.startsWith(normalizedTarget)
   }
 
@@ -38,10 +42,12 @@ export class StringNormalizer {
   static endsWith(
     source: string,
     target: string,
-    caseInsensitive: boolean
+    caseInsensitive: boolean,
   ): boolean {
     const normalizedSource = this.normalize(source, caseInsensitive)
+
     const normalizedTarget = this.normalize(target, caseInsensitive)
+
     return normalizedSource.endsWith(normalizedTarget)
   }
 }

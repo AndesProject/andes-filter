@@ -61,7 +61,7 @@ describe('filter.parser', () => {
 
       const encoded = queryFilterToUrlParams(originalFilter)
       const decoded = urlParamsToQueryFilter<{ name: string; age: number }>(
-        encoded
+        encoded,
       )
 
       expect(decoded).toEqual(originalFilter)

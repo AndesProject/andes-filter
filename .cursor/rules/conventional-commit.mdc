@@ -1,0 +1,422 @@
+---
+alwaysApply: true
+description: "Reglas completas para commits siguiendo Conventional Commits en español con enfoque en valor al usuario"
+triggers: ["commit", "git", "message", "conventional", "sparkle", "✨", "commit-message", "generate", "auto", "@conventional-commits.mdc", "conventional-commits"]
+priority: 1
+autoActivate: true
+context: ["source-control", "commit", "git", "sparkle", "ai-assistant"]
+cursorBehavior: "intervene-immediately"
+---
+
+# 🎯 Reglas para Commits (Conventional en Español) - Cursor AI
+
+## 🎯 Formato obligatorio
+
+Todos los commits deben seguir este formato:
+
+```
+<tipo>(<área>): <mensaje en presente y en español>
+
+<cuerpo detallado con viñetas explicando cambios técnicos>
+```
+
+### Estructura requerida:
+- **tipo**: uno de los tipos permitidos (ver lista abajo)
+- **área**: módulo, funcionalidad o sección afectada (opcional)
+- **mensaje**: descripción corta, clara, en español y enfocada en el valor para el usuario
+- **cuerpo**: lista detallada de cambios técnicos específicos realizados (opcional pero recomendado para commits complejos)
+
+## ✅ Tipos permitidos (Conventional Commits)
+
+**NOTA**: Los tipos permitidos se leen automáticamente desde commitlint.config.js como fuente de verdad.
+
+| Tipo | Descripción | Cuándo usar | Ejemplo con valor |
+|------|-------------|-------------|-------------------|
+| `feat` | nueva funcionalidad que aporta valor al usuario | Agregar componentes, hooks, servicios nuevos | feat: permite a usuarios guardar cursos favoritos |
+| `fix` | corrección de error que afectaba la experiencia | Corregir bugs, errores de lógica, problemas de UI | fix: corrige error que impedía login en móviles |
+| `refactor` | reestructuración de código sin cambiar comportamiento visible | Mejorar arquitectura, aplicar principios SOLID, DRY | refactor: simplifica validación de formularios |
+| `perf` | mejora de rendimiento percibida por el usuario | Optimizar renders, reducir bundle size, mejorar tiempos | perf: reduce tiempo de carga del catálogo en 60% |
+| `docs` | cambios en documentación que mejoran uso o mantenimiento | Actualizar README, comentarios técnicos, tipos | docs: actualiza guía de instalación para Windows |
+| `style` | ajustes de estilo/código sin afectar la lógica | Formateo, ESLint fixes, cambios de estilo visual | style: mejora legibilidad de textos en modo oscuro |
+| `test` | incorporación o mejora de pruebas | Agregar tests unitarios, mejorar cobertura | test: añade pruebas unitarias para hooks de autenticación |
+| `chore` | tareas internas o de mantenimiento | Actualizar dependencias, configuraciones | chore: actualiza react a versión 18.2.0 |
+| `build` | cambios en la configuración de build o dependencias | Webpack, TypeScript, herramientas de desarrollo | build: optimiza configuración de webpack para producción |
+| `ci` | cambios en integración continua | Pipelines, workflows, automatización | ci: añade validación de tipos en pipeline |
+| `revert` | revertir un commit previo | Deshacer cambios problemáticos | revert: revierte cambios en autenticación por problemas de seguridad |
+
+## 🧠 Filosofía del Mensaje con Valor
+
+### Enfoque en el "Por qué" no en el "Qué"
+- ❌ fix: corrige error en validación de formulario
+- ✅ fix: permite a usuarios completar registro sin errores
+
+### Comunicar el beneficio del usuario
+- ❌ feat: añade componente de búsqueda
+- ✅ feat: permite encontrar contenido rápidamente desde cualquier página
+
+### Usar lenguaje que cualquier miembro del equipo entienda
+- ❌ refactor: implementa patrón repository en capa de datos
+- ✅ refactor: mejora velocidad de carga de catálogo de cursos
+
+## 📏 Reglas estrictas (Compatible con commitlint)
+
+### Formato del mensaje:
+- **type**: obligatorio, en minúscula, y solo de la lista permitida (leída desde commitlint.config.js)
+- **scope (área)**: opcional, en lower-case, camelCase o kebab-case (validado desde commitlint.config.js)
+- **subject (mensaje corto)**:
+  - Debe estar en español
+  - Usar presente (ejemplo: añade, corrige, mejora, simplifica, permite)
+  - Límites dinámicos leídos desde commitlint.config.js (subject-min-length, subject-max-length)
+  - Sin mayúscula inicial (a menos que sea un nombre propio)
+  - Sin punto final
+  - header completo (type + scope + subject): límite desde commitlint.config.js (header-max-length)
+  - **CONFIGURACIÓN DINÁMICA**: Se lee automáticamente desde commitlint.config.js
+
+### Idioma preferido:
+- Se prefiere español para mejor comprensión del equipo
+- Se acepta inglés si el mensaje explica claramente el valor para el usuario
+- El enfoque debe estar en el beneficio para el usuario, no en el idioma
+
+## 🎯 Reglas para Generar Mensajes con Valor
+
+### 1. Siempre pensar en el usuario final
+- ¿Qué problema resuelve esto?
+- ¿Cómo mejora la experiencia?
+- ¿Qué beneficio obtiene el usuario?
+
+### 2. Usar verbos de acción claros
+- ✅ permite, mejora, corrige, simplifica, optimiza
+- ❌ añade, actualiza, modifica, cambia
+
+### 3. Incluir contexto del impacto
+- ✅ mejora velocidad de búsqueda en catálogo
+- ❌ optimiza query de búsqueda
+
+### 4. Ser específico sobre el beneficio
+- ✅ reduce tiempo de carga de página en 3 segundos
+- ❌ mejora rendimiento
+
+## 📝 Formato de Cuerpo Detallado
+
+### Cuándo usar cuerpo detallado:
+- Commits que modifican múltiples archivos
+- Refactorizaciones complejas
+- Nuevas funcionalidades con múltiples componentes
+- Cambios que requieren explicación técnica adicional
+
+### Estructura del cuerpo:
+```
+<tipo>(<área>): <mensaje principal>
+
+- <Cambio específico 1 con contexto técnico>.
+- <Cambio específico 2 con contexto técnico>.
+- <Cambio específico 3 con contexto técnico>.
+```
+
+### Reglas para el cuerpo:
+- Cada viñeta debe empezar con verbo en presente (añade, elimina, reemplaza, actualiza, etc.)
+- Incluir contexto técnico específico (nombres de funciones, clases, archivos)
+- Explicar el "por qué" técnico de cada cambio
+- Máximo 4-5 viñetas por commit
+- Cada viñeta debe ser una oración completa terminada en punto
+
+## 🔍 Detección Automática de Impacto
+
+### Para nuevos archivos/componentes:
+- Identificar la funcionalidad principal
+- Enfocarse en qué problema resuelve para el usuario
+- Ejemplo: `feat(catalog): permite filtrar cursos por categoría y duración`
+
+### Para correcciones:
+- Identificar qué problema tenía el usuario
+- Explicar cómo se soluciona
+- Ejemplo: `fix(auth): permite login con email en minúsculas`
+
+### Para mejoras de rendimiento:
+- Cuantificar la mejora cuando sea posible
+- Explicar el beneficio percibido
+- Ejemplo: `perf(images): reduce tiempo de carga de imágenes en 40%`
+
+## 🟢 Ejemplos válidos
+
+### Ejemplo básico (solo header):
+```
+feat(auth): añade autenticación de usuario con sanctum
+fix(api): corrige error que impedía crear usuarios desde móvil
+docs(readme): actualiza pasos de instalación para linux
+refactor(cuestionario): simplifica validación de respuestas
+perf(video): mejora tiempos de carga en lecciones grabadas
+style(components): aplica formato consistente con prettier
+test(hooks): añade pruebas unitarias para use-form
+chore(deps): actualiza react a versión 18.2.0
+build(webpack): optimiza configuración para producción
+ci(pipeline): añade validación de tipos en build
+```
+
+### Ejemplo completo (header + cuerpo detallado):
+```
+refactor(competence): optimiza obtención de temas y elimina código obsoleto
+
+- Reemplaza la lógica de obtención de temas en el componente Competence con una llamada directa a getCompetenceIconTheme.
+- Elimina la función obsoleta getTheme y los datos competenceThemeData asociados.
+- Actualiza imports para incluir competence.service mejorando la modularidad.
+- Limpia CompetenceModel y clases relacionadas utilizando CompetenceThemeByName para determinar estilos, mejorando claridad y mantenibilidad del código.
+```
+
+### Ejemplo de feat con cuerpo:
+```
+feat(search): permite búsqueda avanzada con filtros múltiples
+
+- Implementa componente FilterPanel con filtros por categoría, duración y nivel.
+- Añade hook useAdvancedSearch para manejar estado de filtros complejos.
+- Integra debounce en búsqueda para optimizar rendimiento.
+- Actualiza API service para soportar parámetros de filtrado múltiple.
+```
+
+## 🔴 Ejemplos inválidos
+
+```
+feat: add auth (muy corto y en inglés)
+FEAT: add authentication (mayúsculas y en inglés)
+feat(Auth): add authentication (scope en PascalCase)
+feat(auth): Add user authentication with sanctum (empieza con mayúscula e inglés)
+feat: añade auth (mensaje demasiado corto)
+```
+
+## 📋 Checklist para Mensaje con Valor
+
+Antes de generar el commit, verificar:
+
+- [ ] ¿El mensaje explica el beneficio para el usuario?
+- [ ] ¿Cualquier miembro del equipo entendería el impacto?
+- [ ] ¿El mensaje está en español y es claro?
+- [ ] ¿Se evita jerga técnica innecesaria?
+- [ ] ¿El mensaje comunica el "por qué" del cambio?
+- [ ] ¿Cumple con el formato de commitlint?
+
+## 🚫 Evitar en Mensajes de Commit
+
+- Detalles técnicos innecesarios
+- Jerga de programación
+- Referencias a archivos específicos
+- Cambios internos sin impacto visible
+- Mensajes genéricos como actualiza código
+- Términos en inglés
+
+## 🎯 Verbos Recomendados para Valor al Usuario
+
+**Verbos que explican beneficio al usuario (español e inglés):**
+
+### Enfoque en el usuario:
+- **permite/enable** - permite al usuario hacer algo
+- **facilita/facilitate** - hace más fácil una tarea
+- **mejora/improve** - mejora la experiencia del usuario
+- **optimiza/optimize** - hace más eficiente el proceso
+- **corrige/fix** - soluciona un problema del usuario
+- **simplifica/simplify** - reduce la complejidad para el usuario
+- **reduce/reduce** - disminuye tiempo/esfuerzo del usuario
+- **aumenta/increase** - incrementa beneficios para el usuario
+- **habilita/enable** - permite nueva funcionalidad
+- **deshabilita/disable** - previene errores del usuario
+
+### Evitar enfoque puramente técnico:
+- ❌ añade componente → ✅ permite filtrar contenido
+- ❌ actualiza API → ✅ mejora velocidad de carga
+- ❌ corrige bug → ✅ corrige error que impedía guardar
+
+## 🎯 Validación con commitlint.config.js
+
+**FUENTE DE VERDAD**: Esta regla lee automáticamente el archivo commitlint.config.js como fuente única de configuración
+
+### Lectura automática de configuración:
+1. **LEER** commitlint.config.js al activar la regla
+2. **EXTRAER** tipos permitidos del array type-enum
+3. **OBTENER** límites de caracteres de subject-min-length, subject-max-length, header-max-length
+4. **VALIDAR** casos de scope permitidos
+5. **APLICAR** configuración en tiempo real sin duplicación
+
+### Configuración dinámica:
+- **types**: Se leen desde commitlint.config.js rules['type-enum'][2]
+- **scope-case**: Se leen desde commitlint.config.js rules['scope-case'][2]
+- **subject-min-length**: Se lee desde commitlint.config.js rules['subject-min-length'][2]
+- **subject-max-length**: Se lee desde commitlint.config.js rules['subject-max-length'][2]
+- **header-max-length**: Se lee desde commitlint.config.js rules['header-max-length'][2]
+
+## 🚨 Aplicación Automática para Cursor AI
+
+**TRIGGERS DE ACTIVACIÓN**: Esta regla se activa automáticamente cuando el usuario:
+- Menciona "commit", "git", "message" o "conventional"
+- Escribe un mensaje de commit
+- Solicita ayuda con commits
+- Tiene cambios staged para commit
+- **HACE CLIC EN EL ÍCONO SPARKLE (✨) en el campo de commit message**
+- Está en el panel Source Control de Cursor
+
+**COMPORTAMIENTO OBLIGATORIO**: Cuando se active esta regla:
+
+1. **INTERVENIR INMEDIATAMENTE** - No esperar a que el usuario termine
+2. **VALIDAR EN TIEMPO REAL** - Revisar cada mensaje mientras se escribe
+3. **SUGERIR FORMATO CORRECTO** - Mostrar ejemplo específico del tipo de commit
+4. **EXPLICAR BENEFICIO AL USUARIO** - Enfocarse en el valor, no en la implementación
+5. **PREFERIR ESPAÑOL** - Aceptar inglés solo si explica claramente el valor
+6. **SINCRONIZAR CON commitlint.config.js** - Respetar límites exactos (100 chars)
+7. **MOSTRAR CHECKLIST** - Verificar cada punto antes de aprobar
+8. **CORREGIR AUTOMÁTICAMENTE** - No solo sugerir, sino aplicar la corrección
+
+## ✨ Comportamiento Específico del Ícono Sparkle
+
+**ACTIVACIÓN AUTOMÁTICA**: Esta regla se activa automáticamente cuando el usuario hace clic en el ícono sparkle (✨) en el campo de commit message.
+
+**CUANDO EL USUARIO HAGA CLIC EN EL ÍCONO SPARKLE (✨)**:
+
+1. **ANALIZAR CAMBIOS STAGED** - Revisar qué archivos están en staging
+2. **DETECTAR TIPO DE COMMIT** - Identificar si es feat, fix, refactor, etc.
+3. **GENERAR MENSAJE AUTOMÁTICO** - Crear mensaje siguiendo las reglas
+4. **APLICAR FORMATO CORRECTO** - Insertar en el campo de commit message
+5. **VALIDAR CONTRA commitlint** - Asegurar compatibilidad
+
+**COMANDO ESPECÍFICO PARA SPARKLE Y LLAMADA DIRECTA**:
+```
+CUANDO SE LLAME ESTA REGLA (@conventional-commits.mdc) O SE USE EL SPARKLE:
+
+1. LEER commitlint.config.js como fuente de verdad
+2. EXTRAER configuración real: types, límites, scope-case
+3. ANALIZAR cambios staged identificando archivos y modificaciones
+4. DETECTAR tipo de commit basado en archivos modificados
+5. GENERAR mensaje usando configuración REAL de commitlint:
+   - Formato: <tipo>(<área>): <mensaje en español>
+   - Types: desde commitlint.config.js rules['type-enum'][2]
+   - Límites: desde commitlint.config.js (subject-min/max-length, header-max-length)
+   - Scope: desde commitlint.config.js rules['scope-case'][2]
+   - Cuerpo: lista detallada de cambios técnicos si el commit es complejo
+6. MOSTRAR: Mensaje generado listo para copiar
+7. ENFOCARSE EN EL VALOR: Cada cambio debe explicar qué beneficio obtiene el usuario
+```
+
+### Ejemplo de funcionamiento del sparkle:
+```
+Usuario hace clic en ✨
+Cursor analiza: 5 archivos modificados en competence-plan
+Cursor detecta: feat (nuevas propiedades añadidas)
+Cursor genera mensaje enfocado en valor:
+feat(competence-plan): permite a usuarios ver su progreso en competencias
+
+- Añade propiedades de progreso a CompetenceModel para tracking de avance.
+- Implementa cálculo automático de porcentaje completado.
+- Actualiza componentes para mostrar indicadores visuales de progreso.
+- Integra validación de competencias completadas.
+
+Cursor muestra: El mensaje está listo para copiar
+```
+
+### Ejemplo de intervención automática:
+```
+Usuario escribe: fix bug in login
+AI responde: Este mensaje no sigue las reglas.
+Formato correcto: fix(auth): permite a usuarios iniciar sesión sin errores de validación
+Enfócate en qué problema resuelve para el usuario, no en la implementación técnica.
+```
+
+### Ejemplo de intervención para inglés:
+```
+Usuario escribe: feat(home.context): enhance content loading and selection logic
+AI responde: Mensaje válido en inglés.
+Sugerencia en español: refactor(home-context): reduce tiempo de carga al navegar por planes
+El mensaje explica claramente el beneficio para el usuario.
+```
+
+### Ejemplo de intervención para mensaje técnico:
+```
+Usuario escribe: feat: añade componente de búsqueda
+AI responde: Enfoque técnico sin valor para el usuario.
+Formato correcto: feat(search): permite encontrar contenido rápidamente desde cualquier página
+Enfócate en qué problema resuelve para el usuario, no en la implementación.
+```
+
+## 🔧 Instrucciones para Cursor AI
+
+**CUANDO EL USUARIO ESCRIBA UN COMMIT O USE EL SPARKLE**:
+
+1. **ACTIVAR INMEDIATAMENTE** esta regla
+2. **VALIDAR** contra commitlint.config.js
+3. **INTERVENIR** si no cumple las reglas
+4. **SUGERIR** formato correcto con beneficio al usuario
+5. **APLICAR** la corrección automáticamente
+6. **VERIFICAR** que pase commitlint antes de aprobar
+
+**CONFIGURACIÓN ESPECÍFICA PARA SPARKLE Y LLAMADA DIRECTA**:
+- **Lectura automática**: Leer commitlint.config.js como fuente única de configuración
+- **Detección automática**: Analizar archivos staged para determinar tipo de commit
+- **Generación inteligente**: Crear mensaje basado en cambios reales usando configuración real
+- **Validación en tiempo real**: Verificar formato usando límites exactos de commitlint
+- **Fallback manual**: Si no se puede determinar automáticamente, sugerir opciones
+- **Llamada directa**: Cuando se mencione @conventional-commits.mdc, ejecutar inmediatamente el análisis
+
+**EJECUCIÓN INMEDIATA AL LLAMAR LA REGLA**:
+```
+Al detectar @conventional-commits.mdc:
+1. LEER commitlint.config.js (fuente de verdad)
+2. EXTRAER configuración: types, límites, scope-case
+3. ANALIZAR cambios staged identificando archivos y modificaciones
+4. Generar mensaje automático con límites exactos de commitlint:
+   - Si hay múltiples archivos modificados: incluir cuerpo detallado
+   - Si es un cambio simple: solo header
+   - Cada viñeta del cuerpo debe explicar el cambio técnico y su valor para el usuario
+5. MOSTRAR mensaje final listo para usar
+6. ENFOCARSE: cada cambio debe explicar qué beneficio percibe el usuario
+```
+
+## 🤖 Generación Automática Inteligente
+
+### Algoritmo de detección de complejidad:
+1. **Contar archivos modificados**: Si > 3 archivos → usar cuerpo detallado
+2. **Analizar tipos de cambios**:
+   - Nuevos archivos + modificaciones → cuerpo detallado
+   - Solo modificaciones menores → solo header
+3. **Detectar patrones**:
+   - Refactor + múltiples archivos → cuerpo detallado
+   - Fix + un archivo → solo header
+   - Feat + nuevos componentes → cuerpo detallado
+
+### Plantillas de generación:
+
+#### Para refactor con cuerpo:
+```
+refactor(<área>): <beneficio principal>
+
+- <acción específica 1> en <contexto técnico>.
+- <acción específica 2> en <contexto técnico>.
+- <acción específica 3> mejorando <beneficio técnico>.
+```
+
+#### Para feat con cuerpo:
+```
+feat(<área>): <funcionalidad que permite al usuario>
+
+- Implementa <componente/servicio> con <funcionalidad específica>.
+- Añade <hook/función> para <propósito técnico>.
+- Integra <tecnología/método> para <beneficio de rendimiento>.
+- Actualiza <archivo/modelo> para <mejora específica>.
+```
+
+## 🎯 Resultado Esperado
+
+Cada commit debe contar una historia clara de cómo el cambio mejora la experiencia del usuario o facilita el trabajo del equipo, siguiendo el estándar Conventional Commits y siendo compatible con commitlint.
+
+## 🎯 Responsabilidades de la Regla
+
+**ÚNICA RESPONSABILIDAD:**
+- Analizar los cambios staged en git
+- Generar un mensaje de commit bien formado enfocando en el valor entregado al usuario
+- Mostrar el mensaje listo para copiar y usar
+- No usar comillas dobles en ningún mensaje generado
+
+**PROHIBICIONES ABSOLUTAS:**
+- ❌ NO ejecutar git commit -m ni ningún comando de git
+- ❌ NO ejecutar comandos git (commit, push, merge, add, etc.)
+- ❌ NO preguntar si se debe ejecutar git commit
+- ❌ NO tomar decisiones sobre cuándo hacer commit
+- ❌ NO modificar el historial de git
+- ❌ NO usar comillas dobles en mensajes de commit
+
+El usuario tiene control total sobre cuándo y cómo usar el mensaje generado.

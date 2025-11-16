@@ -10,7 +10,7 @@ export class ContainsFilter extends BaseStringFilter implements StringFilter {
     return this.performStringOperation(
       'includes',
       targetString,
-      this.searchValue
+      this.searchValue,
     )
   }
 }

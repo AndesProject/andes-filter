@@ -17,28 +17,29 @@ describe('InclusionFilter', () => {
       { name: 'Jasmine' },
     ])
     expect(filter.findMany({ where: { name: { in: [''] } } }).data.length).toBe(
-      0
+      0,
     )
     expect(
-      filter.findMany({ where: { name: { in: ['Alice'] } } }).data.length
+      filter.findMany({ where: { name: { in: ['Alice'] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { in: ['Alice', 'Bob'] } } }).data.length
+      filter.findMany({ where: { name: { in: ['Alice', 'Bob'] } } }).data
+        .length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { name: { in: ['David'] } } }).data.length
+      filter.findMany({ where: { name: { in: ['David'] } } }).data.length,
     ).toBe(1)
     expect(filter.findUnique({ where: { name: { in: [''] } } })?.name).toBe(
-      undefined
+      undefined,
     )
     expect(
-      filter.findUnique({ where: { name: { in: ['David'] } } })?.name
+      filter.findUnique({ where: { name: { in: ['David'] } } })?.name,
     ).toBe('David')
     expect(
-      filter.findUnique({ where: { name: { in: ['David', 'Alice'] } } })?.name
+      filter.findUnique({ where: { name: { in: ['David', 'Alice'] } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { in: ['Alice', 'David'] } } })?.name
+      filter.findUnique({ where: { name: { in: ['Alice', 'David'] } } })?.name,
     ).toBe('Alice')
   })
   it('should filter numeric values correctly', () => {
@@ -50,16 +51,16 @@ describe('InclusionFilter', () => {
       { size: 0.5 },
     ])
     expect(filter.findMany({ where: { size: { in: [0] } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findMany({ where: { size: { in: [1] } } }).data.length).toBe(
-      1
+      1,
     )
     expect(
-      filter.findMany({ where: { size: { in: [1, 2] } } }).data.length
+      filter.findMany({ where: { size: { in: [1, 2] } } }).data.length,
     ).toBe(2)
     expect(filter.findUnique({ where: { size: { in: [1024] } } })?.size).toBe(
-      undefined
+      undefined,
     )
     expect(filter.findUnique({ where: { size: { in: [1] } } })?.size).toBe(1)
     expect(filter.findUnique({ where: { size: { in: [0, 1] } } })?.size).toBe(0)
@@ -74,19 +75,20 @@ describe('InclusionFilter', () => {
       { isValid: true },
     ])
     expect(
-      filter.findMany({ where: { isValid: { in: [false] } } }).data.length
+      filter.findMany({ where: { isValid: { in: [false] } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { isValid: { in: [true] } } }).data.length
+      filter.findMany({ where: { isValid: { in: [true] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { isValid: { in: [false, true] } } }).data.length
+      filter.findMany({ where: { isValid: { in: [false, true] } } }).data
+        .length,
     ).toBe(5)
     expect(
-      filter.findUnique({ where: { isValid: { in: [false] } } })?.isValid
+      filter.findUnique({ where: { isValid: { in: [false] } } })?.isValid,
     ).toBe(false)
     expect(
-      filter.findUnique({ where: { isValid: { in: [true] } } })?.isValid
+      filter.findUnique({ where: { isValid: { in: [true] } } })?.isValid,
     ).toBe(true)
   })
   it('casos de borde', () => {
@@ -99,22 +101,22 @@ describe('InclusionFilter', () => {
       { value: 'test' },
     ])
     expect(filter.findMany({ where: { value: { in: [] } } }).data.length).toBe(
-      0
+      0,
     )
     expect(
-      filter.findMany({ where: { value: { in: [null] } } }).data.length
+      filter.findMany({ where: { value: { in: [null] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { in: [undefined] } } }).data.length
+      filter.findMany({ where: { value: { in: [undefined] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { in: [''] } } }).data.length
+      filter.findMany({ where: { value: { in: [''] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { in: [0, false] } } }).data.length
+      filter.findMany({ where: { value: { in: [0, false] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { value: { in: [null, 'test'] } } }).data.length
+      filter.findMany({ where: { value: { in: [null, 'test'] } } }).data.length,
     ).toBe(2)
   })
   it('objetos y arrays', () => {
@@ -130,20 +132,20 @@ describe('InclusionFilter', () => {
       { value: 'string' },
     ])
     expect(
-      filter.findMany({ where: { value: { in: [obj1] } } }).data.length
+      filter.findMany({ where: { value: { in: [obj1] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { in: [obj1, obj2] } } }).data.length
+      filter.findMany({ where: { value: { in: [obj1, obj2] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { value: { in: [arr1] } } }).data.length
+      filter.findMany({ where: { value: { in: [arr1] } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { in: [arr1, arr2] } } }).data.length
+      filter.findMany({ where: { value: { in: [arr1, arr2] } } }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { value: { in: [obj1, arr1, 'string'] } } }).data
-        .length
+        .length,
     ).toBe(3)
   })
 })

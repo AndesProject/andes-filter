@@ -24,6 +24,7 @@ export class BetweenFilter implements EvaluateFilter {
     ) {
       return false
     }
+
     if (
       isNumber(actualValue) &&
       isNumber(this.range[0]) &&
@@ -35,18 +36,24 @@ export class BetweenFilter implements EvaluateFilter {
         Number.isNaN(this.range[1])
       )
         return false
+
       return actualValue >= this.range[0] && actualValue <= this.range[1]
     }
+
     if (
       isValidDate(actualValue) &&
       isValidDate(this.range[0]) &&
       isValidDate(this.range[1])
     ) {
       const actualTime = new Date(actualValue).getTime()
+
       const minTime = new Date(this.range[0]).getTime()
+
       const maxTime = new Date(this.range[1]).getTime()
+
       return actualTime >= minTime && actualTime <= maxTime
     }
+
     // Si el valor es fecha pero los extremos no son fechas válidas, retorna false
     if (
       isValidDate(actualValue) &&
@@ -54,6 +61,7 @@ export class BetweenFilter implements EvaluateFilter {
     ) {
       return false
     }
+
     // Si los extremos son strings que no son fechas válidas, retorna false
     if (
       isString(this.range[0]) &&
@@ -63,6 +71,7 @@ export class BetweenFilter implements EvaluateFilter {
     ) {
       return false
     }
+
     if (
       isString(actualValue) &&
       isString(this.range[0]) &&
@@ -72,8 +81,10 @@ export class BetweenFilter implements EvaluateFilter {
       if (isValidDate(this.range[0]) && isValidDate(this.range[1])) {
         return actualValue >= this.range[0] && actualValue <= this.range[1]
       }
+
       return false
     }
+
     return SafeEvaluator.evaluate(() => {
       return actualValue >= this.range[0] && actualValue <= this.range[1]
     }, false)

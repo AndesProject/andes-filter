@@ -16,6 +16,7 @@ export class EqualityFilter
     if (Number.isNaN(this.expectedValue) && Number.isNaN(actualValue)) {
       return false
     }
+
     if (Number.isNaN(this.expectedValue) || Number.isNaN(actualValue)) {
       return false
     }
@@ -27,6 +28,7 @@ export class EqualityFilter
 
     // Comparación de fechas usando la clase base
     const dateResult = this.handleDateComparison(actualValue)
+
     if (dateResult !== null) {
       return dateResult
     }

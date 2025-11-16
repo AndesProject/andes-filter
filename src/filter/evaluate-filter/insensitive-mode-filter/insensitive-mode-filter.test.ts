@@ -22,67 +22,67 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'CERATI' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'BOB' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'MARIANA' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ALICE' } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'EVA' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ANK' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: ' ' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: '' } },
-      }).data.length
+      }).data.length,
     ).toBe(12)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: ' ' } },
-      })?.name
+      })?.name,
     ).toBe('Gustavo Cerati')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: '' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: 'MARIANA' } },
-      })
+      }),
     ).toBe(null)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: 'BOB' } },
-      })?.name
+      })?.name,
     ).toBe('Bob')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', contains: 'ALICE' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('startsWith string', () => {
@@ -103,77 +103,77 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'CERATI' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'BOB' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'ALICE' } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'EVA' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'ANK' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: ' ' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: '' } },
-      }).data.length
+      }).data.length,
     ).toBe(12)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'A' } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', startsWith: 'GUS' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: ' ' } },
-      })
+      }),
     ).toBe(null)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: '' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: 'MARIANA' } },
-      })
+      }),
     ).toBe(null)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: 'BOB' } },
-      })?.name
+      })?.name,
     ).toBe('Bob')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', startsWith: 'ALICE' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('endsWith string', () => {
@@ -194,52 +194,52 @@ describe('InsensitiveModeFilter', () => {
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'ICE' } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'CERATI' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'DAVID' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: 'SMI' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', endsWith: ' ' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: ' ' } },
-      })
+      }),
     ).toBe(null)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: '' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: 'MARIANA' } },
-      })
+      }),
     ).toBe(null)
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: 'BOB' } },
-      })?.name
+      })?.name,
     ).toBe('Bob')
     expect(
       filter.findUnique({
         where: { name: { mode: 'insensitive', endsWith: 'ALICE' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('multi string', () => {
@@ -262,12 +262,12 @@ describe('InsensitiveModeFilter', () => {
         where: {
           name: { mode: 'insensitive', contains: 'ra', startsWith: 'f' },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { mode: 'insensitive', contains: 'ra', not: 'Frank' } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
@@ -279,7 +279,7 @@ describe('InsensitiveModeFilter', () => {
             notIn: ['Gustavo Cerati'],
           },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
 })

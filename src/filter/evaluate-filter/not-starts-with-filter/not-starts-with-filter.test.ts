@@ -19,51 +19,56 @@ describe('NotStartsWithFilter', () => {
     ])
     expect(
       filter.findMany({ where: { name: { notStartsWith: 'Cerati' } } }).data
-        .length
+        .length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: 'Bob' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: 'Bob' } } }).data
+        .length,
     ).toBe(11)
     expect(
       filter.findMany({ where: { name: { notStartsWith: 'Mariana' } } }).data
-        .length
+        .length,
     ).toBe(12)
     expect(
       filter.findMany({ where: { name: { notStartsWith: 'Alice' } } }).data
-        .length
+        .length,
     ).toBe(10)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: 'eva' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: 'eva' } } }).data
+        .length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: 'ank' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: 'ank' } } }).data
+        .length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: ' ' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: ' ' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: '' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: '' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: 'A' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: 'A' } } }).data.length,
     ).toBe(10)
     expect(
-      filter.findMany({ where: { name: { notStartsWith: 'Gus' } } }).data.length
+      filter.findMany({ where: { name: { notStartsWith: 'Gus' } } }).data
+        .length,
     ).toBe(11)
     expect(
-      filter.findUnique({ where: { name: { notStartsWith: ' ' } } })?.name
+      filter.findUnique({ where: { name: { notStartsWith: ' ' } } })?.name,
     ).toBe('Alice')
     expect(filter.findUnique({ where: { name: { notStartsWith: '' } } })).toBe(
-      null
+      null,
     )
     expect(
-      filter.findUnique({ where: { name: { notStartsWith: 'Mariana' } } })?.name
+      filter.findUnique({ where: { name: { notStartsWith: 'Mariana' } } })
+        ?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notStartsWith: 'Bob' } } })?.name
+      filter.findUnique({ where: { name: { notStartsWith: 'Bob' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notStartsWith: 'Alice' } } })?.name
+      filter.findUnique({ where: { name: { notStartsWith: 'Alice' } } })?.name,
     ).toBe('Bob')
   })
   it('should handle case insensitive filtering correctly', () => {
@@ -77,32 +82,32 @@ describe('NotStartsWithFilter', () => {
     expect(
       filter.findMany({
         where: { name: { notStartsWith: 'alice', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notStartsWith: 'bob', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notStartsWith: 'eva', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notStartsWith: 'xyz', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(5)
     expect(
       filter.findUnique({
         where: { name: { notStartsWith: 'alice', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('BOB')
     expect(
       filter.findUnique({
         where: { name: { notStartsWith: 'xyz', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('should handle null and undefined values correctly', () => {
@@ -114,15 +119,15 @@ describe('NotStartsWithFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'world' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'xyz' } } }).data
-        .length
+        .length,
     ).toBe(4)
   })
   it('should handle empty strings and special cases correctly', () => {
@@ -133,19 +138,19 @@ describe('NotStartsWithFilter', () => {
       { value: 'hello world' },
     ])
     expect(
-      filter.findMany({ where: { value: { notStartsWith: '' } } }).data.length
+      filter.findMany({ where: { value: { notStartsWith: '' } } }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'world' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notStartsWith: 'hello world' } } })
-        .data.length
+        .data.length,
     ).toBe(3)
   })
 })

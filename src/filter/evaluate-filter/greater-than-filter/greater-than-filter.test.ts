@@ -163,6 +163,16 @@ describe('GreaterThanFilter Unit Tests', () => {
       expect(filter.evaluate('a')).toBe(false)
       expect(filter.evaluate('m')).toBe(false)
     })
+
+    it('should handle valid date strings returning true', () => {
+      const filter = new GreaterThanFilter('2021-01-01')
+      expect(filter.evaluate('2022-01-01')).toBe(true)
+    })
+
+    it('should handle valid date strings returning false when equal', () => {
+      const filter = new GreaterThanFilter('2021-01-01')
+      expect(filter.evaluate('2021-01-01')).toBe(false)
+    })
   })
 
   describe('Date value comparison', () => {
@@ -222,6 +232,12 @@ describe('GreaterThanFilter Unit Tests', () => {
       const filter = new GreaterThanFilter('2021-01-01')
       expect(filter.evaluate('2022-01-01')).toBe(true)
       expect(filter.evaluate('2020-01-01')).toBe(false)
+    })
+
+    it('covers both-valid string date branch with ISO times', () => {
+      const filter = new GreaterThanFilter('2021-01-01T00:00:00Z')
+      expect(filter.evaluate('2021-01-01T01:00:00Z')).toBe(true)
+      expect(filter.evaluate('2020-12-31T23:00:00Z')).toBe(false)
     })
 
     it('should handle invalid date strings', () => {

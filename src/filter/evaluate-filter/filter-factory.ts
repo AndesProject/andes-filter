@@ -29,39 +29,45 @@ export class DefaultFilterRegistry implements IFilterRegistry {
     if (criteria.equals !== undefined) {
       return new EqualityFilter(criteria.equals)
     }
+
     throw new Error('No valid comparison criteria provided')
   }
   getStringFilter(criteria: any): StringFilter {
     if (criteria.contains !== undefined) {
       return new ContainsFilter(
         criteria.contains,
-        criteria.mode === 'insensitive'
+        criteria.mode === 'insensitive',
       )
     }
+
     throw new Error('No valid string criteria provided')
   }
   getNumericFilter(criteria: any): NumericFilter {
     if (criteria.gt !== undefined) {
       return new GreaterThanFilter(criteria.gt)
     }
+
     throw new Error('No valid numeric criteria provided')
   }
   getDateFilter(criteria: any): DateFilter {
     if (criteria.before !== undefined) {
       return new BeforeFilter(criteria.before)
     }
+
     throw new Error('No valid date criteria provided')
   }
   getArrayFilter(criteria: any): ArrayFilter {
     if (criteria.some !== undefined) {
       return new SomeFilter(criteria.some)
     }
+
     throw new Error('No valid array criteria provided')
   }
   getLogicalFilter(criteria: any): LogicalFilter {
     if (criteria.AND !== undefined) {
       return new AndFilterGroup(criteria.AND)
     }
+
     throw new Error('No valid logical criteria provided')
   }
 }

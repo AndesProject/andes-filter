@@ -11,31 +11,31 @@ describe('LengthFilter', () => {
       { items: [1, 2, 3, 4] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 0 } } }).data.length
+      filter.findMany({ where: { items: { length: 0 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 3 } } }).data.length
+      filter.findMany({ where: { items: { length: 3 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 4 } } }).data.length
+      filter.findMany({ where: { items: { length: 4 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 5 } } }).data.length
+      filter.findMany({ where: { items: { length: 5 } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findUnique({ where: { items: { length: 0 } } })?.items
+      filter.findUnique({ where: { items: { length: 0 } } })?.items,
     ).toEqual([])
     expect(
-      filter.findUnique({ where: { items: { length: 1 } } })?.items
+      filter.findUnique({ where: { items: { length: 1 } } })?.items,
     ).toEqual([1])
     expect(
-      filter.findUnique({ where: { items: { length: 2 } } })?.items
+      filter.findUnique({ where: { items: { length: 2 } } })?.items,
     ).toEqual([1, 2])
     expect(filter.findUnique({ where: { items: { length: 5 } } })).toBe(null)
   })
@@ -48,13 +48,13 @@ describe('LengthFilter', () => {
       { items: [null, undefined, 0] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { items: { length: 3 } } }).data.length
+      filter.findMany({ where: { items: { length: 3 } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(0)
   })
   it('should handle null and undefined values', () => {
@@ -65,19 +65,19 @@ describe('LengthFilter', () => {
       { items: [1] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 0 } } }).data.length
+      filter.findMany({ where: { items: { length: 0 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findUnique({ where: { items: { length: 0 } } })?.items
+      filter.findUnique({ where: { items: { length: 0 } } })?.items,
     ).toEqual([])
     expect(
-      filter.findUnique({ where: { items: { length: 1 } } })?.items
+      filter.findUnique({ where: { items: { length: 1 } } })?.items,
     ).toEqual([1])
     expect(filter.findUnique({ where: { items: { length: 2 } } })).toBe(null)
   })
@@ -91,13 +91,13 @@ describe('LengthFilter', () => {
       { items: [1, 2] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 0 } } }).data.length
+      filter.findMany({ where: { items: { length: 0 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(0)
   })
   it('should work with empty arrays', () => {
@@ -107,10 +107,10 @@ describe('LengthFilter', () => {
       { items: [1, 2] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 0 } } }).data.length
+      filter.findMany({ where: { items: { length: 0 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findUnique({ where: { items: { length: 0 } } })?.items
+      filter.findUnique({ where: { items: { length: 0 } } })?.items,
     ).toEqual([])
   })
   it('should work with nested arrays', () => {
@@ -126,13 +126,13 @@ describe('LengthFilter', () => {
       { items: [[1, 2, 3]] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 3 } } }).data.length
+      filter.findMany({ where: { items: { length: 3 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(1)
   })
   it('should work with arrays of objects', () => {
@@ -142,13 +142,13 @@ describe('LengthFilter', () => {
       { items: [{ id: 1 }, { id: 2 }, { id: 3 }] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 1 } } }).data.length
+      filter.findMany({ where: { items: { length: 1 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 2 } } }).data.length
+      filter.findMany({ where: { items: { length: 2 } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { items: { length: 3 } } }).data.length
+      filter.findMany({ where: { items: { length: 3 } } }).data.length,
     ).toBe(1)
   })
   it('should work with mixed arrays', () => {
@@ -158,10 +158,10 @@ describe('LengthFilter', () => {
       { items: [{ id: 1 }, [1, 2], 'test'] },
     ])
     expect(
-      filter.findMany({ where: { items: { length: 3 } } }).data.length
+      filter.findMany({ where: { items: { length: 3 } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { length: 4 } } }).data.length
+      filter.findMany({ where: { items: { length: 4 } } }).data.length,
     ).toBe(1)
   })
   it('should work in combination with other filters', () => {
@@ -181,7 +181,7 @@ describe('LengthFilter', () => {
           items: { length: 2 },
           name: { equals: 'test1' },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
@@ -189,7 +189,7 @@ describe('LengthFilter', () => {
           items: { length: 3 },
           active: { equals: true },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
@@ -198,7 +198,7 @@ describe('LengthFilter', () => {
           active: { equals: true },
           name: { contains: 'test' },
         },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('should work with AND/OR conditions', () => {
@@ -213,14 +213,14 @@ describe('LengthFilter', () => {
         where: {
           AND: [{ items: { length: 2 } }, { category: { equals: 'A' } }],
         } as any,
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: {
           OR: [{ items: { length: 1 } }, { items: { length: 4 } }],
         } as any,
-      }).data.length
+      }).data.length,
     ).toBe(2)
   })
 })

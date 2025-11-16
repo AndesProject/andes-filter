@@ -8,45 +8,45 @@ describe('ArrayEvaluator', () => {
     it('returns false if not array', () => {
       expect(ArrayEvaluator.evaluateArray(null, alwaysTrue, 'some')).toBe(false)
       expect(
-        ArrayEvaluator.evaluateArray('not-array', alwaysTrue, 'every')
+        ArrayEvaluator.evaluateArray('not-array', alwaysTrue, 'every'),
       ).toBe(false)
     })
     it('handles some', () => {
       expect(
-        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 2, 'some')
+        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 2, 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 5, 'some')
+        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 5, 'some'),
       ).toBe(false)
       expect(
-        ArrayEvaluator.evaluateArray([null, undefined], alwaysTrue, 'some')
+        ArrayEvaluator.evaluateArray([null, undefined], alwaysTrue, 'some'),
       ).toBe(false)
     })
     it('handles every', () => {
       expect(
-        ArrayEvaluator.evaluateArray([2, 4], (n) => n % 2 === 0, 'every')
+        ArrayEvaluator.evaluateArray([2, 4], (n) => n % 2 === 0, 'every'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateArray([2, 3], (n) => n % 2 === 0, 'every')
+        ArrayEvaluator.evaluateArray([2, 3], (n) => n % 2 === 0, 'every'),
       ).toBe(false)
       expect(ArrayEvaluator.evaluateArray([null, 2], alwaysTrue, 'every')).toBe(
-        false
+        false,
       )
     })
     it('handles none', () => {
       expect(
-        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 5, 'none')
+        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 5, 'none'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 2, 'none')
+        ArrayEvaluator.evaluateArray([1, 2, 3], (n) => n === 2, 'none'),
       ).toBe(false)
       expect(
-        ArrayEvaluator.evaluateArray([null, undefined], alwaysTrue, 'none')
+        ArrayEvaluator.evaluateArray([null, undefined], alwaysTrue, 'none'),
       ).toBe(true)
     })
     it('handles default', () => {
       expect(
-        ArrayEvaluator.evaluateArray([1, 2, 3], alwaysTrue, 'invalid' as any)
+        ArrayEvaluator.evaluateArray([1, 2, 3], alwaysTrue, 'invalid' as any),
       ).toBe(false)
     })
   })
@@ -57,10 +57,10 @@ describe('ArrayEvaluator', () => {
     })
     it('handles some', () => {
       expect(
-        ArrayEvaluator.evaluateEmptyFilter([{}, null, undefined], 'some')
+        ArrayEvaluator.evaluateEmptyFilter([{}, null, undefined], 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateEmptyFilter([null, undefined], 'some')
+        ArrayEvaluator.evaluateEmptyFilter([null, undefined], 'some'),
       ).toBe(false)
     })
     it('handles every', () => {
@@ -71,7 +71,7 @@ describe('ArrayEvaluator', () => {
     })
     it('handles default', () => {
       expect(
-        ArrayEvaluator.evaluateEmptyFilter([1, 2, 3], 'invalid' as any)
+        ArrayEvaluator.evaluateEmptyFilter([1, 2, 3], 'invalid' as any),
       ).toBe(false)
     })
   })
@@ -79,31 +79,31 @@ describe('ArrayEvaluator', () => {
   describe('evaluatePrimitiveFilter', () => {
     it('returns false if not array', () => {
       expect(ArrayEvaluator.evaluatePrimitiveFilter(null, 2, 'some')).toBe(
-        false
+        false,
       )
     })
     it('handles some', () => {
       expect(ArrayEvaluator.evaluatePrimitiveFilter([1, 2, 3], 2, 'some')).toBe(
-        true
+        true,
       )
       expect(ArrayEvaluator.evaluatePrimitiveFilter([1, 3, 4], 2, 'some')).toBe(
-        false
+        false,
       )
     })
     it('handles every', () => {
       expect(
-        ArrayEvaluator.evaluatePrimitiveFilter([2, 2, 2], 2, 'every')
+        ArrayEvaluator.evaluatePrimitiveFilter([2, 2, 2], 2, 'every'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluatePrimitiveFilter([2, 3, 2], 2, 'every')
+        ArrayEvaluator.evaluatePrimitiveFilter([2, 3, 2], 2, 'every'),
       ).toBe(false)
     })
     it('handles none', () => {
       expect(ArrayEvaluator.evaluatePrimitiveFilter([1, 3, 4], 2, 'none')).toBe(
-        true
+        true,
       )
       expect(ArrayEvaluator.evaluatePrimitiveFilter([1, 2, 3], 2, 'none')).toBe(
-        false
+        false,
       )
     })
   })
@@ -111,7 +111,7 @@ describe('ArrayEvaluator', () => {
   describe('evaluateSimpleObjectFilter', () => {
     it('returns false if not array', () => {
       expect(
-        ArrayEvaluator.evaluateSimpleObjectFilter(null, { a: 1 }, 'some')
+        ArrayEvaluator.evaluateSimpleObjectFilter(null, { a: 1 }, 'some'),
       ).toBe(false)
     })
     it('handles some', () => {
@@ -119,18 +119,18 @@ describe('ArrayEvaluator', () => {
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [{ a: 1 }, { a: 2 }],
           { a: 1 },
-          'some'
-        )
+          'some',
+        ),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateSimpleObjectFilter([{ a: 2 }], { a: 1 }, 'some')
+        ArrayEvaluator.evaluateSimpleObjectFilter([{ a: 2 }], { a: 1 }, 'some'),
       ).toBe(false)
       expect(
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [null, undefined],
           { a: 1 },
-          'some'
-        )
+          'some',
+        ),
       ).toBe(false)
     })
     it('handles every', () => {
@@ -138,15 +138,15 @@ describe('ArrayEvaluator', () => {
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [{ a: 1 }, { a: 1 }],
           { a: 1 },
-          'every'
-        )
+          'every',
+        ),
       ).toBe(true)
       expect(
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [{ a: 1 }, { a: 2 }],
           { a: 1 },
-          'every'
-        )
+          'every',
+        ),
       ).toBe(false)
     })
     it('handles none', () => {
@@ -154,15 +154,15 @@ describe('ArrayEvaluator', () => {
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [{ a: 2 }, { a: 3 }],
           { a: 1 },
-          'none'
-        )
+          'none',
+        ),
       ).toBe(true)
       expect(
         ArrayEvaluator.evaluateSimpleObjectFilter(
           [{ a: 1 }, { a: 2 }],
           { a: 1 },
-          'none'
-        )
+          'none',
+        ),
       ).toBe(false)
     })
   })
@@ -171,41 +171,41 @@ describe('ArrayEvaluator', () => {
     it('returns false if not array', () => {
       const fakeEval = { evaluate: vi.fn() }
       expect(ArrayEvaluator.evaluateComplexFilter(null, fakeEval, 'some')).toBe(
-        false
+        false,
       )
     })
     it('handles some', () => {
       const fakeEval = { evaluate: (x: any) => x === 2 }
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'some')
+        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 3, 4], fakeEval, 'some')
+        ArrayEvaluator.evaluateComplexFilter([1, 3, 4], fakeEval, 'some'),
       ).toBe(false)
       expect(
         ArrayEvaluator.evaluateComplexFilter(
           [null, undefined],
           fakeEval,
-          'some'
-        )
+          'some',
+        ),
       ).toBe(false)
     })
     it('handles every', () => {
       const fakeEval = { evaluate: (x: any) => typeof x === 'number' }
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'every')
+        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'every'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 'a', 3], fakeEval, 'every')
+        ArrayEvaluator.evaluateComplexFilter([1, 'a', 3], fakeEval, 'every'),
       ).toBe(false)
     })
     it('handles none', () => {
       const fakeEval = { evaluate: (x: any) => x === 2 }
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 3, 4], fakeEval, 'none')
+        ArrayEvaluator.evaluateComplexFilter([1, 3, 4], fakeEval, 'none'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'none')
+        ArrayEvaluator.evaluateComplexFilter([1, 2, 3], fakeEval, 'none'),
       ).toBe(false)
     })
   })

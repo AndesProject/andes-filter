@@ -62,20 +62,20 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.evaluate([
           { id: 1, name: 'Alice' },
           { id: 2, name: 'Bob' },
-        ])
+        ]),
       ).toBe(false)
     })
     it('should work with nested objects', () => {
       const targetObject = { user: { id: 1, name: 'Alice' } }
       const filter = new HasFilter(targetObject)
       expect(
-        filter.evaluate([targetObject, { user: { id: 2, name: 'Bob' } }])
+        filter.evaluate([targetObject, { user: { id: 2, name: 'Bob' } }]),
       ).toBe(true)
       expect(
         filter.evaluate([
           { user: { id: 1, name: 'Alice' } },
           { user: { id: 2, name: 'Bob' } },
-        ])
+        ]),
       ).toBe(false)
     })
   })
@@ -116,13 +116,13 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { items: [] },
       ])
       expect(
-        filter.findMany({ where: { items: { has: 2 } } }).data.length
+        filter.findMany({ where: { items: { has: 2 } } }).data.length,
       ).toBe(1)
       expect(
-        filter.findMany({ where: { items: { has: 10 } } }).data.length
+        filter.findMany({ where: { items: { has: 10 } } }).data.length,
       ).toBe(0)
       expect(
-        filter.findMany({ where: { items: { has: 1 } } }).data.length
+        filter.findMany({ where: { items: { has: 1 } } }).data.length,
       ).toBe(1)
     })
     it('should work with string arrays', () => {
@@ -133,13 +133,13 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { tags: [] },
       ])
       expect(
-        filter.findMany({ where: { tags: { has: 'javascript' } } }).data.length
+        filter.findMany({ where: { tags: { has: 'javascript' } } }).data.length,
       ).toBe(2)
       expect(
-        filter.findMany({ where: { tags: { has: 'python' } } }).data.length
+        filter.findMany({ where: { tags: { has: 'python' } } }).data.length,
       ).toBe(1)
       expect(
-        filter.findMany({ where: { tags: { has: 'c++' } } }).data.length
+        filter.findMany({ where: { tags: { has: 'c++' } } }).data.length,
       ).toBe(0)
     })
     it('should work with boolean arrays', () => {
@@ -149,10 +149,10 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { flags: [] },
       ])
       expect(
-        filter.findMany({ where: { flags: { has: true } } }).data.length
+        filter.findMany({ where: { flags: { has: true } } }).data.length,
       ).toBe(1)
       expect(
-        filter.findMany({ where: { flags: { has: false } } }).data.length
+        filter.findMany({ where: { flags: { has: false } } }).data.length,
       ).toBe(2)
     })
     it('should work with object arrays', () => {
@@ -170,12 +170,13 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { users: [] },
       ])
       expect(
-        filter.findMany({ where: { users: { has: targetObject } } }).data.length
+        filter.findMany({ where: { users: { has: targetObject } } }).data
+          .length,
       ).toBe(1)
       expect(
         filter.findMany({
           where: { users: { has: { id: 1, name: 'Alice' } } },
-        }).data.length
+        }).data.length,
       ).toBe(0)
     })
     it('should handle null and undefined arrays', () => {
@@ -186,10 +187,10 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         { items: [] },
       ])
       expect(
-        filter.findMany({ where: { items: { has: 1 } } }).data.length
+        filter.findMany({ where: { items: { has: 1 } } }).data.length,
       ).toBe(1)
       expect(
-        filter.findMany({ where: { items: { has: 2 } } }).data.length
+        filter.findMany({ where: { items: { has: 2 } } }).data.length,
       ).toBe(1)
     })
   })
@@ -202,7 +203,7 @@ describe('HasFilter Prisma/TypeORM Compatibility', () => {
         filter.evaluate([
           [1, 2],
           [3, 4],
-        ])
+        ]),
       ).toBe(false)
     })
     it('should handle functions', () => {

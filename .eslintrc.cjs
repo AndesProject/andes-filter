@@ -22,6 +22,13 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'padding-line-between-statements': [
       'error',
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+      {
+        blankLine: 'always',
+        prev: ['block', 'block-like', 'multiline-block-like', 'class'],
+        next: '*',
+      },
       { blankLine: 'always', prev: 'function', next: 'function' },
       { blankLine: 'always', prev: 'block-like', next: 'function' },
       { blankLine: 'always', prev: 'function', next: 'block-like' },

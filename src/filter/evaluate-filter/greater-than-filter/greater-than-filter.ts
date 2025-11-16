@@ -25,25 +25,28 @@ export class GreaterThanFilter implements EvaluateFilter, NumericFilter {
     if (isNumber(actualValue) && isNumber(this.thresholdValue)) {
       if (Number.isNaN(actualValue) || Number.isNaN(this.thresholdValue))
         return false
+
       return actualValue > this.thresholdValue
     }
+
     if (isValidDate(actualValue) && isValidDate(this.thresholdValue)) {
       return (
         new Date(actualValue).getTime() >
         new Date(this.thresholdValue).getTime()
       )
     }
+
     if (isString(actualValue) && isString(this.thresholdValue)) {
-      const firstDate = new Date(actualValue)
-      const secondDate = new Date(this.thresholdValue)
-      const isFirstDateValid = !isNaN(firstDate.getTime())
-      const isSecondDateValid = !isNaN(secondDate.getTime())
-      if (isFirstDateValid && isSecondDateValid) {
-        return firstDate.getTime() > secondDate.getTime()
-      }
+      // Si una cadena representa fecha válida y la otra no, no son comparables
+      const isFirstDateValid = !isNaN(new Date(actualValue).getTime())
+
+      const isSecondDateValid = !isNaN(new Date(this.thresholdValue).getTime())
+
       if (isFirstDateValid !== isSecondDateValid) return false
+
       return actualValue > this.thresholdValue
     }
+
     try {
       return actualValue > this.thresholdValue
     } catch {

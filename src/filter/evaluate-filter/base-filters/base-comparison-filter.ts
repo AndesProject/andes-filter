@@ -5,7 +5,7 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export abstract class BaseComparisonFilter implements EvaluateFilter {
   public constructor(
     protected expectedValue: any,
-    protected isCaseInsensitive: boolean = false
+    protected isCaseInsensitive: boolean = false,
   ) {}
 
   public abstract evaluate(actualValue: any): boolean
@@ -48,11 +48,14 @@ export abstract class BaseComparisonFilter implements EvaluateFilter {
       (actualValue instanceof Date || isString(actualValue))
     ) {
       const dateA = new Date(this.expectedValue)
+
       const dateB = new Date(actualValue)
+
       if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
         return dateA.getTime() === dateB.getTime()
       }
     }
+
     return null
   }
 
@@ -60,6 +63,7 @@ export abstract class BaseComparisonFilter implements EvaluateFilter {
     if (Number.isNaN(this.expectedValue) || Number.isNaN(actualValue)) {
       return Number.isNaN(this.expectedValue) && Number.isNaN(actualValue)
     }
+
     return null
   }
 }

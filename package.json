@@ -34,6 +34,7 @@
     "build": "webpack --mode production",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
+    "mcp:server": "node mcp/server.js",
     "prepare": "husky",
     "prepublishOnly": "npm run build && npm run test",
     "start": "webpack watch --mode development",
@@ -42,6 +43,7 @@
     "test:watch": "npx vitest --watch --coverage"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "yeoman-generator": "7.5.1"
   },
   "devDependencies": {

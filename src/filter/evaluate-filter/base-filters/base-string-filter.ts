@@ -5,7 +5,7 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export abstract class BaseStringFilter implements EvaluateFilter {
   public constructor(
     protected searchValue: string,
-    protected isCaseInsensitive: boolean = false
+    protected isCaseInsensitive: boolean = false,
   ) {}
 
   public abstract evaluate(targetString: any): boolean
@@ -21,26 +21,26 @@ export abstract class BaseStringFilter implements EvaluateFilter {
   protected performStringOperation(
     operation: 'includes' | 'startsWith' | 'endsWith',
     targetString: string,
-    searchValue: string
+    searchValue: string,
   ): boolean {
     switch (operation) {
       case 'includes':
         return StringNormalizer.contains(
           targetString,
           searchValue,
-          this.isCaseInsensitive
+          this.isCaseInsensitive,
         )
       case 'startsWith':
         return StringNormalizer.startsWith(
           targetString,
           searchValue,
-          this.isCaseInsensitive
+          this.isCaseInsensitive,
         )
       case 'endsWith':
         return StringNormalizer.endsWith(
           targetString,
           searchValue,
-          this.isCaseInsensitive
+          this.isCaseInsensitive,
         )
       default:
         return false

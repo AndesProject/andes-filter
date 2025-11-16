@@ -9,10 +9,10 @@ describe('HasFilter', () => {
       { items: [7, 8, 9] },
     ])
     expect(filter.findMany({ where: { items: { has: 2 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findMany({ where: { items: { has: 10 } } }).data.length).toBe(
-      0
+      0,
     )
   })
   it('arrays con strings', () => {
@@ -22,10 +22,10 @@ describe('HasFilter', () => {
       { tags: ['javascript', 'react'] },
     ])
     expect(
-      filter.findMany({ where: { tags: { has: 'javascript' } } }).data.length
+      filter.findMany({ where: { tags: { has: 'javascript' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { tags: { has: 'python' } } }).data.length
+      filter.findMany({ where: { tags: { has: 'python' } } }).data.length,
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
@@ -36,7 +36,7 @@ describe('HasFilter', () => {
       { items: [1, 2, 3] },
     ])
     expect(filter.findMany({ where: { items: { has: 1 } } }).data.length).toBe(
-      1
+      1,
     )
   })
   it('findUnique', () => {
@@ -55,7 +55,7 @@ describe('HasFilter', () => {
       { flags: [false, false] },
     ])
     expect(
-      filter.findMany({ where: { flags: { has: true } } }).data.length
+      filter.findMany({ where: { flags: { has: true } } }).data.length,
     ).toBe(1)
   })
 })
@@ -99,7 +99,7 @@ describe('HasFilter Unit', () => {
       filter.evaluate([
         { id: 1, name: 'Alice' },
         { id: 2, name: 'Bob' },
-      ])
+      ]),
     ).toBe(false)
   })
 })

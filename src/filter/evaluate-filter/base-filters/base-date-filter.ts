@@ -19,6 +19,7 @@ export abstract class BaseDateFilter implements EvaluateFilter {
     if (!ValidationUtils.validateDate(actualValue)) return false
 
     const parsedDate = new Date(actualValue)
+
     if (isNaN(parsedDate.getTime())) return false
 
     return true

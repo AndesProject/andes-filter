@@ -4,7 +4,7 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export class NotEndsWithFilter implements EvaluateFilter {
   constructor(
     private excludedSuffix: string,
-    private isCaseInsensitive: boolean = false
+    private isCaseInsensitive: boolean = false,
   ) {}
   public evaluate(targetString: any): boolean {
     return performStringOperation(
@@ -12,7 +12,7 @@ export class NotEndsWithFilter implements EvaluateFilter {
       targetString,
       this.excludedSuffix,
       this.isCaseInsensitive,
-      true
+      true,
     )
   }
 }

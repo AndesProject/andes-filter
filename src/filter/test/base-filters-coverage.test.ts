@@ -78,7 +78,7 @@ class TestStringFilter extends BaseStringFilter {
   testPerformStringOperation(
     operation: 'includes' | 'startsWith' | 'endsWith',
     targetString: string,
-    searchValue: string
+    searchValue: string,
   ): boolean {
     return this.performStringOperation(operation, targetString, searchValue)
   }
@@ -294,29 +294,29 @@ describe('Base Filters Coverage Tests', () => {
       const filter = new TestStringFilter('test', false)
 
       expect(
-        filter.testPerformStringOperation('includes', 'test string', 'test')
+        filter.testPerformStringOperation('includes', 'test string', 'test'),
       ).toBe(true)
       expect(
-        filter.testPerformStringOperation('includes', 'other string', 'test')
+        filter.testPerformStringOperation('includes', 'other string', 'test'),
       ).toBe(false)
 
       expect(
-        filter.testPerformStringOperation('startsWith', 'test string', 'test')
+        filter.testPerformStringOperation('startsWith', 'test string', 'test'),
       ).toBe(true)
       expect(
-        filter.testPerformStringOperation('startsWith', 'other string', 'test')
+        filter.testPerformStringOperation('startsWith', 'other string', 'test'),
       ).toBe(false)
 
       expect(
-        filter.testPerformStringOperation('endsWith', 'string test', 'test')
+        filter.testPerformStringOperation('endsWith', 'string test', 'test'),
       ).toBe(true)
       expect(
-        filter.testPerformStringOperation('endsWith', 'string other', 'test')
+        filter.testPerformStringOperation('endsWith', 'string other', 'test'),
       ).toBe(false)
 
       // Invalid operation
       expect(
-        filter.testPerformStringOperation('invalid' as any, 'test', 'test')
+        filter.testPerformStringOperation('invalid' as any, 'test', 'test'),
       ).toBe(false)
     })
 
@@ -324,13 +324,13 @@ describe('Base Filters Coverage Tests', () => {
       const filter = new TestStringFilter('test', true)
 
       expect(
-        filter.testPerformStringOperation('includes', 'TEST string', 'test')
+        filter.testPerformStringOperation('includes', 'TEST string', 'test'),
       ).toBe(true)
       expect(
-        filter.testPerformStringOperation('startsWith', 'TEST string', 'test')
+        filter.testPerformStringOperation('startsWith', 'TEST string', 'test'),
       ).toBe(true)
       expect(
-        filter.testPerformStringOperation('endsWith', 'string TEST', 'test')
+        filter.testPerformStringOperation('endsWith', 'string TEST', 'test'),
       ).toBe(true)
     })
   })

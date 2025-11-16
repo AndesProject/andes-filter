@@ -11,7 +11,7 @@ export class InclusionFilter<T> implements EvaluateFilter {
   private isCaseInsensitive: boolean = false
   constructor(
     private allowedValues: T[],
-    isCaseInsensitive?: boolean
+    isCaseInsensitive?: boolean,
   ) {
     this.isCaseInsensitive = !!isCaseInsensitive
   }
@@ -25,6 +25,7 @@ export class InclusionFilter<T> implements EvaluateFilter {
       ) {
         continue
       }
+
       if (
         isNumber(actualValue) &&
         isNumber(allowedValue) &&
@@ -38,6 +39,7 @@ export class InclusionFilter<T> implements EvaluateFilter {
         if (compareDateValues(actualValue, allowedValue)) return true
         continue
       }
+
       if (
         isObject(actualValue) &&
         actualValue !== null &&
@@ -47,17 +49,19 @@ export class InclusionFilter<T> implements EvaluateFilter {
         if (actualValue === allowedValue) return true
         continue
       }
+
       if (isString(actualValue) && isString(allowedValue)) {
         if (
           compareStringsWithCase(
             actualValue,
             allowedValue,
-            this.isCaseInsensitive
+            this.isCaseInsensitive,
           )
         )
           return true
         continue
       }
+
       if (
         isNumber(actualValue) &&
         isNumber(allowedValue) &&
@@ -65,8 +69,10 @@ export class InclusionFilter<T> implements EvaluateFilter {
       ) {
         return true
       }
+
       if (actualValue === allowedValue) return true
     }
+
     return false
   }
 }

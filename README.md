@@ -479,7 +479,7 @@ const searchUsers = (searchTerm: string, filters: any) => {
 const filterProducts = (
   category: string,
   priceRange: [number, number],
-  tags: string[]
+  tags: string[],
 ) => {
   return filter.findMany({
     where: {

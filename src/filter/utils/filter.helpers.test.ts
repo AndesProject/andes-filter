@@ -86,53 +86,53 @@ describe('filter.helpers', () => {
   describe('performStringOperation', () => {
     it('includes', () => {
       expect(
-        performStringOperation('includes', 'Hello World', 'world', true)
+        performStringOperation('includes', 'Hello World', 'world', true),
       ).toBe(true)
       expect(
-        performStringOperation('includes', 'Hello World', 'WORLD', false)
+        performStringOperation('includes', 'Hello World', 'WORLD', false),
       ).toBe(false)
       expect(
-        performStringOperation('includes', 'Hello World', 'WORLD', true, true)
+        performStringOperation('includes', 'Hello World', 'WORLD', true, true),
       ).toBe(false)
     })
     it('startsWith', () => {
       expect(performStringOperation('startsWith', 'Hello', 'he', true)).toBe(
-        true
+        true,
       )
       expect(performStringOperation('startsWith', 'Hello', 'He', false)).toBe(
-        true
+        true,
       )
       expect(performStringOperation('startsWith', 'Hello', 'lo', true)).toBe(
-        false
+        false,
       )
       expect(
-        performStringOperation('startsWith', 'Hello', 'he', true, true)
+        performStringOperation('startsWith', 'Hello', 'he', true, true),
       ).toBe(false)
     })
     it('endsWith', () => {
       expect(performStringOperation('endsWith', 'Hello', 'LO', true)).toBe(true)
       expect(performStringOperation('endsWith', 'Hello', 'lo', false)).toBe(
-        true
+        true,
       )
       expect(performStringOperation('endsWith', 'Hello', 'he', true)).toBe(
-        false
+        false,
       )
       expect(
-        performStringOperation('endsWith', 'Hello', 'LO', true, true)
+        performStringOperation('endsWith', 'Hello', 'LO', true, true),
       ).toBe(false)
     })
     it('tipos incorrectos', () => {
       expect(performStringOperation('includes', 123 as any, 'abc', true)).toBe(
-        false
+        false,
       )
       expect(performStringOperation('includes', 'abc', 123 as any, true)).toBe(
-        false
+        false,
       )
       expect(
-        performStringOperation('includes', 123 as any, 456 as any, true)
+        performStringOperation('includes', 123 as any, 456 as any, true),
       ).toBe(false)
       expect(
-        performStringOperation('includes', 123 as any, 456 as any, true, true)
+        performStringOperation('includes', 123 as any, 456 as any, true, true),
       ).toBe(true)
     })
   })

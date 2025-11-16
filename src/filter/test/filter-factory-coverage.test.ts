@@ -27,10 +27,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getComparisonFilter({})).toThrow(
-        'No valid comparison criteria provided'
+        'No valid comparison criteria provided',
       )
       expect(() => registry.getComparisonFilter({ gt: 5 })).toThrow(
-        'No valid comparison criteria provided'
+        'No valid comparison criteria provided',
       )
     })
 
@@ -57,10 +57,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getStringFilter({})).toThrow(
-        'No valid string criteria provided'
+        'No valid string criteria provided',
       )
       expect(() => registry.getStringFilter({ startsWith: 'test' })).toThrow(
-        'No valid string criteria provided'
+        'No valid string criteria provided',
       )
     })
 
@@ -76,10 +76,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getNumericFilter({})).toThrow(
-        'No valid numeric criteria provided'
+        'No valid numeric criteria provided',
       )
       expect(() => registry.getNumericFilter({ equals: 5 })).toThrow(
-        'No valid numeric criteria provided'
+        'No valid numeric criteria provided',
       )
     })
 
@@ -95,10 +95,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getDateFilter({})).toThrow(
-        'No valid date criteria provided'
+        'No valid date criteria provided',
       )
       expect(() => registry.getDateFilter({ after: new Date() })).toThrow(
-        'No valid date criteria provided'
+        'No valid date criteria provided',
       )
     })
 
@@ -114,10 +114,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getArrayFilter({})).toThrow(
-        'No valid array criteria provided'
+        'No valid array criteria provided',
       )
       expect(() =>
-        registry.getArrayFilter({ every: { equals: 'test' } })
+        registry.getArrayFilter({ every: { equals: 'test' } }),
       ).toThrow('No valid array criteria provided')
     })
 
@@ -133,10 +133,10 @@ describe('Filter Factory Coverage Tests', () => {
       const registry = new DefaultFilterRegistry()
 
       expect(() => registry.getLogicalFilter({})).toThrow(
-        'No valid logical criteria provided'
+        'No valid logical criteria provided',
       )
       expect(() =>
-        registry.getLogicalFilter({ OR: [{ equals: 'test' }] })
+        registry.getLogicalFilter({ OR: [{ equals: 'test' }] }),
       ).toThrow('No valid logical criteria provided')
     })
   })

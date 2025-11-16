@@ -13,6 +13,7 @@ export class EveryFilter implements EvaluateFilter {
   constructor(private filter: any) {
     if (ValidationUtils.isEmptyFilter(this.filter)) {
       this.isEmptyFilter = true
+
       return
     }
 
@@ -21,10 +22,12 @@ export class EveryFilter implements EvaluateFilter {
       Object.keys(this.filter).length > 0
     ) {
       const keys = Object.keys(this.filter)
+
       if (keys.length === 1 && isKnownOperator(keys[0])) {
         this.evaluator = new FilterEvaluator(this.filter)
       } else {
         const allKeysAreOperators = keys.every((key) => isKnownOperator(key))
+
         if (allKeysAreOperators) {
           this.evaluator = new FilterEvaluator(this.filter)
         } else {
@@ -53,7 +56,7 @@ export class EveryFilter implements EvaluateFilter {
       return ArrayEvaluator.evaluateSimpleObjectFilter(
         data,
         this.filter,
-        'every'
+        'every',
       )
     }
 

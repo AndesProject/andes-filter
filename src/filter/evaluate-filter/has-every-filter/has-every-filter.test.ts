@@ -11,15 +11,16 @@ describe('HasEveryFilter', () => {
       { items: [1] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasEvery: [1, 2, 3] } } }).data.length
+      filter.findMany({ where: { items: { hasEvery: [1, 2, 3] } } }).data
+        .length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { items: { hasEvery: [1, 2, 3, 4] } } }).data
-        .length
+        .length,
     ).toBe(1)
     expect(
       filter.findMany({ where: { items: { hasEvery: [1, 2, 3, 4, 5] } } }).data
-        .length
+        .length,
     ).toBe(0)
   })
   it('arrays con strings', () => {
@@ -31,12 +32,12 @@ describe('HasEveryFilter', () => {
     expect(
       filter.findMany({
         where: { tags: { hasEvery: ['javascript', 'typescript'] } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { tags: { hasEvery: ['javascript', 'typescript', 'react'] } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('arrays vacíos, null y undefined', () => {
@@ -47,10 +48,10 @@ describe('HasEveryFilter', () => {
       { items: [1, 2, 3] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasEvery: [] } } }).data.length
+      filter.findMany({ where: { items: { hasEvery: [] } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { items: { hasEvery: [1] } } }).data.length
+      filter.findMany({ where: { items: { hasEvery: [1] } } }).data.length,
     ).toBe(1)
   })
   it('findUnique', () => {
@@ -75,7 +76,7 @@ describe('HasEveryFilter', () => {
     ])
     expect(
       filter.findMany({ where: { flags: { hasEvery: [true, false] } } }).data
-        .length
+        .length,
     ).toBe(2)
   })
   it('arrays con elementos duplicados', () => {
@@ -85,10 +86,11 @@ describe('HasEveryFilter', () => {
       { items: [1, 2] },
     ])
     expect(
-      filter.findMany({ where: { items: { hasEvery: [1, 2] } } }).data.length
+      filter.findMany({ where: { items: { hasEvery: [1, 2] } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { items: { hasEvery: [1, 2, 3] } } }).data.length
+      filter.findMany({ where: { items: { hasEvery: [1, 2, 3] } } }).data
+        .length,
     ).toBe(2)
   })
 })

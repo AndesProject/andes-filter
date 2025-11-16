@@ -12,11 +12,11 @@ describe('BeforeFilter', () => {
       { date: new Date(fixedDate.getTime() + 1000) },
     ])
     expect(
-      filter.findMany({ where: { date: { before: fixedDate } } }).data.length
+      filter.findMany({ where: { date: { before: fixedDate } } }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { date: { before: new Date('2020-01-01') } } })
-        .data.length
+        .data.length,
     ).toBe(0)
   })
   it('should filter numeric values correctly', () => {
@@ -29,14 +29,14 @@ describe('BeforeFilter', () => {
       { date: now + 1000 },
     ])
     expect(
-      filter.findMany({ where: { date: { before: now } } }).data.length
+      filter.findMany({ where: { date: { before: now } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { date: { before: now + 1000 } } }).data.length
+      filter.findMany({ where: { date: { before: now + 1000 } } }).data.length,
     ).toBe(4)
   })
   it('should filter string values correctly', () => {
-    const now: number = new Date().getTime()
+    const now: number = Date.parse('2024-01-01T00:00:00.000Z')
     const filter = createFilter<{ date: string }>([
       { date: '2023-08-31' },
       { date: '2023-08-31' },
@@ -45,8 +45,8 @@ describe('BeforeFilter', () => {
       { date: '2025-08-31' },
     ])
     expect(
-      filter.findMany({ where: { date: { before: now } } }).data.length
-    ).toBe(3)
+      filter.findMany({ where: { date: { before: now } } }).data.length,
+    ).toBe(2)
   })
   it('null, undefined y fechas inválidas', () => {
     const filter = createFilter<{ date: any }>([
@@ -56,11 +56,11 @@ describe('BeforeFilter', () => {
     ])
     const now = new Date()
     expect(
-      filter.findMany({ where: { date: { before: now } } }).data.length
+      filter.findMany({ where: { date: { before: now } } }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({ where: { date: { before: 'invalid-date' } } }).data
-        .length
+        .length,
     ).toBe(0)
   })
   it('findUnique', () => {

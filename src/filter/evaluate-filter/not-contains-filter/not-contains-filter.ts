@@ -4,7 +4,7 @@ import { EvaluateFilter } from '../evaluate-filter.interface'
 export class NotContainsFilter implements EvaluateFilter {
   constructor(
     private excludedValue: string,
-    private isCaseInsensitive: boolean = false
+    private isCaseInsensitive: boolean = false,
   ) {}
   public evaluate(targetString: any): boolean {
     return performStringOperation(
@@ -12,7 +12,7 @@ export class NotContainsFilter implements EvaluateFilter {
       targetString,
       this.excludedValue,
       this.isCaseInsensitive,
-      true
+      true,
     )
   }
 }

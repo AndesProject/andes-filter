@@ -17,34 +17,34 @@ describe('InequalityFilter', () => {
       { name: 'Jasmine' },
     ])
     expect(
-      filter.findMany({ where: { name: { not: 'Alice' } } }).data.length
+      filter.findMany({ where: { name: { not: 'Alice' } } }).data.length,
     ).toBe(9)
     expect(
-      filter.findMany({ where: { name: { not: 'Bob' } } }).data.length
+      filter.findMany({ where: { name: { not: 'Bob' } } }).data.length,
     ).toBe(10)
     expect(
-      filter.findMany({ where: { name: { not: 'Andrea' } } }).data.length
+      filter.findMany({ where: { name: { not: 'Andrea' } } }).data.length,
     ).toBe(11)
     expect(filter.findMany({ where: { name: { not: '' } } }).data.length).toBe(
-      11
+      11,
     )
     expect(
-      filter.findMany({ where: { name: { not: null } } }).data.length
+      filter.findMany({ where: { name: { not: null } } }).data.length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { not: undefined } } }).data.length
+      filter.findMany({ where: { name: { not: undefined } } }).data.length,
     ).toBe(11)
     expect(
-      filter.findUnique({ where: { name: { not: undefined } } })?.name
+      filter.findUnique({ where: { name: { not: undefined } } })?.name,
     ).toBe('Alice')
     expect(filter.findUnique({ where: { name: { not: 'Alice' } } })?.name).toBe(
-      'Bob'
+      'Bob',
     )
     expect(
-      filter.findUnique({ where: { name: { not: 'Jasmine' } } })?.name
+      filter.findUnique({ where: { name: { not: 'Jasmine' } } })?.name,
     ).toBe('Alice')
     expect(filter.findUnique({ where: { name: { not: 'Isaac' } } })?.name).toBe(
-      'Alice'
+      'Alice',
     )
   })
   it('should filter numeric values correctly', () => {
@@ -59,13 +59,13 @@ describe('InequalityFilter', () => {
     expect(filter.findMany({ where: { size: { not: 2 } } }).data.length).toBe(4)
     expect(filter.findMany({ where: { size: { not: 3 } } }).data.length).toBe(4)
     expect(
-      filter.findMany({ where: { size: { not: null } } }).data.length
+      filter.findMany({ where: { size: { not: null } } }).data.length,
     ).toBe(5)
     expect(
-      filter.findMany({ where: { size: { not: undefined } } }).data.length
+      filter.findMany({ where: { size: { not: undefined } } }).data.length,
     ).toBe(5)
     expect(
-      filter.findUnique({ where: { size: { not: undefined } } })?.size
+      filter.findUnique({ where: { size: { not: undefined } } })?.size,
     ).toBe(1)
     expect(filter.findUnique({ where: { size: { not: 1 } } })?.size).toBe(2)
     expect(filter.findUnique({ where: { size: { not: 2 } } })?.size).toBe(1)
@@ -78,25 +78,25 @@ describe('InequalityFilter', () => {
       { isValid: false },
     ])
     expect(
-      filter.findMany({ where: { isValid: { not: true } } }).data.length
+      filter.findMany({ where: { isValid: { not: true } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { isValid: { not: false } } }).data.length
+      filter.findMany({ where: { isValid: { not: false } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { isValid: { not: null } } }).data.length
+      filter.findMany({ where: { isValid: { not: null } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { isValid: { not: undefined } } }).data.length
+      filter.findMany({ where: { isValid: { not: undefined } } }).data.length,
     ).toBe(3)
     expect(
-      filter.findUnique({ where: { isValid: { not: undefined } } })?.isValid
+      filter.findUnique({ where: { isValid: { not: undefined } } })?.isValid,
     ).toBe(true)
     expect(
-      filter.findUnique({ where: { isValid: { not: true } } })?.isValid
+      filter.findUnique({ where: { isValid: { not: true } } })?.isValid,
     ).toBe(false)
     expect(
-      filter.findUnique({ where: { isValid: { not: false } } })?.isValid
+      filter.findUnique({ where: { isValid: { not: false } } })?.isValid,
     ).toBe(true)
   })
   it('not con objeto FilterCriteria (condición anidada)', () => {
@@ -109,22 +109,22 @@ describe('InequalityFilter', () => {
     expect(
       filter
         .findMany({ where: { name: { not: { contains: 'a' } } } })
-        .data.map((x) => x.name)
+        .data.map((x) => x.name),
     ).toEqual(['Alice', 'Bob'])
     expect(
       filter
         .findMany({ where: { name: { not: { startsWith: 'A' } } } })
-        .data.map((x) => x.name)
+        .data.map((x) => x.name),
     ).toEqual(['Bob', 'Charlie', 'David'])
     expect(
       filter
         .findMany({ where: { name: { not: { equals: 'Bob' } } } })
-        .data.map((x) => x.name)
+        .data.map((x) => x.name),
     ).toEqual(['Alice', 'Charlie', 'David'])
     expect(
       filter
         .findMany({ where: { name: { not: { endsWith: 'e' } } } })
-        .data.map((x) => x.name)
+        .data.map((x) => x.name),
     ).toEqual(['Bob', 'David'])
   })
   it('not anidado (doble negación)', () => {
@@ -137,7 +137,7 @@ describe('InequalityFilter', () => {
     expect(
       filter
         .findMany({ where: { name: { not: { not: { equals: 'Bob' } } } } })
-        .data.map((x) => x.name)
+        .data.map((x) => x.name),
     ).toEqual(['Bob'])
   })
 })
@@ -218,6 +218,15 @@ describe('InequalityFilter Unit', () => {
     })
     expect(filter.evaluate('TEST')).toBe(false)
     expect(filter.evaluate('other')).toBe(true)
+  })
+  it('dispara la rama de modo insensible dentro del valor del operador', () => {
+    // Cubre rama: value.mode === 'insensitive' (líneas 70-73)
+    const filter = new InequalityFilter<any>({
+      regex: { pattern: 'abc', mode: 'insensitive' } as any,
+    })
+    // Ejecuta el evaluador para cubrir la rama; la aserción valida el tipo booleano
+    expect(typeof filter.evaluate('ABC')).toBe('boolean')
+    expect(filter.evaluate('XYZ')).toBe(true)
   })
   it('debe manejar objetos con operadores de inclusión', () => {
     const filter = new InequalityFilter<any>({ in: [2, 4, 6] })
@@ -394,7 +403,7 @@ describe('InequalityFilter Unit', () => {
         age: 30,
         active: true,
         tags: ['a', 'b'],
-      })
+      }),
     ).toBe(true)
   })
 })

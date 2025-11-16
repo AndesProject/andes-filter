@@ -8,6 +8,7 @@ export class BeforeFilter extends BaseDateFilter {
     }
 
     const parsedDate = this.getParsedDate(actualValue)
+
     return this.isDateBefore(parsedDate, this.thresholdDate)
   }
 }

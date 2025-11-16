@@ -18,50 +18,51 @@ describe('StartsWithFilter', () => {
       { name: 'Gustavo Cerati' },
     ])
     expect(
-      filter.findMany({ where: { name: { startsWith: 'Cerati' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'Cerati' } } }).data
+        .length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'Bob' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'Bob' } } }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({ where: { name: { startsWith: 'Mariana' } } }).data
-        .length
+        .length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'Alice' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'Alice' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'eva' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'eva' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'ank' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'ank' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { startsWith: ' ' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: ' ' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { name: { startsWith: '' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: '' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'A' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'A' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { startsWith: 'Gus' } } }).data.length
+      filter.findMany({ where: { name: { startsWith: 'Gus' } } }).data.length,
     ).toBe(1)
     expect(filter.findUnique({ where: { name: { startsWith: ' ' } } })).toBe(
-      null
+      null,
     )
     expect(
-      filter.findUnique({ where: { name: { startsWith: '' } } })?.name
+      filter.findUnique({ where: { name: { startsWith: '' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { startsWith: 'Mariana' } } })
+      filter.findUnique({ where: { name: { startsWith: 'Mariana' } } }),
     ).toBe(null)
     expect(
-      filter.findUnique({ where: { name: { startsWith: 'Bob' } } })?.name
+      filter.findUnique({ where: { name: { startsWith: 'Bob' } } })?.name,
     ).toBe('Bob')
     expect(
-      filter.findUnique({ where: { name: { startsWith: 'Alice' } } })?.name
+      filter.findUnique({ where: { name: { startsWith: 'Alice' } } })?.name,
     ).toBe('Alice')
   })
   it('should handle case insensitive filtering correctly', () => {
@@ -75,37 +76,37 @@ describe('StartsWithFilter', () => {
     expect(
       filter.findMany({
         where: { name: { startsWith: 'alice', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { startsWith: 'bob', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { startsWith: 'eva', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { startsWith: 'char', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { name: { startsWith: 'xyz', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
     expect(
       filter.findUnique({
         where: { name: { startsWith: 'alice', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
     expect(
       filter.findUnique({
         where: { name: { startsWith: 'xyz', mode: 'insensitive' } },
-      })
+      }),
     ).toBe(null)
   })
   it('should handle null and undefined values correctly', () => {
@@ -116,13 +117,15 @@ describe('StartsWithFilter', () => {
       { value: 'world' },
     ])
     expect(
-      filter.findMany({ where: { value: { startsWith: 'hello' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: 'hello' } } }).data
+        .length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { startsWith: 'world' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: 'world' } } }).data
+        .length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { startsWith: 'xyz' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: 'xyz' } } }).data.length,
     ).toBe(0)
   })
   it('should handle empty strings and special cases correctly', () => {
@@ -133,17 +136,19 @@ describe('StartsWithFilter', () => {
       { value: 'hello world' },
     ])
     expect(
-      filter.findMany({ where: { value: { startsWith: '' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: '' } } }).data.length,
     ).toBe(4)
     expect(
-      filter.findMany({ where: { value: { startsWith: 'hello' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: 'hello' } } }).data
+        .length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { value: { startsWith: 'world' } } }).data.length
+      filter.findMany({ where: { value: { startsWith: 'world' } } }).data
+        .length,
     ).toBe(1)
     expect(
       filter.findMany({ where: { value: { startsWith: 'hello world' } } }).data
-        .length
+        .length,
     ).toBe(1)
   })
 })

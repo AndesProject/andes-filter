@@ -12,19 +12,19 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { value: { not: 10 } } }).data
+        filter.findMany({ where: { value: { not: 10 } } }).data,
       ).toHaveLength(4)
       expect(
-        filter.findMany({ where: { value: { not: 20 } } }).data
+        filter.findMany({ where: { value: { not: 20 } } }).data,
       ).toHaveLength(4)
       expect(
-        filter.findMany({ where: { value: { not: null } } }).data
+        filter.findMany({ where: { value: { not: null } } }).data,
       ).toHaveLength(4)
       expect(
-        filter.findMany({ where: { value: { not: undefined } } }).data
+        filter.findMany({ where: { value: { not: undefined } } }).data,
       ).toHaveLength(4)
       expect(
-        filter.findMany({ where: { value: { not: 0 } } }).data
+        filter.findMany({ where: { value: { not: 0 } } }).data,
       ).toHaveLength(4)
     })
     it('should handle NOT with dates', () => {
@@ -39,13 +39,13 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { date: { not: date1 } } }).data
+        filter.findMany({ where: { date: { not: date1 } } }).data,
       ).toHaveLength(2)
       expect(
-        filter.findMany({ where: { date: { not: date2 } } }).data
+        filter.findMany({ where: { date: { not: date2 } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { date: { not: null } } }).data
+        filter.findMany({ where: { date: { not: null } } }).data,
       ).toHaveLength(3)
     })
     it('should handle NOT with NaN', () => {
@@ -57,10 +57,10 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { value: { not: NaN } } }).data
+        filter.findMany({ where: { value: { not: NaN } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { value: { not: 1 } } }).data
+        filter.findMany({ where: { value: { not: 1 } } }).data,
       ).toHaveLength(3)
     })
     it('should handle NOT with strings and insensitive mode', () => {
@@ -72,18 +72,18 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { name: { not: 'Alice' } } }).data
+        filter.findMany({ where: { name: { not: 'Alice' } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { name: { not: 'alice' } } }).data
+        filter.findMany({ where: { name: { not: 'alice' } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { name: { not: 'ALICE' } } }).data
+        filter.findMany({ where: { name: { not: 'ALICE' } } }).data,
       ).toHaveLength(3)
       expect(
         filter.findMany({
           where: { name: { not: 'Alice', mode: 'insensitive' } },
-        }).data
+        }).data,
       ).toHaveLength(1)
     })
   })
@@ -97,10 +97,10 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { value: { not: { in: [1, 2] } } } }).data
+        filter.findMany({ where: { value: { not: { in: [1, 2] } } } }).data,
       ).toHaveLength(2)
       expect(
-        filter.findMany({ where: { value: { not: { notIn: [3, 4] } } } }).data
+        filter.findMany({ where: { value: { not: { notIn: [3, 4] } } } }).data,
       ).toHaveLength(2)
     })
     it('should handle NOT with contains/startsWith/endsWith and insensitive', () => {
@@ -112,28 +112,28 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { name: { not: { contains: 'lic' } } } }).data
+        filter.findMany({ where: { name: { not: { contains: 'lic' } } } }).data,
       ).toHaveLength(2)
       expect(
         filter.findMany({
           where: { name: { not: { contains: 'lic', mode: 'insensitive' } } },
-        }).data
+        }).data,
       ).toHaveLength(1)
       expect(
-        filter.findMany({ where: { name: { not: { startsWith: 'A' } } } }).data
+        filter.findMany({ where: { name: { not: { startsWith: 'A' } } } }).data,
       ).toHaveLength(2)
       expect(
         filter.findMany({
           where: { name: { not: { startsWith: 'A', mode: 'insensitive' } } },
-        }).data
+        }).data,
       ).toHaveLength(1)
       expect(
-        filter.findMany({ where: { name: { not: { endsWith: 'e' } } } }).data
+        filter.findMany({ where: { name: { not: { endsWith: 'e' } } } }).data,
       ).toHaveLength(2)
       expect(
         filter.findMany({
           where: { name: { not: { endsWith: 'E', mode: 'insensitive' } } },
-        }).data
+        }).data,
       ).toHaveLength(1)
     })
   })
@@ -148,15 +148,15 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       const filter = createFilter(data)
       expect(
         filter.findMany({ where: { arr: { not: { some: { equals: 1 } } } } })
-          .data
+          .data,
       ).toHaveLength(2)
       expect(
         filter.findMany({ where: { arr: { not: { none: { equals: 2 } } } } })
-          .data
+          .data,
       ).toHaveLength(2)
       expect(
         filter.findMany({ where: { arr: { not: { every: { equals: 2 } } } } })
-          .data
+          .data,
       ).toHaveLength(2)
     })
   })
@@ -172,13 +172,13 @@ describe('Not Filter Behavior Analysis - Prisma/TypeORM Compatibility', () => {
       ]
       const filter = createFilter(data)
       expect(
-        filter.findMany({ where: { obj: { not: obj1 } } }).data
+        filter.findMany({ where: { obj: { not: obj1 } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { obj: { not: obj2 } } }).data
+        filter.findMany({ where: { obj: { not: obj2 } } }).data,
       ).toHaveLength(3)
       expect(
-        filter.findMany({ where: { obj: { not: { key: 'value' } } } }).data
+        filter.findMany({ where: { obj: { not: { key: 'value' } } } }).data,
       ).toHaveLength(4)
     })
   })

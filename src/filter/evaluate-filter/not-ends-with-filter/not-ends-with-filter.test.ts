@@ -18,35 +18,36 @@ describe('NotEndsWithFilter', () => {
       { name: 'Gustavo Cerati' },
     ])
     expect(
-      filter.findMany({ where: { name: { notEndsWith: 'ice' } } }).data.length
+      filter.findMany({ where: { name: { notEndsWith: 'ice' } } }).data.length,
     ).toBe(10)
     expect(
       filter.findMany({ where: { name: { notEndsWith: 'Cerati' } } }).data
-        .length
+        .length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { notEndsWith: 'David' } } }).data.length
+      filter.findMany({ where: { name: { notEndsWith: 'David' } } }).data
+        .length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { notEndsWith: 'smi' } } }).data.length
+      filter.findMany({ where: { name: { notEndsWith: 'smi' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notEndsWith: ' ' } } }).data.length
+      filter.findMany({ where: { name: { notEndsWith: ' ' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findUnique({ where: { name: { notEndsWith: ' ' } } })?.name
+      filter.findUnique({ where: { name: { notEndsWith: ' ' } } })?.name,
     ).toBe('Alice')
     expect(filter.findUnique({ where: { name: { notEndsWith: '' } } })).toBe(
-      null
+      null,
     )
     expect(
-      filter.findUnique({ where: { name: { notEndsWith: 'Mariana' } } })?.name
+      filter.findUnique({ where: { name: { notEndsWith: 'Mariana' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notEndsWith: 'Bob' } } })?.name
+      filter.findUnique({ where: { name: { notEndsWith: 'Bob' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notEndsWith: 'Alice' } } })?.name
+      filter.findUnique({ where: { name: { notEndsWith: 'Alice' } } })?.name,
     ).toBe('Bob')
   })
   it('should handle case insensitive filtering correctly', () => {
@@ -60,32 +61,32 @@ describe('NotEndsWithFilter', () => {
     expect(
       filter.findMany({
         where: { name: { notEndsWith: 'alice', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notEndsWith: 'bob', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notEndsWith: 'eva', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notEndsWith: 'xyz', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(5)
     expect(
       filter.findUnique({
         where: { name: { notEndsWith: 'alice', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('BOB')
     expect(
       filter.findUnique({
         where: { name: { notEndsWith: 'xyz', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('should handle null and undefined values correctly', () => {
@@ -97,14 +98,14 @@ describe('NotEndsWithFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'world' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { value: { notEndsWith: 'xyz' } } }).data.length
+      filter.findMany({ where: { value: { notEndsWith: 'xyz' } } }).data.length,
     ).toBe(4)
   })
   it('should handle empty strings and special cases correctly', () => {
@@ -115,19 +116,19 @@ describe('NotEndsWithFilter', () => {
       { value: 'hello world' },
     ])
     expect(
-      filter.findMany({ where: { value: { notEndsWith: '' } } }).data.length
+      filter.findMany({ where: { value: { notEndsWith: '' } } }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'world' } } }).data
-        .length
+        .length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notEndsWith: 'hello world' } } }).data
-        .length
+        .length,
     ).toBe(3)
   })
 })

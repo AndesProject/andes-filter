@@ -70,23 +70,23 @@ describe('EqualityFilter Integration Tests', () => {
       const filter = createFilter<{ name: string }>(testData)
       expect(filter.findUnique({ where: { name: { equals: '' } } })).toBe(null)
       expect(filter.findUnique({ where: { name: { equals: null } } })).toBe(
-        null
+        null,
       )
       expect(
-        filter.findUnique({ where: { name: { equals: undefined } } })
+        filter.findUnique({ where: { name: { equals: undefined } } }),
       ).toBe(null)
       expect(
-        filter.findUnique({ where: { name: { equals: 'Mariana' } } })
+        filter.findUnique({ where: { name: { equals: 'Mariana' } } }),
       ).toBe(null)
     })
 
     it('should return correct item for findUnique with exact matches', () => {
       const filter = createFilter<{ name: string }>(testData)
       expect(
-        filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name
+        filter.findUnique({ where: { name: { equals: 'Bob' } } })?.name,
       ).toBe('Bob')
       expect(
-        filter.findUnique({ where: { name: { equals: 'Alice' } } })?.name
+        filter.findUnique({ where: { name: { equals: 'Alice' } } })?.name,
       ).toBe('Alice')
     })
   })

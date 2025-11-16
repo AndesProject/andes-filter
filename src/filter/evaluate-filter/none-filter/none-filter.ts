@@ -16,8 +16,10 @@ export class NoneFilter implements EvaluateFilter {
       Object.keys(this.filter).length === 0
     ) {
       this.isEmptyFilter = true
+
       return
     }
+
     if (
       typeof this.filter !== 'object' ||
       this.filter === null ||
@@ -26,21 +28,30 @@ export class NoneFilter implements EvaluateFilter {
       this.evaluator = {
         evaluate: (data: any) => data === this.filter,
       }
+
       return
     }
+
     const keys = Object.keys(this.filter)
+
     if (keys.length === 1) {
       const key = keys[0]
+
       const value = (this.filter as Record<string, any>)[key]
+
       if (key === 'distinct') {
         this.isDistinct = true
+
         return
       }
+
       if (key === 'not') {
         this.isNegation = true
         this.evaluator = createFilterClassMap(String(key), value)
+
         return
       }
+
       if (isKnownOperator(key)) {
         this.evaluator = createFilterClassMap(String(key), value)
       } else {
@@ -58,21 +69,27 @@ export class NoneFilter implements EvaluateFilter {
       // Return false when there are duplicates (distinct condition is violated)
       return false
     }
+
     if (this.isEmptyFilter) {
       return false
     }
+
     if (this.isNegation) {
       return data.every((item) => {
         if (item == null) return true
+
         return !this.evaluator!.evaluate(item)
       })
     }
+
     if (this.evaluator) {
       return data.every((item) => {
         if (item == null) return true
+
         return !this.evaluator!.evaluate(item)
       })
     }
+
     return data.every((item) => item !== this.filter)
   }
 }

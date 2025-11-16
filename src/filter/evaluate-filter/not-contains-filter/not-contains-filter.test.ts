@@ -19,44 +19,45 @@ describe('NotContainsFilter', () => {
     ])
     expect(
       filter.findMany({ where: { name: { notContains: 'Gustavo Cerati' } } })
-        .data.length
+        .data.length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { notContains: 'Bob' } } }).data.length
+      filter.findMany({ where: { name: { notContains: 'Bob' } } }).data.length,
     ).toBe(11)
     expect(
       filter.findMany({ where: { name: { notContains: 'Mariana' } } }).data
-        .length
+        .length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notContains: 'Alice' } } }).data.length
+      filter.findMany({ where: { name: { notContains: 'Alice' } } }).data
+        .length,
     ).toBe(10)
     expect(
-      filter.findMany({ where: { name: { notContains: 'eva' } } }).data.length
+      filter.findMany({ where: { name: { notContains: 'eva' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { notContains: 'ank' } } }).data.length
+      filter.findMany({ where: { name: { notContains: 'ank' } } }).data.length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { notContains: ' ' } } }).data.length
+      filter.findMany({ where: { name: { notContains: ' ' } } }).data.length,
     ).toBe(11)
     expect(
-      filter.findMany({ where: { name: { notContains: '' } } }).data.length
+      filter.findMany({ where: { name: { notContains: '' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findUnique({ where: { name: { notContains: ' ' } } })?.name
+      filter.findUnique({ where: { name: { notContains: ' ' } } })?.name,
     ).toBe('Alice')
     expect(filter.findUnique({ where: { name: { notContains: '' } } })).toBe(
-      null
+      null,
     )
     expect(
-      filter.findUnique({ where: { name: { notContains: 'Mariana' } } })?.name
+      filter.findUnique({ where: { name: { notContains: 'Mariana' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notContains: 'Bob' } } })?.name
+      filter.findUnique({ where: { name: { notContains: 'Bob' } } })?.name,
     ).toBe('Alice')
     expect(
-      filter.findUnique({ where: { name: { notContains: 'Alice' } } })?.name
+      filter.findUnique({ where: { name: { notContains: 'Alice' } } })?.name,
     ).toBe('Bob')
   })
   it('should handle case insensitive filtering correctly', () => {
@@ -70,32 +71,32 @@ describe('NotContainsFilter', () => {
     expect(
       filter.findMany({
         where: { name: { notContains: 'alice', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notContains: 'bob', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notContains: 'EVA', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(4)
     expect(
       filter.findMany({
         where: { name: { notContains: 'xyz', mode: 'insensitive' } },
-      }).data.length
+      }).data.length,
     ).toBe(5)
     expect(
       filter.findUnique({
         where: { name: { notContains: 'alice', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('BOB')
     expect(
       filter.findUnique({
         where: { name: { notContains: 'xyz', mode: 'insensitive' } },
-      })?.name
+      })?.name,
     ).toBe('Alice')
   })
   it('should handle null and undefined values correctly', () => {
@@ -107,14 +108,14 @@ describe('NotContainsFilter', () => {
     ])
     expect(
       filter.findMany({ where: { value: { notContains: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
       filter.findMany({ where: { value: { notContains: 'world' } } }).data
-        .length
+        .length,
     ).toBe(3)
     expect(
-      filter.findMany({ where: { value: { notContains: 'xyz' } } }).data.length
+      filter.findMany({ where: { value: { notContains: 'xyz' } } }).data.length,
     ).toBe(4)
   })
   it('should handle empty strings and special cases correctly', () => {
@@ -125,19 +126,19 @@ describe('NotContainsFilter', () => {
       { value: 'hello world' },
     ])
     expect(
-      filter.findMany({ where: { value: { notContains: '' } } }).data.length
+      filter.findMany({ where: { value: { notContains: '' } } }).data.length,
     ).toBe(0)
     expect(
       filter.findMany({ where: { value: { notContains: 'hello' } } }).data
-        .length
+        .length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notContains: 'world' } } }).data
-        .length
+        .length,
     ).toBe(2)
     expect(
       filter.findMany({ where: { value: { notContains: 'hello world' } } }).data
-        .length
+        .length,
     ).toBe(3)
   })
 })

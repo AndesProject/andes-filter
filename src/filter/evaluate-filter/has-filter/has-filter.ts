@@ -16,6 +16,7 @@ export class HasFilter<T> implements EvaluateFilter {
       ) {
         continue
       }
+
       // Comparación especial para NaN
       if (
         isNumber(item) &&
@@ -25,6 +26,7 @@ export class HasFilter<T> implements EvaluateFilter {
       ) {
         return true
       }
+
       if (isObject(item) && isObject(this.requiredElement)) {
         if (item === this.requiredElement) {
           return true
@@ -33,6 +35,7 @@ export class HasFilter<T> implements EvaluateFilter {
         return true
       }
     }
+
     return false
   }
 }

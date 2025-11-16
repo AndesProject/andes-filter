@@ -129,7 +129,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(3)
       expect(
-        result.data.every((item) => item.name.toLowerCase().includes('a'))
+        result.data.every((item) => item.name.toLowerCase().includes('a')),
       ).toBe(true)
     })
     it('should handle notContains filter', () => {
@@ -139,7 +139,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(1)
       expect(
-        result.data.every((item) => !item.name.toLowerCase().includes('a'))
+        result.data.every((item) => !item.name.toLowerCase().includes('a')),
       ).toBe(true)
     })
     it('should handle startsWith filter', () => {
@@ -217,7 +217,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2)
       expect(
-        result.data.every((item) => item.createdAt < new Date('2023-03-01'))
+        result.data.every((item) => item.createdAt < new Date('2023-03-01')),
       ).toBe(true)
     })
     it('should handle after filter', () => {
@@ -227,7 +227,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2)
       expect(
-        result.data.every((item) => item.createdAt > new Date('2023-03-01'))
+        result.data.every((item) => item.createdAt > new Date('2023-03-01')),
       ).toBe(true)
     })
     it('should handle between filter', () => {
@@ -244,8 +244,8 @@ describe('Comprehensive Filter Tests', () => {
         result.data.every(
           (item) =>
             item.createdAt >= new Date('2023-02-01') &&
-            item.createdAt <= new Date('2023-04-01')
-        )
+            item.createdAt <= new Date('2023-04-01'),
+        ),
       ).toBe(true)
     })
   })
@@ -257,7 +257,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2)
       expect(result.data.every((item) => item.tags.includes('admin'))).toBe(
-        true
+        true,
       )
     })
     it('should handle hasEvery filter', () => {
@@ -277,8 +277,8 @@ describe('Comprehensive Filter Tests', () => {
       expect(result.data).toHaveLength(3)
       expect(
         result.data.every((item) =>
-          item.tags.some((tag) => ['admin', 'moderator'].includes(tag))
-        )
+          item.tags.some((tag) => ['admin', 'moderator'].includes(tag)),
+        ),
       ).toBe(true)
     })
     it('should handle length filter', () => {
@@ -414,7 +414,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(3)
       expect(result.data.every((item) => item.age >= 25 && item.active)).toBe(
-        true
+        true,
       )
     })
     it('should handle OR filter', () => {
@@ -426,7 +426,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2)
       expect(result.data.every((item) => item.age < 25 || !item.active)).toBe(
-        true
+        true,
       )
     })
     it('should handle NOT filter', () => {
@@ -438,7 +438,7 @@ describe('Comprehensive Filter Tests', () => {
       })
       expect(result.data).toHaveLength(2)
       expect(result.data.every((item) => item.age < 30 && item.active)).toBe(
-        true
+        true,
       )
     })
   })

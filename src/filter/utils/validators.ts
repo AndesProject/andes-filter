@@ -54,7 +54,7 @@ export class ValidationUtils {
     return Object.keys(obj).every(
       (key) =>
         typeof (obj as Record<string, any>)[key] !== 'object' ||
-        (obj as Record<string, any>)[key] === null
+        (obj as Record<string, any>)[key] === null,
     )
   }
 }

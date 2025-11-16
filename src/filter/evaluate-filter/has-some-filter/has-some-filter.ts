@@ -12,22 +12,15 @@ export class HasSomeFilter<T> implements EvaluateFilter {
   private hasNestedFilters(obj: any): boolean {
     if (!isObject(obj) || obj === null) return false
 
-    for (const key in obj) {
-      const value = (obj as any)[key]
-      if (isObject(value) && value !== null) {
-        // Verificar si el valor es un objeto con filtros
-        if (
-          Object.keys(value).some((filterKey) => isKnownOperator(filterKey))
-        ) {
-          return true
-        }
-        // Verificar recursivamente si hay filtros anidados
-        if (this.hasNestedFilters(value)) {
-          return true
-        }
-      }
-    }
-    return false
+    return Object.values(obj).some((value) => {
+      if (value === null) return false
+      if (!isObject(value)) return this.hasNestedFilters(value)
+      const hasKnown = Object.keys(value).some((filterKey) =>
+        isKnownOperator(filterKey),
+      )
+
+      return hasKnown || this.hasNestedFilters(value)
+    })
   }
 
   public evaluate(data: any): boolean {
@@ -53,6 +46,7 @@ export class HasSomeFilter<T> implements EvaluateFilter {
         if (isObject(item) && item !== null) {
           return JSON.stringify(item) === JSON.stringify(required)
         }
+
         return item === required
       })
     })

@@ -50,16 +50,16 @@ describe('IsNullFilter', () => {
       { arr: [1], obj: { a: 1 } },
     ])
     expect(
-      filter.findMany({ where: { arr: { isNull: true } } }).data.length
+      filter.findMany({ where: { arr: { isNull: true } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { arr: { isNull: false } } }).data.length
+      filter.findMany({ where: { arr: { isNull: false } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { obj: { isNull: true } } }).data.length
+      filter.findMany({ where: { obj: { isNull: true } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { obj: { isNull: false } } }).data.length
+      filter.findMany({ where: { obj: { isNull: false } } }).data.length,
     ).toBe(2)
   })
   it('should work in combination with other filters', () => {
@@ -72,17 +72,17 @@ describe('IsNullFilter', () => {
     expect(
       filter.findMany({
         where: { value: { isNull: false }, name: { contains: 'b' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { value: { isNull: false }, name: { contains: 'd' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { value: { isNull: true }, name: { contains: 'a' } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
   })
   it('should work with AND/OR conditions', () => {
@@ -97,14 +97,14 @@ describe('IsNullFilter', () => {
         where: {
           AND: [{ value: { isNull: true } }, { flag: { equals: true } }],
         } as any,
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: {
           OR: [{ value: { isNull: false } }, { flag: { equals: true } }],
         } as any,
-      }).data.length
+      }).data.length,
     ).toBe(4)
   })
 })

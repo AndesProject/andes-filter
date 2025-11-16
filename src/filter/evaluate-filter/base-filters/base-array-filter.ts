@@ -20,6 +20,7 @@ export abstract class BaseArrayFilter implements EvaluateFilter {
 
     for (const key in obj) {
       const value = (obj as any)[key]
+
       if (ValidationUtils.validateObject(value)) {
         // Verificar si el valor es un objeto con filtros
         if (
@@ -27,12 +28,14 @@ export abstract class BaseArrayFilter implements EvaluateFilter {
         ) {
           return true
         }
+
         // Verificar recursivamente si hay filtros anidados
         if (this.hasNestedFilters(value)) {
           return true
         }
       }
     }
+
     return false
   }
 

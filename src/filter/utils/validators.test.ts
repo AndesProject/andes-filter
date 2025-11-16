@@ -62,13 +62,13 @@ describe('ValidationUtils', () => {
 
   it('hasOnlyPrimitiveValues', () => {
     expect(
-      ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: 'x', c: true })
+      ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: 'x', c: true }),
     ).toBe(true)
     expect(ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: { x: 2 } })).toBe(
-      false
+      false,
     )
     expect(
-      ValidationUtils.hasOnlyPrimitiveValues({ a: null, b: undefined })
+      ValidationUtils.hasOnlyPrimitiveValues({ a: null, b: undefined }),
     ).toBe(true)
     expect(ValidationUtils.hasOnlyPrimitiveValues(null)).toBe(false)
     expect(ValidationUtils.hasOnlyPrimitiveValues('string')).toBe(false)

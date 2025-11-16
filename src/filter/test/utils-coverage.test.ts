@@ -42,10 +42,10 @@ describe('Utils Coverage Tests', () => {
 
       expect(ArrayEvaluator.evaluateArray(null, evaluator, 'some')).toBe(false)
       expect(ArrayEvaluator.evaluateArray(undefined, evaluator, 'some')).toBe(
-        false
+        false,
       )
       expect(ArrayEvaluator.evaluateArray('string', evaluator, 'some')).toBe(
-        false
+        false,
       )
       expect(ArrayEvaluator.evaluateArray(123, evaluator, 'some')).toBe(false)
     })
@@ -65,7 +65,7 @@ describe('Utils Coverage Tests', () => {
       const evaluator = (_item: any) => true
 
       expect(
-        ArrayEvaluator.evaluateArray(data, evaluator, 'invalid' as any)
+        ArrayEvaluator.evaluateArray(data, evaluator, 'invalid' as any),
       ).toBe(false)
     })
 
@@ -87,10 +87,10 @@ describe('Utils Coverage Tests', () => {
 
       expect(ArrayEvaluator.evaluatePrimitiveFilter(data, 3, 'some')).toBe(true)
       expect(ArrayEvaluator.evaluatePrimitiveFilter(data, 3, 'every')).toBe(
-        false
+        false,
       )
       expect(ArrayEvaluator.evaluatePrimitiveFilter(data, 3, 'none')).toBe(
-        false
+        false,
       )
     })
 
@@ -103,13 +103,13 @@ describe('Utils Coverage Tests', () => {
       const filter = { name: 'Alice' }
 
       expect(
-        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'some')
+        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'every')
+        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'every'),
       ).toBe(false)
       expect(
-        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'none')
+        ArrayEvaluator.evaluateSimpleObjectFilter(data, filter, 'none'),
       ).toBe(false)
     })
 
@@ -124,13 +124,13 @@ describe('Utils Coverage Tests', () => {
       }
 
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'some')
+        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'every')
+        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'every'),
       ).toBe(false)
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'none')
+        ArrayEvaluator.evaluateComplexFilter(data, mockFilter, 'none'),
       ).toBe(false)
     })
 
@@ -144,13 +144,13 @@ describe('Utils Coverage Tests', () => {
       const evaluator = new FilterEvaluator(filterConfig)
 
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'some')
+        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'some'),
       ).toBe(true)
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'every')
+        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'every'),
       ).toBe(false)
       expect(
-        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'none')
+        ArrayEvaluator.evaluateComplexFilter(data, evaluator, 'none'),
       ).toBe(false)
     })
 
@@ -177,10 +177,10 @@ describe('Utils Coverage Tests', () => {
       }
 
       expect(SafeEvaluator.evaluate(successOperation, 'fallback')).toBe(
-        'success'
+        'success',
       )
       expect(SafeEvaluator.evaluate(failureOperation, 'fallback')).toBe(
-        'fallback'
+        'fallback',
       )
     })
 
@@ -218,10 +218,10 @@ describe('Utils Coverage Tests', () => {
 
     it('should handle invalid date comparisons', () => {
       expect(SafeEvaluator.compareDates('invalid-date', new Date(), 'eq')).toBe(
-        false
+        false,
       )
       expect(SafeEvaluator.compareDates(new Date(), 'invalid-date', 'eq')).toBe(
-        false
+        false,
       )
       expect(SafeEvaluator.compareDates(NaN, new Date(), 'eq')).toBe(false)
       expect(SafeEvaluator.compareDates(new Date(), NaN, 'eq')).toBe(false)
@@ -231,13 +231,13 @@ describe('Utils Coverage Tests', () => {
       const date1 = new Date('2023-01-01')
       const date2 = new Date('2023-01-02')
       expect(SafeEvaluator.compareDates(date1, date2, 'invalid' as any)).toBe(
-        false
+        false,
       )
     })
 
     it('should test regex safely', () => {
       expect(SafeEvaluator.testRegex('test', undefined, 'this is a test')).toBe(
-        true
+        true,
       )
       expect(SafeEvaluator.testRegex('test', 'i', 'THIS IS A TEST')).toBe(true)
       expect(SafeEvaluator.testRegex('test', undefined, 'no match')).toBe(false)
@@ -246,7 +246,7 @@ describe('Utils Coverage Tests', () => {
     it('should handle invalid regex patterns', () => {
       expect(SafeEvaluator.testRegex('[invalid', undefined, 'test')).toBe(false)
       expect(SafeEvaluator.testRegex('test', 'invalid-flags', 'test')).toBe(
-        false
+        false,
       )
     })
   })
@@ -290,7 +290,7 @@ describe('Utils Coverage Tests', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         '[TestContext] test error',
-        expect.any(Error)
+        expect.any(Error),
       )
       consoleSpy.mockRestore()
     })
@@ -347,7 +347,7 @@ describe('Utils Coverage Tests', () => {
       Logger.unknownFilter('unknownFilterType')
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        '[FilterRegistry] Unknown filter type: unknownFilterType'
+        '[FilterRegistry] Unknown filter type: unknownFilterType',
       )
       consoleSpy.mockRestore()
     })
@@ -370,7 +370,7 @@ describe('Utils Coverage Tests', () => {
 
     it('should check string containment correctly', () => {
       expect(StringNormalizer.contains('Test String', 'test', false)).toBe(
-        false
+        false,
       )
       expect(StringNormalizer.contains('Test String', 'test', true)).toBe(true)
       expect(StringNormalizer.contains('TEST STRING', 'test', true)).toBe(true)
@@ -380,13 +380,13 @@ describe('Utils Coverage Tests', () => {
 
     it('should check string starts with correctly', () => {
       expect(StringNormalizer.startsWith('Test String', 'test', false)).toBe(
-        false
+        false,
       )
       expect(StringNormalizer.startsWith('Test String', 'test', true)).toBe(
-        true
+        true,
       )
       expect(StringNormalizer.startsWith('TEST STRING', 'test', true)).toBe(
-        true
+        true,
       )
       expect(StringNormalizer.startsWith('', 'test', true)).toBe(false)
       expect(StringNormalizer.startsWith('test', '', true)).toBe(true)
@@ -394,7 +394,7 @@ describe('Utils Coverage Tests', () => {
 
     it('should check string ends with correctly', () => {
       expect(StringNormalizer.endsWith('String Test', 'test', false)).toBe(
-        false
+        false,
       )
       expect(StringNormalizer.endsWith('String Test', 'test', true)).toBe(true)
       expect(StringNormalizer.endsWith('STRING TEST', 'test', true)).toBe(true)
@@ -505,7 +505,7 @@ describe('Utils Coverage Tests', () => {
       Logger['isProduction'] = false
       Logger.unknownFilter('custom')
       expect(warnSpy).toHaveBeenCalledWith(
-        '[FilterRegistry] Unknown filter type: custom'
+        '[FilterRegistry] Unknown filter type: custom',
       )
     })
   })
@@ -521,10 +521,10 @@ describe('Utils Coverage Tests', () => {
     })
     it('hasOnlyPrimitiveValues: cubre todos los casos', () => {
       expect(
-        ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: 'x', c: null })
+        ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: 'x', c: null }),
       ).toBe(true)
       expect(
-        ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: { x: 2 } })
+        ValidationUtils.hasOnlyPrimitiveValues({ a: 1, b: { x: 2 } }),
       ).toBe(false)
       expect(ValidationUtils.hasOnlyPrimitiveValues(null)).toBe(false)
       expect(ValidationUtils.hasOnlyPrimitiveValues([])).toBe(true)

@@ -7,6 +7,18 @@ describe('Coverage Tests - Covering Missing Lines', () => {
       const result = filter.findMany({ where: {} })
       expect(result.data).toHaveLength(1)
     })
+    it('should handle mode-insensitive object with no sub-criteria (no-op)', () => {
+      const data = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+      ]
+      const filter = createFilter(data)
+      // name tiene solo { mode: 'insensitive' } -> ruta crea filtro null en handleInsensitiveModeCriteria
+      const result = filter.findMany({
+        where: { name: { mode: 'insensitive' } },
+      } as any)
+      expect(result.data).toHaveLength(2)
+    })
     it('should handle null data in evaluate', () => {
       const filter = createFilter([{ id: 1, name: 'test' }])
       const result = filter.findMany({ where: { name: { equals: 'test' } } })

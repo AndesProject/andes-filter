@@ -18,19 +18,19 @@ describe('RegexFilter', () => {
       { name: 'Gustavo Cerati' },
     ])
     expect(
-      filter.findMany({ where: { name: { regex: '^Alice$' } } }).data.length
+      filter.findMany({ where: { name: { regex: '^Alice$' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { regex: '^G' } } }).data.length
+      filter.findMany({ where: { name: { regex: '^G' } } }).data.length,
     ).toBe(2)
     expect(
-      filter.findMany({ where: { name: { regex: 'a$' } } }).data.length
+      filter.findMany({ where: { name: { regex: 'a$' } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { name: { regex: '^[A-Z]' } } }).data.length
+      filter.findMany({ where: { name: { regex: '^[A-Z]' } } }).data.length,
     ).toBe(12)
     expect(
-      filter.findMany({ where: { name: { regex: '^[0-9]' } } }).data.length
+      filter.findMany({ where: { name: { regex: '^[0-9]' } } }).data.length,
     ).toBe(0)
   })
   it('should handle null and undefined values correctly', () => {
@@ -41,13 +41,13 @@ describe('RegexFilter', () => {
       { value: 'world' },
     ])
     expect(
-      filter.findMany({ where: { value: { regex: 'hello' } } }).data.length
+      filter.findMany({ where: { value: { regex: 'hello' } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { regex: 'world' } } }).data.length
+      filter.findMany({ where: { value: { regex: 'world' } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { regex: 'xyz' } } }).data.length
+      filter.findMany({ where: { value: { regex: 'xyz' } } }).data.length,
     ).toBe(0)
   })
   it('patrones de regex especiales', () => {
@@ -60,13 +60,13 @@ describe('RegexFilter', () => {
     const result = filter.findMany({ where: { value: { regex: '\\d+' } } })
     expect(result.data.length).toBe(3)
     expect(
-      filter.findMany({ where: { value: { regex: '^\\d' } } }).data.length
+      filter.findMany({ where: { value: { regex: '^\\d' } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { value: { regex: '[a-z]+' } } }).data.length
+      filter.findMany({ where: { value: { regex: '[a-z]+' } } }).data.length,
     ).toBe(4)
     expect(
-      filter.findMany({ where: { value: { regex: '^[a-z]+$' } } }).data.length
+      filter.findMany({ where: { value: { regex: '^[a-z]+$' } } }).data.length,
     ).toBe(1)
   })
   it('patrones de regex inválidos', () => {
@@ -75,13 +75,13 @@ describe('RegexFilter', () => {
       { value: 'world' },
     ])
     expect(
-      filter.findMany({ where: { value: { regex: '[' } } }).data.length
+      filter.findMany({ where: { value: { regex: '[' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { value: { regex: '(' } } }).data.length
+      filter.findMany({ where: { value: { regex: '(' } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { value: { regex: '\\' } } }).data.length
+      filter.findMany({ where: { value: { regex: '\\' } } }).data.length,
     ).toBe(0)
   })
   it('regex con flags como string', () => {
@@ -92,22 +92,22 @@ describe('RegexFilter', () => {
       { value: 'world' },
     ])
     expect(
-      filter.findMany({ where: { value: { regex: '^hello$' } } }).data.length
+      filter.findMany({ where: { value: { regex: '^hello$' } } }).data.length,
     ).toBe(1)
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: '^hello$', flags: 'i' } } },
-      }).data.length
+      }).data.length,
     ).toBe(3)
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: 'hello', flags: 'i' } } },
-      }).data.length
+      }).data.length,
     ).toBe(3)
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: 'bye', flags: 'i' } } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
   })
   it('regex como objeto con flags edge cases', () => {
@@ -119,17 +119,17 @@ describe('RegexFilter', () => {
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: '\\d+', flags: 'g' } } },
-      }).data.length
+      }).data.length,
     ).toBe(3)
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: 'abc', flags: 'gi' } } },
-      }).data.length
+      }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { value: { regex: { pattern: 'abc', flags: 'z' } } },
-      }).data.length
+      }).data.length,
     ).toBe(0)
   })
 })

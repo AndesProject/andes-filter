@@ -18,10 +18,10 @@ describe('LessThanFilter', () => {
     expect(filter.findMany({ where: { size: { lt: 0 } } }).data.length).toBe(2)
     expect(filter.findMany({ where: { size: { lt: 3 } } }).data.length).toBe(6)
     expect(filter.findMany({ where: { size: { lt: 100 } } }).data.length).toBe(
-      7
+      7,
     )
     expect(filter.findUnique({ where: { size: { lt: -2 } } })?.size).toBe(
-      undefined
+      undefined,
     )
     expect(filter.findUnique({ where: { size: { lt: -1 } } })?.size).toBe(-2)
     expect(filter.findUnique({ where: { size: { lt: 100 } } })?.size).toBe(-2)
@@ -48,16 +48,16 @@ describe('LessThanFilter', () => {
       { value: 'c' },
     ])
     expect(filter.findMany({ where: { value: { lt: 'b' } } }).data.length).toBe(
-      1
+      1,
     )
     expect(filter.findMany({ where: { value: { lt: 'c' } } }).data.length).toBe(
-      2
+      2,
     )
     expect(filter.findMany({ where: { value: { lt: 'a' } } }).data.length).toBe(
-      0
+      0,
     )
     expect(filter.findUnique({ where: { value: { lt: 'b' } } })?.value).toBe(
-      'a'
+      'a',
     )
     expect(filter.findUnique({ where: { value: { lt: 'a' } } })).toBe(null)
   })
@@ -71,10 +71,10 @@ describe('LessThanFilter', () => {
     expect(filter.findMany({ where: { value: { lt: 1 } } }).data.length).toBe(1)
     expect(filter.findMany({ where: { value: { lt: 0 } } }).data.length).toBe(0)
     expect(
-      filter.findMany({ where: { value: { lt: null } } }).data.length
+      filter.findMany({ where: { value: { lt: null } } }).data.length,
     ).toBe(0)
     expect(
-      filter.findMany({ where: { value: { lt: undefined } } }).data.length
+      filter.findMany({ where: { value: { lt: undefined } } }).data.length,
     ).toBe(0)
   })
 })
@@ -164,6 +164,10 @@ describe('LessThanFilter - extra coverage for string dates and catch', () => {
     const f = new LessThanFilter('2023-01-02')
     expect(f.evaluate('2023-01-01')).toBe(true)
     expect(f.evaluate('2023-01-03')).toBe(false)
+  })
+  it('should return false when valid string dates are equal', () => {
+    const f = new LessThanFilter('2023-01-02')
+    expect(f.evaluate('2023-01-02')).toBe(false)
   })
   it('should trigger catch branch when comparing with Symbol', () => {
     const f = new LessThanFilter(Symbol('s')) as unknown as {

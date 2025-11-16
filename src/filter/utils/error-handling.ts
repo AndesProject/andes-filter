@@ -13,10 +13,11 @@ export class SafeEvaluator {
   static compareNumbers(
     a: any,
     b: any,
-    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte'
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
   ): boolean {
     return this.evaluate(() => {
       const numA = Number(a)
+
       const numB = Number(b)
 
       if (Number.isNaN(numA) || Number.isNaN(numB)) return false
@@ -42,15 +43,17 @@ export class SafeEvaluator {
   static compareDates(
     a: any,
     b: any,
-    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte'
+    operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
   ): boolean {
     return this.evaluate(() => {
       const dateA = new Date(a)
+
       const dateB = new Date(b)
 
       if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return false
 
       const timeA = dateA.getTime()
+
       const timeB = dateB.getTime()
 
       switch (operation) {
@@ -74,10 +77,11 @@ export class SafeEvaluator {
   static testRegex(
     pattern: string,
     flags: string | undefined,
-    input: string
+    input: string,
   ): boolean {
     return this.evaluate(() => {
       const regex = new RegExp(pattern, flags)
+
       return regex.test(input)
     }, false)
   }

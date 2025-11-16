@@ -12,15 +12,15 @@ describe('AfterFilter', () => {
       { date: new Date(now.getTime() + 1000) },
     ])
     expect(
-      filter.findMany({ where: { date: { after: new Date() } } }).data.length
+      filter.findMany({ where: { date: { after: new Date() } } }).data.length,
     ).toBe(2)
     expect(
       filter.findMany({
         where: { date: { after: new Date(now.getTime() + 1000) } },
-      }).data.length
+      }).data.length,
     ).toBe(1)
     expect(filter.findMany({ where: { date: { after: 0 } } }).data.length).toBe(
-      5
+      5,
     )
   })
   it('should filter numeric values correctly', () => {
@@ -33,14 +33,14 @@ describe('AfterFilter', () => {
       { date: now + 1000 },
     ])
     expect(
-      filter.findMany({ where: { date: { after: now } } }).data.length
+      filter.findMany({ where: { date: { after: now } } }).data.length,
     ).toBe(1)
     expect(
-      filter.findMany({ where: { date: { after: now + 1000 } } }).data.length
+      filter.findMany({ where: { date: { after: now + 1000 } } }).data.length,
     ).toBe(0)
   })
   it('should filter string values correctly', () => {
-    const now: number = new Date().getTime()
+    const now: number = Date.parse('2024-01-01T00:00:00.000Z')
     const filter = createFilter<{ date: string }>([
       { date: '2023-08-31' },
       { date: '2023-08-31' },
@@ -49,8 +49,8 @@ describe('AfterFilter', () => {
       { date: '2025-08-31' },
     ])
     expect(
-      filter.findMany({ where: { date: { after: now } } }).data.length
-    ).toBe(2)
+      filter.findMany({ where: { date: { after: now } } }).data.length,
+    ).toBe(3)
   })
   it('null, undefined y fechas inválidas', () => {
     const filter = createFilter<{ date: any }>([
@@ -59,11 +59,11 @@ describe('AfterFilter', () => {
       { date: 0 },
     ])
     expect(filter.findMany({ where: { date: { after: 0 } } }).data.length).toBe(
-      1
+      1,
     )
     expect(
       filter.findMany({ where: { date: { after: 'invalid-date' } } }).data
-        .length
+        .length,
     ).toBe(0)
   })
   it('findUnique', () => {

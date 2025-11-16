@@ -16,7 +16,9 @@ class DeepComparator {
       return false
 
     const aKeys = Object.keys(a)
+
     const bKeys = Object.keys(b)
+
     if (aKeys.length !== bKeys.length) return false
 
     for (const key of aKeys) {
@@ -24,6 +26,7 @@ class DeepComparator {
       if (!DeepComparator.compare((a as any)[key], (b as any)[key]))
         return false
     }
+
     return true
   }
 }
@@ -31,12 +34,14 @@ class DeepComparator {
 // Clase responsable solo de analizar la configuración del filtro
 class FilterConfigurationAnalyzer {
   public static hasKnownOperator(obj: any): boolean {
-    if (!ValidationUtils.validateObject(obj)) return false
-    return Object.keys(obj).some(
-      (k) =>
-        isKnownOperator(k) ||
-        (ValidationUtils.validateObject((obj as any)[k]) &&
-          FilterConfigurationAnalyzer.hasKnownOperator((obj as any)[k]))
+    return (
+      ValidationUtils.validateObject(obj) &&
+      Object.keys(obj).some(
+        (k) =>
+          isKnownOperator(k) ||
+          (ValidationUtils.validateObject((obj as any)[k]) &&
+            FilterConfigurationAnalyzer.hasKnownOperator((obj as any)[k])),
+      )
     )
   }
 
@@ -79,6 +84,7 @@ class FilterConfigurationAnalyzer {
     // Analizar filtros con una sola clave
     if (keys.length === 1) {
       const key = keys[0]
+
       const value = (filter as Record<string, any>)[key]
 
       if (key === 'not') {
@@ -99,9 +105,12 @@ class FilterConfigurationAnalyzer {
   } {
     if (ValidationUtils.validateObject(value)) {
       const innerKeys = Object.keys(value)
+
       if (innerKeys.length === 1) {
         const innerKey = innerKeys[0]
+
         const innerValue = (value as Record<string, any>)[innerKey]
+
         return {
           isEmptyFilter: false,
           isNegation: true,
@@ -134,6 +143,7 @@ export class SomeFilter implements EvaluateFilter {
   constructor(private filter: any) {
     const configuration =
       FilterConfigurationAnalyzer.analyzeConfiguration(filter)
+
     this.isEmptyFilter = configuration.isEmptyFilter
     this.isNegation = configuration.isNegation
     this.evaluator = configuration.evaluator
@@ -147,22 +157,23 @@ export class SomeFilter implements EvaluateFilter {
       return data.some(
         (item: any) =>
           ValidationUtils.validateNotNull(item) &&
-          ValidationUtils.validateObject(item)
+          ValidationUtils.validateObject(item),
       )
     }
 
     if (this.isNegation && this.evaluator) {
-      return data.some((item: any) => {
-        if (!ValidationUtils.validateNotNull(item)) return false
-        return !this.evaluator!.evaluate(item)
-      })
+      return data.some(
+        (item: any) =>
+          ValidationUtils.validateNotNull(item) &&
+          !this.evaluator!.evaluate(item),
+      )
     }
 
     if (this.evaluator) {
       return ArrayEvaluatorUtil.evaluateComplexFilter(
         data,
         this.evaluator,
-        'some'
+        'some',
       )
     }
 

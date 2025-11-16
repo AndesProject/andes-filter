@@ -5,6 +5,7 @@ export class GreaterThanOrEqualFilter implements EvaluateFilter {
   constructor(private value: any) {}
   public evaluate(data: any): boolean {
     if (isNil(this.value) || isNil(data)) return false
+
     return data >= this.value
   }
 }

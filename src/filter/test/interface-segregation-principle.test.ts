@@ -152,7 +152,7 @@ describe('Interface Segregation Principle (ISP)', () => {
       // Un componente que solo necesita comparaciones no depende de operadores de string
       function processComparisonData<T>(
         criteria: ComparisonFilterCriteria<T, keyof T>,
-        data: T[]
+        data: T[],
       ): T[] {
         const factory = new FilterFactory()
         const filter = factory.createComparisonFilter(criteria)
