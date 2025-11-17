@@ -29,13 +29,13 @@
     "scalable",
     "query-builder"
   ],
-  "homepage": "https://github.com/alfasync/alfasync#readme",
+  "homepage": "https://github.com/alfasync/filter#readme",
   "bugs": {
-    "url": "https://github.com/alfasync/alfasync/issues"
+    "url": "https://github.com/alfasync/filter/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alfasync/alfasync.git"
+    "url": "https://github.com/alfasync/filter.git"
   },
   "license": "CC-BY-NC-4.0",
   "author": "David Narvaez <dnarvaez@unimayor.edu.co>",
