@@ -1,6 +1,6 @@
 {
   "name": "@alfasync/filter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Advanced TypeScript filtering library with Prisma-like object-based syntax. Supports complex queries with logical operators (AND/OR/NOT), comparison operators, array operations, date filtering, pagination, sorting, and MCP integration. Type-safe, high-performance, and optimized for large datasets.",
   "keywords": [
