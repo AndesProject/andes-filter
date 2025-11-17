@@ -1,11 +1,11 @@
-# Deltabit Filter
+# Alfasync Filter
 
-[![codecov](https://codecov.io/github/deltabit/deltabit/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/deltabit/deltabit)
-[![codecov](https://codecov.io/github/deltabit/deltabit/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/deltabit/deltabit)
+[![codecov](https://codecov.io/github/alfasync/alfasync/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/alfasync)
+[![codecov](https://codecov.io/github/alfasync/alfasync/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/alfasync)
 
-## ¿Qué es deltabit Filter?
+## ¿Qué es alfasync Filter?
 
-**Deltabit Filter** es una librería de filtrado avanzada desarrollada en TypeScript
+**Alfasync Filter** es una librería de filtrado avanzada desarrollada en TypeScript
 que permite aplicar filtros complejos y condiciones a colecciones de datos de
 manera intuitiva y programática. Utiliza objetos para definir condiciones,
 permitiendo combinar operadores lógicos y relacionales para construir consultas
@@ -26,13 +26,13 @@ eficientes y escalables.
 ## Instalación
 
 ```bash
-npm install @deltabit/filter
+npm install @alfasync/filter
 ```
 
 ## Uso Básico
 
 ```typescript
-import { createFilter } from '@deltabit/filter'
+import { createFilter } from '@alfasync/filter'
 
 // Datos de ejemplo
 const users = [
@@ -511,12 +511,12 @@ const filterProducts = (
 
 ## URL Filter Service
 
-Deltabit Filter incluye un servicio para sincronizar filtros con parámetros de URL, ideal para aplicaciones web que necesitan mantener el estado de filtros en la URL.
+Alfasync Filter incluye un servicio para sincronizar filtros con parámetros de URL, ideal para aplicaciones web que necesitan mantener el estado de filtros en la URL.
 
 ### Ejemplo de Uso
 
 ```typescript
-import { createUrlFilterService } from '@deltabit/filter'
+import { createUrlFilterService } from '@alfasync/filter'
 
 // Configurar el servicio
 const urlFilter = createUrlFilterService({
@@ -562,7 +562,7 @@ unsubscribe()
 
 ## Integración MCP (Model Context Protocol)
 
-Deltabit Filter incluye un servidor MCP que expone las funcionalidades de filtrado como herramientas para clientes MCP compatibles como Cursor, Claude Desktop, entre otros.
+Alfasync Filter incluye un servidor MCP que expone las funcionalidades de filtrado como herramientas para clientes MCP compatibles como Cursor, Claude Desktop, entre otros.
 
 ### Instalación del Servidor MCP
 
@@ -573,7 +573,7 @@ El servidor MCP ya está incluido en el paquete. Solo necesitas tener Node.js >=
 #### Usando npx (recomendado)
 
 ```bash
-npx @deltabit/filter mcp
+npx @alfasync/filter mcp
 ```
 
 #### Usando npm
@@ -586,10 +586,10 @@ npm run mcp:server
 
 El servidor MCP expone las siguientes herramientas:
 
-- **`deltabit.findMany`**: Filtra una colección y retorna datos con paginación
-- **`deltabit.findUnique`**: Encuentra un único elemento que cumpla la consulta
-- **`deltabit.listOperators`**: Lista todos los operadores disponibles
-- **`deltabit.validateQuery`**: Valida una query antes de ejecutarla
+- **`alfasync.findMany`**: Filtra una colección y retorna datos con paginación
+- **`alfasync.findUnique`**: Encuentra un único elemento que cumpla la consulta
+- **`alfasync.listOperators`**: Lista todos los operadores disponibles
+- **`alfasync.validateQuery`**: Valida una query antes de ejecutarla
 
 Para más detalles sobre la configuración y uso del servidor MCP, consulta el [README de MCP](./mcp/README.md).
 
@@ -597,10 +597,10 @@ Para más detalles sobre la configuración y uso del servidor MCP, consulta el [
 
 ### Filter Parser
 
-Deltabit Filter incluye utilidades para convertir filtros a/desde parámetros de URL:
+Alfasync Filter incluye utilidades para convertir filtros a/desde parámetros de URL:
 
 ```typescript
-import { queryFilterToUrlParams, urlParamsToQueryFilter } from '@deltabit/filter'
+import { queryFilterToUrlParams, urlParamsToQueryFilter } from '@alfasync/filter'
 
 // Convertir filtro a parámetro de URL
 const filter = {

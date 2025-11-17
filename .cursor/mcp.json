@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "deltabit": {
+    "alfasync": {
       "command": "npm",
       "args": ["run", "mcp:server"],
       "cwd": "."

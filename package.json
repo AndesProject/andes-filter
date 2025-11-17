@@ -1,5 +1,5 @@
 {
-  "name": "@deltabit/filter",
+  "name": "@alfasync/filter",
   "version": "0.1.0",
   "private": false,
   "description": "Advanced TypeScript filtering library with Prisma-like object-based syntax. Supports complex queries with logical operators (AND/OR/NOT), comparison operators, array operations, date filtering, pagination, sorting, and MCP integration. Type-safe, high-performance, and optimized for large datasets.",
@@ -29,13 +29,13 @@
     "scalable",
     "query-builder"
   ],
-  "homepage": "https://github.com/deltabit/deltabit#readme",
+  "homepage": "https://github.com/alfasync/alfasync#readme",
   "bugs": {
-    "url": "https://github.com/deltabit/deltabit/issues"
+    "url": "https://github.com/alfasync/alfasync/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/deltabit/deltabit.git"
+    "url": "https://github.com/alfasync/alfasync.git"
   },
   "license": "CC-BY-NC-4.0",
   "author": "David Narvaez <dnarvaez@unimayor.edu.co>",

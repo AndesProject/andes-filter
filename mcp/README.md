@@ -1,10 +1,10 @@
-# Servidor MCP para Deltabit Filter
+# Servidor MCP para Alfasync Filter
 
-Este servidor MCP (Model Context Protocol) expone las funcionalidades de Deltabit Filter como herramientas que pueden ser utilizadas por clientes MCP compatibles como Cursor, Claude Desktop, u otros.
+Este servidor MCP (Model Context Protocol) expone las funcionalidades de Alfasync Filter como herramientas que pueden ser utilizadas por clientes MCP compatibles como Cursor, Claude Desktop, u otros.
 
 ## Instalación
 
-El servidor MCP ya está incluido en el paquete `@deltabit/filter`. Solo necesitas tener Node.js >= 22.0.0 instalado.
+El servidor MCP ya está incluido en el paquete `@alfasync/filter`. Solo necesitas tener Node.js >= 22.0.0 instalado.
 
 ## Ejecución
 
@@ -13,7 +13,7 @@ Para ejecutar el servidor MCP, puedes usar cualquiera de estos métodos:
 ### Usando npx (recomendado, similar a shadcn):
 
 ```bash
-npx @deltabit/filter mcp
+npx @alfasync/filter mcp
 ```
 
 ### Usando npm:
@@ -26,13 +26,13 @@ npm run mcp:server
 
 El servidor MCP expone las siguientes herramientas:
 
-### 1. `deltabit.findMany`
+### 1. `alfasync.findMany`
 
-Filtra una colección usando la sintaxis de deltabit y retorna datos y paginación.
+Filtra una colección usando la sintaxis de alfasync y retorna datos y paginación.
 
 **Parámetros:**
 - `data` (array, requerido): Arreglo de objetos/valores a filtrar
-- `query` (object, requerido): Objeto de consulta de deltabit (where, pagination, orderBy, distinct)
+- `query` (object, requerido): Objeto de consulta de alfasync (where, pagination, orderBy, distinct)
 
 **Ejemplo:**
 ```json
@@ -54,34 +54,34 @@ Filtra una colección usando la sintaxis de deltabit y retorna datos y paginaci�
 }
 ```
 
-### 2. `deltabit.findUnique`
+### 2. `alfasync.findUnique`
 
-Encuentra un único elemento que cumpla la consulta de deltabit o null.
+Encuentra un único elemento que cumpla la consulta de alfasync o null.
 
 **Parámetros:**
 - `data` (array, requerido): Arreglo de objetos/valores a evaluar
-- `query` (object, requerido): Objeto de consulta de deltabit
+- `query` (object, requerido): Objeto de consulta de alfasync
 
-### 3. `deltabit.listOperators`
+### 3. `alfasync.listOperators`
 
-Lista todos los operadores disponibles en deltabit con su categoría.
+Lista todos los operadores disponibles en alfasync con su categoría.
 
 **Parámetros:** Ninguno
 
 **Retorna:** Lista de operadores agrupados por categoría (Comparación, Numérico, String, Array, Lógico, Utilidad)
 
-### 4. `deltabit.validateQuery`
+### 4. `alfasync.validateQuery`
 
-Valida una query de deltabit antes de ejecutarla, retornando errores si los hay.
+Valida una query de alfasync antes de ejecutarla, retornando errores si los hay.
 
 **Parámetros:**
-- `query` (object, requerido): Objeto de consulta de deltabit a validar
+- `query` (object, requerido): Objeto de consulta de alfasync a validar
 
 **Retorna:** Objeto con `valid` (boolean) y `errors` (array de strings)
 
-### 5. `deltabit.getDocumentation`
+### 5. `alfasync.getDocumentation`
 
-Obtiene documentación detallada de un operador específico de deltabit.
+Obtiene documentación detallada de un operador específico de alfasync.
 
 **Parámetros:**
 - `operator` (string, opcional): Nombre del operador del cual obtener documentación. Si no se proporciona, retorna documentación de todos los operadores.
@@ -100,18 +100,18 @@ Para usar este servidor MCP en Cursor, agrega la siguiente configuración en tu 
 ```json
 {
   "mcpServers": {
-    "deltabit": {
+    "alfasync": {
       "command": "npx",
-      "args": ["-y", "@deltabit/filter", "filter", "mcp"],
+      "args": ["-y", "@alfasync/filter", "filter", "mcp"],
       "cwd": "."
     }
   }
 }
 ```
 
-Esta configuración usa `npx` para ejecutar el binario `filter` del paquete `@deltabit/filter` con el comando `mcp`.
+Esta configuración usa `npx` para ejecutar el binario `filter` del paquete `@alfasync/filter` con el comando `mcp`.
 
-**Nota:** Para scoped packages como `@deltabit/filter`, npx requiere especificar el nombre del binario (`filter`) explícitamente. El comando completo es: `npx @deltabit/filter filter mcp`.
+**Nota:** Para scoped packages como `@alfasync/filter`, npx requiere especificar el nombre del binario (`filter`) explícitamente. El comando completo es: `npx @alfasync/filter filter mcp`.
 
 ### Alternativas
 
@@ -120,10 +120,10 @@ Si prefieres usar npm directamente:
 ```json
 {
   "mcpServers": {
-    "deltabit": {
+    "alfasync": {
       "command": "npm",
       "args": ["run", "mcp:server"],
-      "cwd": "/ruta/a/deltabit"
+      "cwd": "/ruta/a/alfasync"
     }
   }
 }
@@ -134,10 +134,10 @@ O si quieres usar tsx directamente:
 ```json
 {
   "mcpServers": {
-    "deltabit": {
+    "alfasync": {
       "command": "tsx",
       "args": ["mcp/server.ts"],
-      "cwd": "/ruta/a/deltabit"
+      "cwd": "/ruta/a/alfasync"
     }
   }
 }
@@ -145,7 +145,7 @@ O si quieres usar tsx directamente:
 
 ## Operadores Disponibles
 
-El servidor soporta todos los operadores de Deltabit Filter:
+El servidor soporta todos los operadores de Alfasync Filter:
 
 ### Comparación
 - `equals`: Igual a un valor específico
@@ -179,7 +179,7 @@ El servidor soporta todos los operadores de Deltabit Filter:
 - `isNull`: Verificar si un campo es null
 - `distinct`: Verificar si los valores son distintos
 
-Para más detalles sobre cada operador, usa la herramienta `deltabit.getDocumentation`.
+Para más detalles sobre cada operador, usa la herramienta `alfasync.getDocumentation`.
 
 ## Desarrollo
 

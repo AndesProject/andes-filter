@@ -12,7 +12,7 @@ const __dirname = dirname(__filename)
 const require = createRequire(import.meta.url)
 
 // Cuando npx ejecuta un binario de un scoped package, puede pasar el nombre del binario como argumento
-// Ejemplo: npx @deltabit/filter filter mcp -> argv[2] = "filter", argv[3] = "mcp"
+// Ejemplo: npx @alfasync/filter filter mcp -> argv[2] = "filter", argv[3] = "mcp"
 // Necesitamos detectar esto y usar el argumento correcto
 let command = process.argv[2]
 
@@ -42,7 +42,7 @@ if (command === 'mcp') {
 
   child.on('error', (error) => {
     // eslint-disable-next-line no-console
-    console.error('[deltabit] Error al ejecutar el servidor MCP:', error)
+    console.error('[alfasync] Error al ejecutar el servidor MCP:', error)
     process.exit(1)
   })
 
@@ -51,12 +51,12 @@ if (command === 'mcp') {
   })
 } else {
   // eslint-disable-next-line no-console
-  console.log('Uso: npx @deltabit/filter <comando>')
+  console.log('Uso: npx @alfasync/filter <comando>')
   // eslint-disable-next-line no-console
   console.log('')
   // eslint-disable-next-line no-console
   console.log('Comandos disponibles:')
   // eslint-disable-next-line no-console
-  console.log('  mcp    Ejecuta el servidor MCP para deltabit')
+  console.log('  mcp    Ejecuta el servidor MCP para alfasync')
   process.exit(1)
 }
