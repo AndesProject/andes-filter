@@ -2,7 +2,7 @@
   "name": "@andes-project/filter",
   "version": "1.0.3",
   "private": false,
-  "description": "A powerful TypeScript filtering library for complex data queries with intuitive object-based syntax, supporting logical operators, pagination, and high performance.",
+  "description": "Advanced TypeScript filtering library with Prisma-like object-based syntax. Supports complex queries with logical operators (AND/OR/NOT), comparison operators, array operations, date filtering, pagination, sorting, and MCP integration. Type-safe, high-performance, and optimized for large datasets.",
   "keywords": [
     "typescript",
     "filter",
@@ -10,10 +10,24 @@
     "data-filtering",
     "search",
     "pagination",
+    "sorting",
     "logical-operators",
+    "comparison-operators",
+    "array-operations",
+    "date-filtering",
+    "type-safe",
+    "prisma-like",
+    "object-based-syntax",
+    "mcp",
+    "model-context-protocol",
+    "data-processing",
+    "collection-filtering",
     "frontend",
+    "backend",
     "javascript",
-    "data-processing"
+    "high-performance",
+    "scalable",
+    "query-builder"
   ],
   "homepage": "https://github.com/AndesProject/andes-filter#readme",
   "bugs": {
@@ -23,7 +37,7 @@
     "type": "git",
     "url": "https://github.com/AndesProject/andes-filter.git"
   },
-  "license": "ISC",
+  "license": "CC-BY-NC-4.0",
   "author": "David Narvaez <dnarvaez@unimayor.edu.co>",
   "exports": {
     ".": {
@@ -45,6 +59,7 @@
   ],
   "scripts": {
     "build": "tsc --emitDeclarationOnly --project tsconfig.json && vite build",
+    "commitlint": "commitlint --edit",
     "dev": "vite",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
@@ -62,6 +77,8 @@
     "yeoman-generator": "7.5.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@types/node": "^20.14.5",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
@@ -83,7 +100,7 @@
     "vitest": "^3.1.1"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.11.1"
   },
   "publishConfig": {
     "access": "public"

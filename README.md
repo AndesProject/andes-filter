@@ -13,23 +13,26 @@ eficientes y escalables.
 
 ### Características Principales
 
-- 🎯 **Filtrado Intuitivo**: Define filtros complejos usando objetos
+- 🎯 **Filtrado Intuitivo**: Define filtros complejos usando objetos con sintaxis similar a Prisma
 - 🔗 **Operadores Lógicos**: Combina múltiples condiciones con AND, OR, NOT
 - 📊 **Escalabilidad**: Diseñado para manejar grandes volúmenes de datos
 - 🚀 **Alto Rendimiento**: Optimizado para consultas eficientes
 - 🛡️ **Type Safety**: Desarrollado en TypeScript para máxima seguridad de tipos
 - 🔧 **Fácil de Usar**: Sintaxis clara y consistente
+- 🌐 **URL Filter Service**: Sincroniza filtros con parámetros de URL
+- 🤖 **Integración MCP**: Servidor MCP para usar en clientes compatibles como Cursor
+- 🛠️ **CLI**: Herramienta de línea de comandos para ejecutar el servidor MCP
 
 ## Instalación
 
 ```bash
-npm install @andes/filter
+npm install @andes-project/filter
 ```
 
 ## Uso Básico
 
 ```typescript
-import { createFilter } from '@andes/filter'
+import { createFilter } from '@andes-project/filter'
 
 // Datos de ejemplo
 const users = [
@@ -506,6 +509,115 @@ const filterProducts = (
 - **TypeScript**: >= 5.4.5
 - **Navegadores**: Compatible con ES6+
 
+## URL Filter Service
+
+Andes Filter incluye un servicio para sincronizar filtros con parámetros de URL, ideal para aplicaciones web que necesitan mantener el estado de filtros en la URL.
+
+### Ejemplo de Uso
+
+```typescript
+import { createUrlFilterService } from '@andes-project/filter'
+
+// Configurar el servicio
+const urlFilter = createUrlFilterService({
+  paramKey: 'filter', // Nombre del parámetro en la URL (opcional, por defecto 'filter')
+  getUrl: () => window.location.href,
+  setUrl: (url: string) => window.history.pushState({}, '', url),
+})
+
+// Obtener el filtro actual desde la URL
+const currentFilter = urlFilter.getFilter()
+
+// Establecer un nuevo filtro (actualiza la URL)
+urlFilter.setFilter({
+  where: {
+    active: { equals: true },
+    age: { gt: 25 },
+  },
+})
+
+// Actualizar el filtro de forma incremental
+urlFilter.updateFilter((prev) => ({
+  ...prev,
+  where: {
+    ...prev.where,
+    name: { contains: 'Alice' },
+  },
+}))
+
+// Limpiar el filtro
+urlFilter.clearFilter()
+
+// Sincronizar desde la URL (útil cuando cambia la URL manualmente)
+urlFilter.syncFromUrl()
+
+// Suscribirse a cambios en el filtro
+const unsubscribe = urlFilter.subscribe((query) => {
+  console.log('Filtro actualizado:', query)
+})
+
+// Cancelar suscripción
+unsubscribe()
+```
+
+## Integración MCP (Model Context Protocol)
+
+Andes Filter incluye un servidor MCP que expone las funcionalidades de filtrado como herramientas para clientes MCP compatibles como Cursor, Claude Desktop, entre otros.
+
+### Instalación del Servidor MCP
+
+El servidor MCP ya está incluido en el paquete. Solo necesitas tener Node.js >= 22.0.0 instalado.
+
+### Ejecución
+
+#### Usando npx (recomendado)
+
+```bash
+npx @andes-project/filter mcp
+```
+
+#### Usando npm
+
+```bash
+npm run mcp:server
+```
+
+### Herramientas Disponibles
+
+El servidor MCP expone las siguientes herramientas:
+
+- **`andes-filter.findMany`**: Filtra una colección y retorna datos con paginación
+- **`andes-filter.findUnique`**: Encuentra un único elemento que cumpla la consulta
+- **`andes-filter.listOperators`**: Lista todos los operadores disponibles
+- **`andes-filter.validateQuery`**: Valida una query antes de ejecutarla
+
+Para más detalles sobre la configuración y uso del servidor MCP, consulta el [README de MCP](./mcp/README.md).
+
+## Utilidades
+
+### Filter Parser
+
+Andes Filter incluye utilidades para convertir filtros a/desde parámetros de URL:
+
+```typescript
+import { queryFilterToUrlParams, urlParamsToQueryFilter } from '@andes-project/filter'
+
+// Convertir filtro a parámetro de URL
+const filter = {
+  where: {
+    active: { equals: true },
+    age: { gt: 25 },
+  },
+}
+
+const encoded = queryFilterToUrlParams(filter)
+// Resultado: string codificado en base64
+
+// Convertir parámetro de URL a filtro
+const decoded = urlParamsToQueryFilter(encoded)
+// Resultado: FilterQuery restaurado
+```
+
 ## Contribuir
 
 1. Fork el proyecto
@@ -516,5 +628,5 @@ const filterProducts = (
 
 ## Licencia
 
-Este proyecto está bajo la Licencia ISC. Ver el archivo `LICENSE` para más
+Este proyecto está bajo la Licencia CC-BY-NC-4.0. Ver el archivo `LICENSE` para más
 detalles.
