@@ -1,23 +1,236 @@
 name: Publish to npm
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      is_prerelease:
+        description: 'Is this a pre-release version?'
+        required: false
+        default: false
+        type: boolean
+      prerelease_type:
+        description: 'Pre-release type (beta, alpha, rc)'
+        required: false
+        default: 'beta'
+        type: choice
+        options:
+          - beta
+          - alpha
+          - rc
+      prerelease_number:
+        description: 'Pre-release number (leave empty to auto-increment)'
+        required: false
+        default: ''
+        type: string
+      branch:
+        description: 'Branch to publish from (default: auto-detect)'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org/'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm test
-      - run: npm publish --access public
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Detect default branch
+        id: branch
+        run: |
+          if [ -n "${{ github.event.inputs.branch }}" ]; then
+            BRANCH="${{ github.event.inputs.branch }}"
+          else
+            BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "")
+            if [ -z "$BRANCH" ]; then
+              BRANCH=$(git branch -r | grep 'HEAD' | sed 's/.*\///' || echo "")
+            fi
+            if [ -z "$BRANCH" ]; then
+              BRANCH=$(git remote show origin | grep 'HEAD branch' | sed 's/.*: //' || echo "")
+            fi
+            if [ -z "$BRANCH" ]; then
+              BRANCH="master"
+            fi
+          fi
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "Using branch: $BRANCH"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.1'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Build package
+        run: npm run build
+
+      - name: Determine version bump
+        id: version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          BUMP_TYPE="${{ github.event.inputs.version }}"
+          IS_PRERELEASE="${{ github.event.inputs.is_prerelease }}"
+          PRERELEASE_TYPE="${{ github.event.inputs.prerelease_type }}"
+          PRERELEASE_NUMBER="${{ github.event.inputs.prerelease_number }}"
+
+          # Extract base version parts
+          BASE_VERSION="${CURRENT_VERSION%%-*}"
+          IFS='.' read -r -a VERSION_PARTS <<< "$BASE_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+
+          # Calculate base version
+          case $BUMP_TYPE in
+            major)
+              NEW_MAJOR=$((MAJOR + 1))
+              BASE_NEW_VERSION="$NEW_MAJOR.0.0"
+              ;;
+            minor)
+              NEW_MINOR=$((MINOR + 1))
+              BASE_NEW_VERSION="$MAJOR.$NEW_MINOR.0"
+              ;;
+            patch)
+              NEW_PATCH=$((PATCH + 1))
+              BASE_NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+              ;;
+          esac
+
+          # Handle pre-release versions
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            if [ -z "$PRERELEASE_NUMBER" ]; then
+              # Auto-increment: find existing pre-release versions
+              EXISTING_PRERELEASES=$(npm view "@alfasync/filter@$BASE_NEW_VERSION-$PRERELEASE_TYPE.*" versions --json 2>/dev/null || echo "[]")
+              if [ "$EXISTING_PRERELEASES" != "[]" ] && [ -n "$EXISTING_PRERELEASES" ]; then
+                # Extract highest number
+                HIGHEST=$(echo "$EXISTING_PRERELEASES" | grep -o "$PRERELEASE_TYPE\.[0-9]*" | sed "s/$PRERELEASE_TYPE\.//" | sort -n | tail -1)
+                PRERELEASE_NUMBER=$((HIGHEST + 1))
+              else
+                PRERELEASE_NUMBER=1
+              fi
+            fi
+            NEW_VERSION="$BASE_NEW_VERSION-$PRERELEASE_TYPE.$PRERELEASE_NUMBER"
+            echo "npm_tag=$PRERELEASE_TYPE" >> $GITHUB_OUTPUT
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            NEW_VERSION="$BASE_NEW_VERSION"
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Bumping version from $CURRENT_VERSION to $NEW_VERSION"
+
+      - name: Update version in package.json
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+          npm pkg set version="$NEW_VERSION"
+          echo "Updated to version: $NEW_VERSION"
+
+      - name: Extract version from release tag
+        if: github.event_name == 'release'
+        id: release_version
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          VERSION="${TAG_NAME#v}"
+          IS_PRERELEASE="${{ github.event.release.prerelease }}"
+
+          # Detect pre-release type from version string
+          if [[ "$VERSION" =~ -(beta|alpha|rc)\. ]]; then
+            PRERELEASE_TYPE=$(echo "$VERSION" | grep -oE '-(beta|alpha|rc)\.' | sed 's/-//; s/\.//')
+            echo "npm_tag=$PRERELEASE_TYPE" >> $GITHUB_OUTPUT
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION from tag: $TAG_NAME (pre-release: $IS_PRERELEASE)"
+
+      - name: Update version from release tag
+        if: github.event_name == 'release'
+        run: |
+          npm version ${{ steps.release_version.outputs.version }} --no-git-tag-version
+
+      - name: Publish to npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          NPM_TAG="${{ steps.version.outputs.npm_tag || steps.release_version.outputs.npm_tag || 'latest' }}"
+          echo "Publishing to npm with tag: $NPM_TAG"
+          npm publish --access public --tag "$NPM_TAG"
+
+      - name: Create git tag and push
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          BRANCH="${{ steps.branch.outputs.branch }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $VERSION [skip ci]" || exit 0
+          git tag "v$VERSION"
+          git push origin HEAD:$BRANCH --tags
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          BRANCH="${{ steps.branch.outputs.branch }}"
+          IS_PRERELEASE="${{ steps.version.outputs.is_prerelease }}"
+          NPM_TAG="${{ steps.version.outputs.npm_tag || 'latest' }}"
+
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            INSTALL_CMD="npm install @alfasync/filter@$NPM_TAG"
+            RELEASE_NAME="Pre-release $TAG ($NPM_TAG)"
+          else
+            INSTALL_CMD="npm install @alfasync/filter@$VERSION"
+            RELEASE_NAME="Release $TAG"
+          fi
+
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/releases \
+            -d "{
+              \"tag_name\": \"$TAG\",
+              \"name\": \"$RELEASE_NAME\",
+              \"body\": \"## Changes\\n\\nSee [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/$BRANCH/CHANGELOG.md) for details.\\n\\n## Installation\\n\\n\\\`\\\`\\\`bash\\n$INSTALL_CMD\\n\\\`\\\`\\\`\",
+              \"draft\": false,
+              \"prerelease\": $IS_PRERELEASE
+            }"
