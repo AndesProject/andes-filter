@@ -1,7 +1,7 @@
 # Alfasync Filter
 
-[![codecov](https://codecov.io/github/alfasync/alfasync/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/alfasync)
-[![codecov](https://codecov.io/github/alfasync/alfasync/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/alfasync)
+[![codecov](https://codecov.io/github/alfasync/filter/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/filter)
+[![codecov](https://codecov.io/github/alfasync/filter/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/alfasync/filter)
 
 ## ¿Qué es alfasync Filter?
 
