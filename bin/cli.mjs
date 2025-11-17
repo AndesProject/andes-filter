@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { spawn } from 'child_process'
+import { existsSync } from 'fs'
 import { createRequire } from 'module'
-import { dirname, join, resolve } from 'path'
+import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -24,20 +25,43 @@ if (command === 'filter' && process.argv[3]) {
 if (command === 'mcp') {
   const serverPath = join(__dirname, '../mcp/server.ts')
 
-  // Intentar encontrar tsx en las dependencias del paquete
-  let tsxPath
+  const packageNodeModules = join(__dirname, '../node_modules')
 
-  try {
-    // tsx tiene su binario en dist/cli.mjs
-    tsxPath = require.resolve('tsx/dist/cli.mjs')
-  } catch {
-    // Si no se encuentra, intentar con la ruta relativa a node_modules
-    tsxPath = resolve(__dirname, '../node_modules/tsx/dist/cli.mjs')
+  const packageTsxPath = join(packageNodeModules, 'tsx/dist/cli.mjs')
+
+  // Intentar múltiples estrategias para encontrar tsx
+  let tsxCommand
+
+  let tsxArgs
+
+  // Estrategia 1: Intentar usar tsx desde node_modules del paquete
+  if (existsSync(packageTsxPath)) {
+    tsxCommand = 'node'
+    tsxArgs = [packageTsxPath, serverPath]
+  } else {
+    // Estrategia 2: Intentar resolver tsx usando require.resolve
+    try {
+      const resolvedTsx = require.resolve('tsx/dist/cli.mjs', {
+        paths: [packageNodeModules, __dirname],
+      })
+
+      tsxCommand = 'node'
+      tsxArgs = [resolvedTsx, serverPath]
+    } catch {
+      // Estrategia 3: Usar npx tsx como último recurso
+      tsxCommand = 'npx'
+      tsxArgs = ['-y', 'tsx', serverPath]
+    }
   }
 
-  const child = spawn('node', [tsxPath, serverPath], {
+  const child = spawn(tsxCommand, tsxArgs, {
     stdio: 'inherit',
     shell: false,
+    env: {
+      ...process.env,
+      // Asegurar que node_modules del paquete esté en el path
+      NODE_PATH: packageNodeModules,
+    },
   })
 
   child.on('error', (error) => {

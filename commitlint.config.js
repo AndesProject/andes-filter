@@ -37,5 +37,7 @@ module.exports = {
     'subject-empty': [2, 'never'],
     // Type debe estar en minúsculas
     'type-case': [2, 'always', 'lower-case'],
+    // Longitud máxima de líneas del cuerpo (desactivado para permitir líneas más largas)
+    'body-max-line-length': [0],
   },
 }
