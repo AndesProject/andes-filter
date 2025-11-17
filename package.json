@@ -1,6 +1,6 @@
 {
-  "name": "@andes-project/filter",
-  "version": "1.0.3",
+  "name": "@deltabit/filter",
+  "version": "0.1.0",
   "private": false,
   "description": "Advanced TypeScript filtering library with Prisma-like object-based syntax. Supports complex queries with logical operators (AND/OR/NOT), comparison operators, array operations, date filtering, pagination, sorting, and MCP integration. Type-safe, high-performance, and optimized for large datasets.",
   "keywords": [
@@ -29,13 +29,13 @@
     "scalable",
     "query-builder"
   ],
-  "homepage": "https://github.com/AndesProject/andes-filter#readme",
+  "homepage": "https://github.com/deltabit/deltabit#readme",
   "bugs": {
-    "url": "https://github.com/AndesProject/andes-filter/issues"
+    "url": "https://github.com/deltabit/deltabit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AndesProject/andes-filter.git"
+    "url": "https://github.com/deltabit/deltabit.git"
   },
   "license": "CC-BY-NC-4.0",
   "author": "David Narvaez <dnarvaez@unimayor.edu.co>",

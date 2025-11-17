@@ -1,11 +1,11 @@
-# Andes Filter
+# Deltabit Filter
 
-[![codecov](https://codecov.io/github/AndesProject/andes-filter/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/AndesProject/andes-filter)
-[![codecov](https://codecov.io/github/AndesProject/andes-filter/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/AndesProject/andes-filter)
+[![codecov](https://codecov.io/github/deltabit/deltabit/branch/master/graph/badge.svg?token=KT8REBY8K1)](https://codecov.io/github/deltabit/deltabit)
+[![codecov](https://codecov.io/github/deltabit/deltabit/branch/master/graphs/sunburst.svg?token=KT8REBY8K1)](https://codecov.io/github/deltabit/deltabit)
 
-## ¿Qué es Andes Filter?
+## ¿Qué es deltabit Filter?
 
-**Andes Filter** es una librería de filtrado avanzada desarrollada en TypeScript
+**Deltabit Filter** es una librería de filtrado avanzada desarrollada en TypeScript
 que permite aplicar filtros complejos y condiciones a colecciones de datos de
 manera intuitiva y programática. Utiliza objetos para definir condiciones,
 permitiendo combinar operadores lógicos y relacionales para construir consultas
@@ -26,13 +26,13 @@ eficientes y escalables.
 ## Instalación
 
 ```bash
-npm install @andes-project/filter
+npm install @deltabit/filter
 ```
 
 ## Uso Básico
 
 ```typescript
-import { createFilter } from '@andes-project/filter'
+import { createFilter } from '@deltabit/filter'
 
 // Datos de ejemplo
 const users = [
@@ -511,12 +511,12 @@ const filterProducts = (
 
 ## URL Filter Service
 
-Andes Filter incluye un servicio para sincronizar filtros con parámetros de URL, ideal para aplicaciones web que necesitan mantener el estado de filtros en la URL.
+Deltabit Filter incluye un servicio para sincronizar filtros con parámetros de URL, ideal para aplicaciones web que necesitan mantener el estado de filtros en la URL.
 
 ### Ejemplo de Uso
 
 ```typescript
-import { createUrlFilterService } from '@andes-project/filter'
+import { createUrlFilterService } from '@deltabit/filter'
 
 // Configurar el servicio
 const urlFilter = createUrlFilterService({
@@ -562,7 +562,7 @@ unsubscribe()
 
 ## Integración MCP (Model Context Protocol)
 
-Andes Filter incluye un servidor MCP que expone las funcionalidades de filtrado como herramientas para clientes MCP compatibles como Cursor, Claude Desktop, entre otros.
+Deltabit Filter incluye un servidor MCP que expone las funcionalidades de filtrado como herramientas para clientes MCP compatibles como Cursor, Claude Desktop, entre otros.
 
 ### Instalación del Servidor MCP
 
@@ -573,7 +573,7 @@ El servidor MCP ya está incluido en el paquete. Solo necesitas tener Node.js >=
 #### Usando npx (recomendado)
 
 ```bash
-npx @andes-project/filter mcp
+npx @deltabit/filter mcp
 ```
 
 #### Usando npm
@@ -586,10 +586,10 @@ npm run mcp:server
 
 El servidor MCP expone las siguientes herramientas:
 
-- **`andes-filter.findMany`**: Filtra una colección y retorna datos con paginación
-- **`andes-filter.findUnique`**: Encuentra un único elemento que cumpla la consulta
-- **`andes-filter.listOperators`**: Lista todos los operadores disponibles
-- **`andes-filter.validateQuery`**: Valida una query antes de ejecutarla
+- **`deltabit.findMany`**: Filtra una colección y retorna datos con paginación
+- **`deltabit.findUnique`**: Encuentra un único elemento que cumpla la consulta
+- **`deltabit.listOperators`**: Lista todos los operadores disponibles
+- **`deltabit.validateQuery`**: Valida una query antes de ejecutarla
 
 Para más detalles sobre la configuración y uso del servidor MCP, consulta el [README de MCP](./mcp/README.md).
 
@@ -597,10 +597,10 @@ Para más detalles sobre la configuración y uso del servidor MCP, consulta el [
 
 ### Filter Parser
 
-Andes Filter incluye utilidades para convertir filtros a/desde parámetros de URL:
+Deltabit Filter incluye utilidades para convertir filtros a/desde parámetros de URL:
 
 ```typescript
-import { queryFilterToUrlParams, urlParamsToQueryFilter } from '@andes-project/filter'
+import { queryFilterToUrlParams, urlParamsToQueryFilter } from '@deltabit/filter'
 
 // Convertir filtro a parámetro de URL
 const filter = {

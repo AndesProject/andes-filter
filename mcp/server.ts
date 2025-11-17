@@ -229,7 +229,7 @@ function validateQuery(query: unknown): {
 async function main(): Promise<void> {
   const server = new Server(
     {
-      name: 'andes-filter-mcp',
+      name: 'deltabit-mcp',
       version: packageJson.version || '0.0.0',
     },
     {
@@ -241,9 +241,9 @@ async function main(): Promise<void> {
 
   const tools = [
     {
-      name: 'andes-filter.findMany',
+      name: 'deltabit.findMany',
       description:
-        'Filtra una colección usando la sintaxis de andes-filter y retorna datos y paginación.',
+        'Filtra una colección usando la sintaxis de deltabit y retorna datos y paginación.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -255,7 +255,7 @@ async function main(): Promise<void> {
           },
           query: {
             description:
-              'Objeto de consulta de andes-filter (where, pagination, orderBy, distinct).',
+              'Objeto de consulta de deltabit (where, pagination, orderBy, distinct).',
             type: 'object',
           },
         },
@@ -264,9 +264,9 @@ async function main(): Promise<void> {
       },
     },
     {
-      name: 'andes-filter.findUnique',
+      name: 'deltabit.findUnique',
       description:
-        'Encuentra un único elemento que cumpla la consulta de andes-filter o null.',
+        'Encuentra un único elemento que cumpla la consulta de deltabit o null.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -277,7 +277,7 @@ async function main(): Promise<void> {
             items: {},
           },
           query: {
-            description: 'Objeto de consulta de andes-filter.',
+            description: 'Objeto de consulta de deltabit.',
             type: 'object',
           },
         },
@@ -286,9 +286,9 @@ async function main(): Promise<void> {
       },
     },
     {
-      name: 'andes-filter.listOperators',
+      name: 'deltabit.listOperators',
       description:
-        'Lista todos los operadores disponibles en andes-filter con su categoría.',
+        'Lista todos los operadores disponibles en deltabit con su categoría.',
       inputSchema: {
         type: 'object',
         properties: {},
@@ -296,14 +296,14 @@ async function main(): Promise<void> {
       },
     },
     {
-      name: 'andes-filter.validateQuery',
+      name: 'deltabit.validateQuery',
       description:
-        'Valida una query de andes-filter antes de ejecutarla, retornando errores si los hay.',
+        'Valida una query de deltabit antes de ejecutarla, retornando errores si los hay.',
       inputSchema: {
         type: 'object',
         properties: {
           query: {
-            description: 'Objeto de consulta de andes-filter a validar.',
+            description: 'Objeto de consulta de deltabit a validar.',
             type: 'object',
           },
         },
@@ -312,9 +312,9 @@ async function main(): Promise<void> {
       },
     },
     {
-      name: 'andes-filter.getDocumentation',
+      name: 'deltabit.getDocumentation',
       description:
-        'Obtiene documentación detallada de un operador específico de andes-filter.',
+        'Obtiene documentación detallada de un operador específico de deltabit.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -340,7 +340,7 @@ async function main(): Promise<void> {
 
       try {
         switch (name) {
-          case 'andes-filter.findMany': {
+          case 'deltabit.findMany': {
             if (!args || typeof args !== 'object') {
               throw new Error('Los argumentos deben ser un objeto')
             }
@@ -366,7 +366,7 @@ async function main(): Promise<void> {
             }
           }
 
-          case 'andes-filter.findUnique': {
+          case 'deltabit.findUnique': {
             if (!args || typeof args !== 'object') {
               throw new Error('Los argumentos deben ser un objeto')
             }
@@ -395,7 +395,7 @@ async function main(): Promise<void> {
             }
           }
 
-          case 'andes-filter.listOperators': {
+          case 'deltabit.listOperators': {
             const operators = getKnownOperators()
 
             const categorized = operators.reduce(
@@ -439,7 +439,7 @@ async function main(): Promise<void> {
             }
           }
 
-          case 'andes-filter.validateQuery': {
+          case 'deltabit.validateQuery': {
             if (!args || typeof args !== 'object') {
               throw new Error('Los argumentos deben ser un objeto')
             }
@@ -458,7 +458,7 @@ async function main(): Promise<void> {
             }
           }
 
-          case 'andes-filter.getDocumentation': {
+          case 'deltabit.getDocumentation': {
             if (!args || typeof args !== 'object') {
               throw new Error('Los argumentos deben ser un objeto')
             }
@@ -559,6 +559,6 @@ async function main(): Promise<void> {
 
 main().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error('[andes-filter-mcp] Error fatal:', err)
+  console.error('[deltabit-mcp] Error fatal:', err)
   process.exit(1)
 })

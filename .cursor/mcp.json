@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "andes-filter": {
+    "deltabit": {
       "command": "npm",
       "args": ["run", "mcp:server"],
       "cwd": "."

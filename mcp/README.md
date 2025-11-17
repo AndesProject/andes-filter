@@ -1,10 +1,10 @@
-# Servidor MCP para Andes Filter
+# Servidor MCP para Deltabit Filter
 
-Este servidor MCP (Model Context Protocol) expone las funcionalidades de Andes Filter como herramientas que pueden ser utilizadas por clientes MCP compatibles como Cursor, Claude Desktop, u otros.
+Este servidor MCP (Model Context Protocol) expone las funcionalidades de Deltabit Filter como herramientas que pueden ser utilizadas por clientes MCP compatibles como Cursor, Claude Desktop, u otros.
 
 ## Instalación
 
-El servidor MCP ya está incluido en el paquete `@andes-project/filter`. Solo necesitas tener Node.js >= 22.0.0 instalado.
+El servidor MCP ya está incluido en el paquete `@deltabit/filter`. Solo necesitas tener Node.js >= 22.0.0 instalado.
 
 ## Ejecución
 
@@ -13,7 +13,7 @@ Para ejecutar el servidor MCP, puedes usar cualquiera de estos métodos:
 ### Usando npx (recomendado, similar a shadcn):
 
 ```bash
-npx @andes-project/filter mcp
+npx @deltabit/filter mcp
 ```
 
 ### Usando npm:
@@ -26,13 +26,13 @@ npm run mcp:server
 
 El servidor MCP expone las siguientes herramientas:
 
-### 1. `andes-filter.findMany`
+### 1. `deltabit.findMany`
 
-Filtra una colección usando la sintaxis de andes-filter y retorna datos y paginación.
+Filtra una colección usando la sintaxis de deltabit y retorna datos y paginación.
 
 **Parámetros:**
 - `data` (array, requerido): Arreglo de objetos/valores a filtrar
-- `query` (object, requerido): Objeto de consulta de andes-filter (where, pagination, orderBy, distinct)
+- `query` (object, requerido): Objeto de consulta de deltabit (where, pagination, orderBy, distinct)
 
 **Ejemplo:**
 ```json
@@ -54,34 +54,34 @@ Filtra una colección usando la sintaxis de andes-filter y retorna datos y pagin
 }
 ```
 
-### 2. `andes-filter.findUnique`
+### 2. `deltabit.findUnique`
 
-Encuentra un único elemento que cumpla la consulta de andes-filter o null.
+Encuentra un único elemento que cumpla la consulta de deltabit o null.
 
 **Parámetros:**
 - `data` (array, requerido): Arreglo de objetos/valores a evaluar
-- `query` (object, requerido): Objeto de consulta de andes-filter
+- `query` (object, requerido): Objeto de consulta de deltabit
 
-### 3. `andes-filter.listOperators`
+### 3. `deltabit.listOperators`
 
-Lista todos los operadores disponibles en andes-filter con su categoría.
+Lista todos los operadores disponibles en deltabit con su categoría.
 
 **Parámetros:** Ninguno
 
 **Retorna:** Lista de operadores agrupados por categoría (Comparación, Numérico, String, Array, Lógico, Utilidad)
 
-### 4. `andes-filter.validateQuery`
+### 4. `deltabit.validateQuery`
 
-Valida una query de andes-filter antes de ejecutarla, retornando errores si los hay.
+Valida una query de deltabit antes de ejecutarla, retornando errores si los hay.
 
 **Parámetros:**
-- `query` (object, requerido): Objeto de consulta de andes-filter a validar
+- `query` (object, requerido): Objeto de consulta de deltabit a validar
 
 **Retorna:** Objeto con `valid` (boolean) y `errors` (array de strings)
 
-### 5. `andes-filter.getDocumentation`
+### 5. `deltabit.getDocumentation`
 
-Obtiene documentación detallada de un operador específico de andes-filter.
+Obtiene documentación detallada de un operador específico de deltabit.
 
 **Parámetros:**
 - `operator` (string, opcional): Nombre del operador del cual obtener documentación. Si no se proporciona, retorna documentación de todos los operadores.
@@ -100,18 +100,18 @@ Para usar este servidor MCP en Cursor, agrega la siguiente configuración en tu 
 ```json
 {
   "mcpServers": {
-    "andes-filter": {
+    "deltabit": {
       "command": "npx",
-      "args": ["-y", "@andes-project/filter", "filter", "mcp"],
+      "args": ["-y", "@deltabit/filter", "filter", "mcp"],
       "cwd": "."
     }
   }
 }
 ```
 
-Esta configuración usa `npx` para ejecutar el binario `filter` del paquete `@andes-project/filter` con el comando `mcp`.
+Esta configuración usa `npx` para ejecutar el binario `filter` del paquete `@deltabit/filter` con el comando `mcp`.
 
-**Nota:** Para scoped packages como `@andes-project/filter`, npx requiere especificar el nombre del binario (`filter`) explícitamente. El comando completo es: `npx @andes-project/filter filter mcp`.
+**Nota:** Para scoped packages como `@deltabit/filter`, npx requiere especificar el nombre del binario (`filter`) explícitamente. El comando completo es: `npx @deltabit/filter filter mcp`.
 
 ### Alternativas
 
@@ -120,10 +120,10 @@ Si prefieres usar npm directamente:
 ```json
 {
   "mcpServers": {
-    "andes-filter": {
+    "deltabit": {
       "command": "npm",
       "args": ["run", "mcp:server"],
-      "cwd": "/ruta/a/andes-filter"
+      "cwd": "/ruta/a/deltabit"
     }
   }
 }
@@ -134,10 +134,10 @@ O si quieres usar tsx directamente:
 ```json
 {
   "mcpServers": {
-    "andes-filter": {
+    "deltabit": {
       "command": "tsx",
       "args": ["mcp/server.ts"],
-      "cwd": "/ruta/a/andes-filter"
+      "cwd": "/ruta/a/deltabit"
     }
   }
 }
@@ -145,7 +145,7 @@ O si quieres usar tsx directamente:
 
 ## Operadores Disponibles
 
-El servidor soporta todos los operadores de Andes Filter:
+El servidor soporta todos los operadores de Deltabit Filter:
 
 ### Comparación
 - `equals`: Igual a un valor específico
@@ -179,7 +179,7 @@ El servidor soporta todos los operadores de Andes Filter:
 - `isNull`: Verificar si un campo es null
 - `distinct`: Verificar si los valores son distintos
 
-Para más detalles sobre cada operador, usa la herramienta `andes-filter.getDocumentation`.
+Para más detalles sobre cada operador, usa la herramienta `deltabit.getDocumentation`.
 
 ## Desarrollo
 
